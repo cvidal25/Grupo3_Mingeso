@@ -16,7 +16,7 @@ public class ExerciseService {
 
     @Autowired
     ExerciseRepository exerciseRepository;
-
+    //GET ALL
     @CrossOrigin(origins = {"http://localhost:3000"})
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

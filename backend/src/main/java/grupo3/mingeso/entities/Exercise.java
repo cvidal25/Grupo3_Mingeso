@@ -17,13 +17,14 @@ public class Exercise implements Serializable {
 
     @Id
     @Column(name = "exercise_id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer exerciseID;
 
 
     @Column(name = "title", nullable = false, length = 30)
     private String exerciseTitle;
 
-    @Column(name = "body", nullable = false, length = 1024)
+    @Column(name = "body", nullable = false, length = 2048)
     private String exerciseBody;
 
     @Column(name = "language", nullable = false)
