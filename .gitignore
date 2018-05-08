@@ -27,3 +27,28 @@ backend/nbbuild/
 backend/dist/
 backend/nbdist/
 backend/.nb-gradle/
+
+
+## FRONT END
+##dependencies
+front-end/node_modules
+
+# testing
+front-end/coverage
+
+# production
+front-end/build
+
+# misc
+front-end/.DS_Store
+front-end/.env.local
+front-end/.env.development.local
+front-end/.env.test.local
+front-end/.env.production.local
+
+front-end/npm-debug.log*
+front-end/yarn-debug.log*
+front-end/yarn-error.log*
+front-end/*.lock
+
+front-end/.idea
