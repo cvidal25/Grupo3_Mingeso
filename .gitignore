@@ -1,0 +1,29 @@
+backend/.gradle
+backend/build/
+backend/!gradle/wrapper/gradle-wrapper.jar
+backend/.properties
+backend/out/production
+
+### STS ###
+backend/.apt_generated
+backend/.classpath
+backend/.factorypath
+backend/.project
+backend/.settings
+backend/.springBeans
+backend/.sts4-cache
+
+### IntelliJ IDEA ###
+backend/.idea
+backend/*.iws
+backend/*.iml
+backend/*.ipr
+backend/out/
+
+### NetBeans ###
+backend/nbproject/private/
+backend/build/
+backend/nbbuild/
+backend/dist/
+backend/nbdist/
+backend/.nb-gradle/
