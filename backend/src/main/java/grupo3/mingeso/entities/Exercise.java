@@ -17,7 +17,7 @@ public class Exercise implements Serializable {
 
     @Id
     @Column(name = "exercise_id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer exerciseID;
 
 
