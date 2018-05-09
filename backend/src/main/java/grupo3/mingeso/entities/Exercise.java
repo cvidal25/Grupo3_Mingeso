@@ -13,11 +13,11 @@ import java.util.List;
 @NamedQuery(name = "Exercise.findAll", query = "SELECT a FROM Exercise a")
 public class Exercise implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "exercise_id", unique = true, nullable = false)
     @GeneratedValue
+    @Column(name = "exercise_id", unique = true, nullable = false)
     private Integer exerciseID;
 
 

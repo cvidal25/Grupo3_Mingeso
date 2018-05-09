@@ -6,17 +6,17 @@ import javax.persistence.*;
 @Table(name="user")
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable{
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "user_id", unique = true, nullable = false)
     @GeneratedValue
+    @Column(name = "user_id", unique = true, nullable = false)
     private Integer userID;
 
     @Column(name = "username", nullable = false, length = 60)
     private String userName;
 
-    @Column(name = "user_type", nullable = false) /* 1 = coordinador; 2 = profesor; 3 = estudiante */
+    @Column(name = "user_type", nullable = false) /* 1 = estudiante; 2 = profesor; 3 = coordinador */
     private Integer userType;
 
     @Column(name = "email", nullable = false, length = 256)
