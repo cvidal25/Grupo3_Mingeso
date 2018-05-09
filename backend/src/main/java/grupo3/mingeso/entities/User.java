@@ -22,9 +22,6 @@ public class User implements Serializable{
     @Column(name = "email", nullable = false, length = 256)
     private String userMail;
 
-    @Column(name = "password", nullable = false, length = 100)
-    private String userPass;
-
     @Column(name = "career", nullable = false, length = 55)
     private String userCareer;
 
@@ -48,10 +45,6 @@ public class User implements Serializable{
     public String getUserMail() { return userMail; }
 
     public void setUserMail(String userMail) { this.userMail = userMail; }
-
-    public String getUserPass() { return userPass; }
-
-    public void setUserPass(String userPass) { this.userPass = userPass; }
 
     public String getUserCareer() { return userCareer; }
 

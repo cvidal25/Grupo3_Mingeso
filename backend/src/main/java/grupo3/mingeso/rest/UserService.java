@@ -39,7 +39,7 @@ public class UserService {
     }
 
     //DELETE ONE
-    @DeleteMapping(value = "user/{id}")
+    @DeleteMapping(value = "delete/{id}")
     @ResponseBody
     public void productDelete(@PathVariable Integer id){
         userRepository.deleteById(id);
@@ -47,17 +47,18 @@ public class UserService {
     }
 
     //UPDATE
-    /*@PutMapping(value = "/user", params = {"id","body"})
-    public Exercise update(@RequestParam("id") Integer id, @RequestParam("body") String body,
+    @PutMapping(value = "/update", params = {"id","username","userCareer"})
+    public User update(@RequestParam("id") Integer id, @RequestParam("username") String username, @RequestParam("userCareer") String userCareer,
                            HttpServletResponse httpResponse) {
 
-        if(!exerciseRepository.existsById(id)) {
+        if(!userRepository.existsById(id)) {
             httpResponse.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
 
-        Exercise exercise = exerciseRepository.findById(id).get();
-        exercise.setExerciseBody(body);
-        return exerciseRepository.save(exercise);
-    }*/
+        User user = userRepository.findById(id).get();
+        user.setUserName(username);
+        user.setUserCareer(userCareer);
+        return userRepository.save(user);
+    }
 }
