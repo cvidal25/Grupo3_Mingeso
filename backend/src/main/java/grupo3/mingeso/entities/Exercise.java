@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "excercise")
-@NamedQuery(name = "Exercise.findAll", query = "SELECT a FROM Exercise a")
+@NamedQuery(name = "Exercise.findAll", query = "SELECT e FROM Exercise e")
 public class Exercise implements Serializable {
 
     //private static final long serialVersionUID = 1L;
@@ -20,11 +20,10 @@ public class Exercise implements Serializable {
     @Column(name = "exercise_id", unique = true, nullable = false)
     private Integer exerciseID;
 
-
     @Column(name = "title", nullable = false, length = 30)
     private String exerciseTitle;
 
-    @Column(name = "body", nullable = false, length = 2048)
+    @Column(name = "body", nullable = false, length = 16384)
     private String exerciseBody;
 
     @Column(name = "language", nullable = false)
@@ -32,6 +31,13 @@ public class Exercise implements Serializable {
 
     @Column(name = "initial_date", nullable = false)
     private Date exerciseIntialDate;
+
+
+    @Column(name = "input", nullable = false, length = 2048)
+    private String exerciseInput;
+
+    @Column(name = "output", nullable = false, length = 2048)
+    private String exerciseOutput;
 
     @Column(name = "finish_date", nullable = false)
     private Date exerciseFinishlDate;
@@ -42,6 +48,22 @@ public class Exercise implements Serializable {
     public void Exercise(){
     }
 
+
+    public String getExerciseInput() {
+        return exerciseInput;
+    }
+
+    public void setExerciseInput(String exerciseInput) {
+        this.exerciseInput = exerciseInput;
+    }
+
+    public String getExerciseOutput() {
+        return exerciseOutput;
+    }
+
+    public void setExerciseOutput(String exerciseOutput) {
+        this.exerciseOutput = exerciseOutput;
+    }
 
     public Integer getExerciseID() {
         return exerciseID;
