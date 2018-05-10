@@ -26,8 +26,8 @@ Instalar IDE
 3. Copie el Archivo application.properties.template y elimine la extencion .template
 4. Modifique el puerto expuesto de MySQL y modifique las credenciales de acceso a la BD.
 ```
-*
-## Front End
+
+### Front End
 
 
 ```
