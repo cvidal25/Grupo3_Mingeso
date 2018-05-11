@@ -3,17 +3,16 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "excercise")
 @NamedQuery(name = "Exercise.findAll", query = "SELECT e FROM Exercise e")
 public class Exercise implements Serializable {
-
-    //private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -45,25 +44,20 @@ public class Exercise implements Serializable {
     @Column(name = "total_score", nullable = false)
     private Integer exerciseScore;
 
+    @Column(name = "published", nullable = false)
+    private boolean exercisePublished;
+
     public void Exercise(){
     }
 
 
-    public String getExerciseInput() {
-        return exerciseInput;
-    }
+    public String getExerciseInput() { return exerciseInput; }
 
-    public void setExerciseInput(String exerciseInput) {
-        this.exerciseInput = exerciseInput;
-    }
+    public void setExerciseInput(String exerciseInput) { this.exerciseInput = exerciseInput; }
 
-    public String getExerciseOutput() {
-        return exerciseOutput;
-    }
+    public String getExerciseOutput() { return exerciseOutput; }
 
-    public void setExerciseOutput(String exerciseOutput) {
-        this.exerciseOutput = exerciseOutput;
-    }
+    public void setExerciseOutput(String exerciseOutput) { this.exerciseOutput = exerciseOutput; }
 
     public Integer getExerciseID() {
         return exerciseID;
@@ -121,5 +115,21 @@ public class Exercise implements Serializable {
         this.exerciseScore = exerciseScore;
     }
 
+    public boolean isExercisePublished() { return exercisePublished; }
+
+    public void setExercisePublished(boolean exercisePublished) { this.exercisePublished = exercisePublished; }
+
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
+    private Set<UserExercise> userExercise = new HashSet<>();
+
+    public Set<UserExercise> getUserExercise() {
+        return userExercise;
+    }
+
+    public void setBookPublishers(Set<UserExercise> userExercise) {
+        this.userExercise = userExercise;
+    }
 
 }

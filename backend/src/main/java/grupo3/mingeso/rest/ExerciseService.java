@@ -48,8 +48,8 @@ public class ExerciseService {
     }
 
     //UPDATE
-    @PutMapping(value = "/update", params = {"id","body"})
-    public Exercise update(@RequestParam("id") Integer id, @RequestParam("body") String body,
+    @PutMapping(value = "/update", params = {"id","body","published"})
+    public Exercise update(@RequestParam("id") Integer id, @RequestParam("body") String body, @RequestParam("published") boolean published,
                           HttpServletResponse httpResponse) {
 
         if(!exerciseRepository.existsById(id)) {
@@ -59,6 +59,7 @@ public class ExerciseService {
 
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.setExerciseBody(body);
+        exercise.setExercisePublished(published);
         return exerciseRepository.save(exercise);
     }
 

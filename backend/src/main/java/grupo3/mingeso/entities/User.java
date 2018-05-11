@@ -1,12 +1,16 @@
 package grupo3.mingeso.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name="user")
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable{
-    //private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -53,4 +57,21 @@ public class User implements Serializable{
     public String getUserCoordination() { return userCoordination; }
 
     public void setUserCoordination(String userCoordination) { this.userCoordination = userCoordination; }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
+    private Set<UserExercise> userExercise = new HashSet<>();
+
+    public Set<UserExercise> getUserExercise() {
+        return userExercise;
+    }
+
+    public void setBookPublishers(Set<UserExercise> userExercise) {
+        this.userExercise = userExercise;
+    }
 }
+
+
+
+
