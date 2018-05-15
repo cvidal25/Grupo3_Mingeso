@@ -1,0 +1,154 @@
+RELLENO EJERCICIOS
+
+{
+"exerciseTitle": "Enunciado 1 en Python",
+"exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
+"exerciseLenguge": 1,
+"exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+"exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+"exerciseScore": 5,
+"exerciseInput":"hola/@chao/@bai",
+"exerciseOutput":"aloh/@oahc/@iab",
+"exercisePublished": true
+}
+
+
+
+{
+"exerciseTitle": "Enunciado 3 en C",
+"exerciseBody": "1Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
+"exerciseLenguge": 3,
+"exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+"exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+"exerciseScore": 10,
+"exerciseInput":"hola/@chao/@bai",
+"exerciseOutput":"aloh/@oahc/@iab",
+"exercisePublished": false
+}
+
+
+{
+"exerciseTitle": "Enunciado 2 en Java",
+"exerciseBody": "1Lorem ipEDFSFVGsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
+"exerciseLenguge": 2,
+"exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+"exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+"exerciseScore": 2,
+"exerciseInput":"hola/@chao/@bai",
+"exerciseOutput":"aloh/@oahc/@iab",
+"exercisePublished": false
+}
+
+RELLENO USERS
+
+{
+	"userName": "Javiera Paz Seguel Castro",
+	"userType": 1,
+	"userMail": "javiera.seguel@usach.cl",
+	"userCareer": "Ingeniería de Ejecución en Geomensura",
+	"userCoordination": "B-3"
+}
+
+{
+	"userName": "Shalini Ramchandani Moorjimal",
+	"userType": 3,
+	"userMail": "shalini.ramchandani@usach.cl",
+	"userCareer": "Ingeniería Civil en Informática",
+	"userCoordination": "A-1"
+}
+
+{
+	"userName": "Jorge Paredes",
+	"userType": 2,
+	"userMail": "jorge.paredes@usach.cl",
+	"userCareer": "Ingeniería Ejecución en Informática",
+	"userCoordination": "A-1"
+}
+
+{
+	"userName": "Christian David Vidal Cerda",
+	"userType": 2,
+	"userMail": "christian.vidal@usach.cl",
+	"userCareer": "Ingeniería Ejecución en Informática",
+	"userCoordination": "B-3"
+}
+
+{
+	"userName": "Eduardo Bustamante",
+	"userType": 1,
+	"userMail": "eduardo.bustamante@usach.cl",
+	"userCareer": "Ingeniería Ejecución en Mecánica",
+	"userCoordination": "B-3"
+}
+
+{
+	"userName": "Miguel Bosé",
+	"userType": 1,
+	"userMail": "miguel.bose@usach.cl",
+	"userCareer": "Ingeniería Ejecución en Metalurgia",
+	"userCoordination": "A-1"
+}
+
+
+RELLENO USEREXCERCISE
+{
+    "userExerciseID": 1,
+    "userScore": 5,
+    "userDateResolution": "2012-04-30T02:15:12.000+0000",
+    "userSolvingTime": "2012-04-30T02:15:12.000+0000",
+    "userOutput": "hola/@oahc/@iab",
+    "exercise": {
+        "exerciseID": 1,
+        "exerciseTitle": "Enunciado 1 en Python",
+        "exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
+        "exerciseLenguge": 1,
+        "exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+        "exerciseInput": "hola/@chao/@bai",
+        "exerciseOutput": "aloh/@oahc/@iab",
+        "exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+        "exerciseScore": 5,
+        "exercisePublished": true
+    },
+    "user": {
+        "userID": 4,
+        "userName": "Christian David Vidal Cerda",
+        "userType": 2,
+        "userMail": "christian.vidal@usach.cl",
+        "userCareer": "Ingeniería Ejecución en Informática",
+        "userCoordination": "B-3"
+    }
+}
+
+
+{
+	"exercise": {
+        "exerciseID": 1,
+        "exerciseTitle": "Enunciado 1 en Python",
+        "exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
+        "exerciseLenguge": 1,
+        "exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+        "exerciseInput": "hola/@chao/@bai",
+        "exerciseOutput": "aloh/@oahc/@iab",
+        "exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+        "exerciseScore": 5,
+        "exercisePublished": true
+    },
+	"user":{
+			"userID":2,
+			"userName": "Shalini Ramchandani Moorjimal",
+			"userType": 3,
+			"userMail": "shalini.ramchandani@usach.cl",
+			"userCareer": "Ingeniería Civil en Informática",
+			"userCoordination": "A-1"
+		}
+}
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+CONSULTAS:
+http://localhost:8082/exercise/update?id=2&body=algo
+
