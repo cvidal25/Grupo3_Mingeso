@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 //import brace from 'brace';
 import AceEditor from 'react-ace';
+import { Link } from 'react-router-dom';
 
 import 'brace/mode/python';
 import 'brace/theme/monokai';
@@ -15,15 +16,14 @@ class App extends Component {
     }
 
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      return <div className="App">
+          <header className="App-header">
+              <img src={logo} className="App-logo" alt="logo"/>
+              <h1 className="App-title">Welcome to React</h1>
+          </header>
+          <p className="App-intro">
+              To get started, edit <code>src/App.js</code> and save to reload.
+          </p>
           <AceEditor
               mode="python"
               theme="monokai"
@@ -41,8 +41,7 @@ class App extends Component {
                   showLineNumbers: true,
                   tabSize: 2,
               }}/>
-      </div>
-    );
+      </div>;
   }
 }
 
