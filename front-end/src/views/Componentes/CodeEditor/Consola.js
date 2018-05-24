@@ -4,7 +4,7 @@ import AceEditor from 'react-ace';
 import brace from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
-import { Card, CardBody, CardHeader, Col, Collapse, Row, Table } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
 
 import '../../../scss/spinner.css';
@@ -98,12 +98,32 @@ class CodeEditor extends Component{
         this.setState({
             aceEditorValue:NewValue
         });
-        
+        console.log(this.state.aceEditorValue);
     };
 
-    getEnunciado(id){
-        
+    handleSentCodigo=event=>{
+        /*
+        //http://localhost:8082/answer
+        {
+	"language":1,
+	"code":"i = 0\nwhile(i<3):\n\tprint(i)\n\ti = i+1"
+	
+}
+        */
+       var data={
+           'language':1,
+           'code':this.state.aceEditorValue
+       }
+       console.log(data);
+        Axios.post('http://localhost:8082/answer',data)
+        .then(response=>{
+            console.log(response.data);
+        }).catch(function(error){
+            console.log(error);
+        });       
     }
+
+
 
 
 
@@ -139,7 +159,7 @@ class CodeEditor extends Component{
         var num;
        
         for(num in this.state.lenguaje){
-            if(this.state.modo===this.state.lenguaje[num]){
+            if(this.state.modo===this.state.lenguajeRA[num]){
                 console.log(num);
                 break;
             }
@@ -191,8 +211,12 @@ class CodeEditor extends Component{
                          
                         
                     </CardBody>
+
+                    <Button block color="success" onClick={this.handleSentCodigo}>Enviar</Button> 
                 </Card>
-                  </Col>  
+                  </Col> 
+
+                  
                 </Row>
                 
             </div>
