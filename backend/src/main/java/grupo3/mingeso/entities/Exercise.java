@@ -28,17 +28,16 @@ public class Exercise implements Serializable {
     @Column(name = "language", nullable = false)
     private Integer exerciseLenguge;
 
-    @Column(name = "initial_date", nullable = false)
+    @Column(name = "initial_date")
     private Date exerciseIntialDate;
 
-
-    @Column(name = "input", nullable = false, length = 2048)
+    @Column(name = "input", length = 2048)
     private String exerciseInput;
 
     @Column(name = "output", nullable = false, length = 2048)
     private String exerciseOutput;
 
-    @Column(name = "finish_date", nullable = false)
+    @Column(name = "finish_date")
     private Date exerciseFinishlDate;
 
     @Column(name = "total_score", nullable = false)
