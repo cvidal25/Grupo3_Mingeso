@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardBody, CardHeader, Col, Collapse, Row, Table } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
 import Axios from 'axios';
+import Loading from 'react-loading-spinner';
+import '../../../scss/spinner.css';
+import c_icon from '../../../assets/img/logos_lenguajes/c_logo.png';
+import python_icon from '../../../assets/img/logos_lenguajes/python_logo.png';
+import java_icon from '../../../assets/img/logos_lenguajes/java_logo.png';
+
 
 //import prueba from './prueba.json';
 
@@ -11,18 +17,34 @@ class Enunciado extends Component{
         this.state={
             items:[],
             lenguaje:['python','java','c_cpp'],
-            padre:-1, // segun el padre se veran las funciones
+            iconos:[python_icon,java_icon,c_icon],
             collapse: false,
             accordion: [],
-            custom: [true, false],
-            status: 'Closed',
-            fadeIn: true,
-            timeout: 300,
+            espera:false,
       };
     }
 
     componentDidMount(){
-        Axios.get('http://localhost:8082/exercise')
+        this.setState({
+            espera:true
+        });
+
+        const config={
+            'onUploadProgress': (progressEvent) => {
+                console.log("PAZ----");
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
+            },
+            'onDownloadProgress': (progressEvent) => {
+                console.log("PAZ");
+                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
+            },
+
+
+        }
+        Axios.get('http://localhost:8082/exercise',config)
         .then(response=>{
             //console.log(response.data);
             var aux=[];
@@ -31,9 +53,11 @@ class Enunciado extends Component{
             for (item in enunciados){
                 aux.push(false);    
             }
+
             this.setState({
                 items:enunciados,
-                accordion: aux
+                accordion: aux,
+                espera:false
             });
         })
         .catch(function(error){
@@ -41,7 +65,9 @@ class Enunciado extends Component{
         })
     };
 
+
     toggleAccordion(tab) {
+
 
     const prevState = this.state.accordion;
     const state = prevState.map((x, index) => tab === index ? !x : false);
@@ -63,6 +89,9 @@ class Enunciado extends Component{
     }
 
 
+
+
+
     listar (listaEnunciados){
         return (
             <div >
@@ -73,64 +102,71 @@ class Enunciado extends Component{
                         <i className="fa fa-align-justify"></i> Tabla de Enunciados
                     </CardHeader>
                     <CardBody>
-                        <Table responsive>
-                        
-                        <thead>
-                        <tr>
-                            <th>Titulo</th>
-                            <th>Publicado</th>
-                            <th>Lenguaje</th>
-                            <th>Status</th>
-                        </tr>
-                        </thead>
-                        
-                        {listaEnunciados && listaEnunciados.map((enunciado, key) =>
-                        <tbody>
-                            <tr key={key} onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
-                                <td>{enunciado.exerciseTitle}</td>
-                                 <td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
-                                <td>{this.state.lenguaje[enunciado.exerciseLenguge-1]}</td>
-                                <td>
-                                    <Link to={{
-                                        pathname:"/enunciados/"+this.state.lenguaje[enunciado.exerciseLenguge-1].toString()+"/consola/"+enunciado.exerciseID,
-                                        
-                                        }}>
-                                        <button>
-                                        GO
-                                        </button>
-                                    </Link>
-                                </td>
-                            </tr>
+                        {//<Loading isLoading={this.state.espera} loadingClassName='defloading' > //
+                        }
+                            {this.state.espera?
+                            <div className="row">
+                                <div className ='col'>
+                                    <div className='defaultSpinner' ></div>
+                                </div>
+                            </div>
+                            :
+                            <Table responsive>
+                            
+                            <thead>
                             <tr>
-                                <td colSpan="4" style={{height:'0px',margin:'0px'}}>
-                                    <Collapse isOpen={this.state.accordion[key]} aria-labelledby="headingOne">
-                                        <fieldset className="form-group">
-                                            <div className="row">
-                                                <legend className="col-form-label col-sm-2 pt-0"><strong> Cuerpo:</strong></legend>
-                                                <div className="col-sm-10" style={{textAlign:'justify'}}>
-                                                        {enunciado.exerciseBody}
-                                                </div>
-                                            </div>
-                                            <br/>
-                                            <div className="row">
-                                                <legend className="col-form-label col-sm-2 pt-0"><strong> Input: </strong></legend>
-                                                <div className="col-sm-3" style={{textAlign:'justify'}}>
-                                                        {this.listarInOut(enunciado.exerciseInput)}
-                                                </div>
-                                                <legend className="col-form-label col-sm-2 pt-0"> <strong> Output:</strong></legend>
-                                                <div className="col-sm-3" style={{textAlign:'justify'}}>
-                                                        {this.listarInOut(enunciado.exerciseOutput)}
-                                                </div>
-                                            </div>
-                                            
-                                        </fieldset>
-                                    </Collapse>
-                                </td>
+                                <th>Titulo</th>
+                                <th>Publicado</th>
+                                <th >Lenguaje </th>
+                                <th style={{textAlign:'center'}} >Status</th>
                             </tr>
-                        </tbody>
-                        )}
-                       
-                        </Table>
+                            </thead>
+                            
+                            {listaEnunciados && listaEnunciados.map((enunciado, key) =>
+                            <tbody key={key}>
+                                <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
+                                    <td>{enunciado.exerciseTitle}</td>
+                                    <td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
+                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}}/></td>
+                                    <td>
+                                        <Link to={{
+                                            pathname:"/enunciados/"+this.state.lenguaje[enunciado.exerciseLenguge-1].toString()+"/consola/"+enunciado.exerciseID,
+                                            
+                                            }}>
+                                            <Button block color="primary">GO</Button>
+                                        </Link>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="4">
+                                        <Collapse isOpen={this.state.accordion[key]} aria-labelledby="headingOne">
+                                            <fieldset className="form-group">
+                                                <div className="row">
+                                                    <legend className="col-form-label col-sm-1 pt-0"><strong> Cuerpo:</strong></legend>
+                                                    <div className="col-sm-11" style={{textAlign:'justify'}}>
+                                                            {enunciado.exerciseBody}
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div className="row">
+                                                    <legend className="col-form-label col-sm-2 pt-0"><strong> Input: </strong></legend>
+                                                    <div className="col-sm-3" style={{textAlign:'justify'}}>
+                                                            {this.listarInOut(enunciado.exerciseInput)}
+                                                    </div>
+                                                    <legend className="col-form-label col-sm-2 pt-0"> <strong> Output:</strong></legend>
+                                                    <div className="col-sm-3" style={{textAlign:'justify'}}>
+                                                            {this.listarInOut(enunciado.exerciseOutput)}
+                                                    </div>
+                                                </div>
+                                                
+                                            </fieldset>
+                                        </Collapse>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            )}
+                        
+                        </Table> }
                         {
                         /*
                         <Pagination>
@@ -144,7 +180,8 @@ class Enunciado extends Component{
                         <PaginationItem><PaginationLink next tag="button">Next</PaginationLink></PaginationItem>
                         </Pagination>*/
                         }
-
+                        {//</Loading>
+                        }
                     </CardBody>
                 </Card>
                 </Col>
@@ -156,9 +193,6 @@ class Enunciado extends Component{
 
 
     render(){
-        
-        
-        console.log(this.state);
 
         return(
             <div>

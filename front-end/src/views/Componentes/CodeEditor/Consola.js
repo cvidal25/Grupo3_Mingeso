@@ -4,16 +4,17 @@ import AceEditor from 'react-ace';
 import brace from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table } from 'reactstrap';
+import  { Redirect } from 'react-router-dom';
 
+import '../../../scss/spinner.css';
 import 'brace/mode/java';
 import 'brace/mode/python';
 import 'brace/mode/c_cpp';
 
-import 'brace/theme/tomorrow';
-import 'brace/theme/kuroir';
-import 'brace/theme/monokai';
-import { isString } from 'util';
+import'brace/theme/dracula';
 
+import { isString } from 'util';
 
 
 
@@ -24,17 +25,61 @@ class CodeEditor extends Component{
         this.state={
             enunciado:"",
             existeEnunciado:false,
-            lenguaje:["python","java","c_cpp"],
+            lenguaje:["Python","Java","C"],
+            lenguajeRA:["python",'java','c_cpp'],
+            modo:'python',
             basePython:"",
             baseJava:"",
             baseC_Cpp:"",
-            aceEditorValue:""
+            aceEditorValue:"",
+            espera:false
 
         }
     };
 
     componentDidMount(){
+        this.setState({
+            espera:true,
+            modo:this.props.match.params.lenguaje
+        })
+        var num=this.props.match.params.num;
+        if(isString(num)){
+            Axios.get('http://localhost:8082/exercise/'+num)
+                .then(response=>{
+                        this.setState({
+                            enunciado:response.data,
+                            existeEnunciado:true,
+                            espera:false
+                        });
+                        var aux;
+                        for(aux in this.state.lenguaje){
+                            if(this.state.modo===this.state.lenguajeRA[aux]){
+                                console.log(aux);
+                                if((response.data.exerciseLenguge-1).toString()!==aux.toString()){
+                                    
+                                    console.log('REDIRIGIR');
+                                    window.location.replace('/');
+                                }
+                                break;
+                            }
+                        }
+                        
+                        
+                    }
+                )
+                .catch(function(error){
+                    console.log(error);
 
+                    this.setState({
+                        espera:false
+                    })
+                })
+        }
+        else{
+            this.setState({
+                espera:false
+            })
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -57,21 +102,7 @@ class CodeEditor extends Component{
     };
 
     getEnunciado(id){
-        Axios.get('http://localhost:8082/exercise/'+id)
-        .then(response=>{
-            console.log(response.data); 
-            if(!this.state.existeEnunciado){
-                this.setState({
-                    enunciado:response.data,
-                    existeEnunciado:true
-                }); 
-            console.log(this.enunciado);
-            }
-           
-        })
-        .catch(function(error){
-            console.log(error);
-        })
+        
     }
 
 
@@ -105,43 +136,64 @@ class CodeEditor extends Component{
 
     render(){
 
-        var num=this.props.match.params.num;
-        if(isString(num)){
-            this.getEnunciado(num);
+        var num;
+       
+        for(num in this.state.lenguaje){
+            if(this.state.modo===this.state.lenguaje[num]){
+                console.log(num);
+                break;
+            }
         }
-        var modo=this.props.match.params.lenguaje;
 
         return (
             <div>
-                <div className="row">
-                    <div className="col-1"></div>
-                    <div className="col-10">
-                        <h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle}</h2>
-                        <div style={{textAlign:"justify",fontSize:"18"}}>{this.state.enunciado.exerciseBody}</div>
-                        <div style={{height:"20px"}}> </div>
-                        <AceEditor
-                            mode={modo}
-                            theme="monokai"
-                            name="blah2"
-                            onChange={this.onChange}
-                            fontSize={18}
-                            showPrintMargin={true}
-                            showGutter={true}
-                            highlightActiveLine={true}
-                            value={''}
-                            setOptions={{
-                                enableBasicAutocompletion: true,
-                                enableLiveAutocompletion: true,
-                                enableSnippets: true,
-                                showLineNumbers: true,
-                                tabSize: 2,
-                            }}/>
-                        </div>
-                    
-                    <div className="col-1"></div>
-                </div>
+                <Row>
+                  <Col>
+                  <Card>
+                    <CardHeader>
+                        {this.state.existeEnunciado?
+                        <h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle}</h2>:
+                        <h2 style={{textAlign: "center" }}>Consola de {this.state.lenguaje[num]}</h2>
+                    }
+                
+                    </CardHeader>
+                    <CardBody>
 
-
+                        
+                        {this.state.espera ?
+                             <div className="defaultSpinner"></div>
+                            :
+                            <div >
+                            <div style={{textAlign:"justify",fontSize:"18"}}>
+                            {this.state.enunciado.exerciseBody}
+                            </div>
+                                <div style={{height:"20px"}}> </div>
+                                <AceEditor
+                                    mode={this.state.modo}
+                                    theme='dracula'
+                                    name="blah2"
+                                    width="70%"
+                                    onChange={this.onChange}
+                                    fontSize={18}
+                                    showPrintMargin={true}
+                                    showGutter={true}
+                                    highlightActiveLine={true}
+                                    value={''}
+                                    setOptions={{
+                                        enableBasicAutocompletion: true,
+                                        enableLiveAutocompletion: true,
+                                        enableSnippets: true,
+                                        showLineNumbers: true,
+                                        tabSize: 2,
+                                    }}/>
+                            </div>
+                        }
+                         
+                        
+                    </CardBody>
+                </Card>
+                  </Col>  
+                </Row>
                 
             </div>
         );
