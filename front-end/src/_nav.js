@@ -74,6 +74,11 @@ export default {
       ]
     },
     {
+      name:'Ingresar',
+      url: '/ingresar',
+      
+    },
+    {
       name: 'Base',
       url: '/base',
       icon: 'icon-puzzle',
