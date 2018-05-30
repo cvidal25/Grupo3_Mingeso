@@ -133,36 +133,6 @@ class CodeEditor extends Component{
     }
 
 
-
-
-
-    
-
-    /*consumeAPI= event =>{
-        const glot= new GlotAPI('d8c012ba-9fc5-4dda-af2b-8614aae48d30');
-        glot.run('python','2',[{"name": "main.py", "content": "print(42)"}]);
-        Axios({
-            "crossDomain": true,
-            "url": "https://run.glot.io/languages/python/2",
-            "method": "POST",
-            "headers": {
-              "authorization": "Token d8c012ba-9fc5-4dda-af2b-8614aae48d30",
-              "content-type": "application/json",
-              "cache-control": "no-cache",
-              "postman-token": "26652605-dbf5-2cde-ecbe-e06001636891"
-            },
-            "data": "{\"files\": [{\"name\": \"main.py\", \"content\": \"print(42)\"}]}"
-        }).then(response =>{
-            console.log(response.data);
-        }).catch(function (error){
-            console.log(error,"ERRROR");
-        });
-
-    }*/
-    prueba(){
-        console.log(this.state.enunciado);
-    }
-
     render(){
 
         var num;

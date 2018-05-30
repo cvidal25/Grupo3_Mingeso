@@ -207,25 +207,25 @@ class EnunciadoPro extends Component{
                                                 </Link>
                                             </Col>
                                             <Col>
-                                                <Link to='#'>
-                                                    <Button block color="danger" id={"BotonDelete"+key.toString()}  data-toggle="modal" style={{height:"38px"}} data-target={"#modalDelete"}>
+                                                
+                                                    <Button block color="danger" id={"BotonDelete"+key.toString()}  style={{height:"38px"}} onClick={()=>{this.toggleOpenModal(key);}}>
                                                         <i className="fa fa-close font-2xl fa-lg d-block"></i>
                                                     </Button>
                                                     <Tooltip placement="top" isOpen={this.state.openStates[2][key]} target={"BotonDelete"+key.toString()} toggle={() => {this.toggleOpen(key,2);}}>
                                                        Eliminar 
                                                     </Tooltip>
-                                                    <Modal isOpen={this.state.openStates[3][key]} toggle={()=>{this.toggleOpen(key);}} 
-                                                    className={'modal-success' + this.props.className}>
-                                                    <ModalHeader toggle={()=>{this.toggleOpen(key);}}>Guardado</ModalHeader>
-                                                    <ModalBody>
-                                                        La nueva cuenta de usuario se ha creado satisfactoriamente.
-                                                        <h1>La contraseña del nuevo usuario es:</h1>
-                                                    </ModalBody>
-                                                    <ModalFooter>
-                                                        <Button color="success">Aceptar</Button>
-                                                    </ModalFooter>
-                                                </Modal>
-                                                </Link>
+                                                    <Modal isOpen={this.state.openStates[3][key]} toggle={()=>{this.toggleOpenModal(key);}} className={this.props.className}>
+                                                        <ModalHeader toggle={()=>{this.toggleOpenModal(key);}}>Estas Seguro?</ModalHeader>
+                                                        <ModalBody>
+                                                            Estas Seguro de Eliminar: 
+                                                            <strong> {enunciado.exerciseTitle}</strong>
+                                                        </ModalBody>
+                                                        <ModalFooter>
+                                                        <Button color="primary" onClick={()=>{this.toggleOpenModal(key);}}>Do Something</Button>{' '}
+                                                        <Button color="secondary" onClick={()=>{this.toggleOpenModal(key);}}>Cancel</Button>
+                                                        </ModalFooter>
+                                                    </Modal>
+                                                
                                             </Col>
                                         </Row>
                                     </td>
@@ -287,19 +287,7 @@ class EnunciadoPro extends Component{
     render(){
         return(
             <div>
-                <div>
-        <Button color="danger" onClick={this.toggle}>{this.props.buttonLabel}</Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
-          <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
+                
                 {this.listar(this.state.items)}
             </div>
         );
