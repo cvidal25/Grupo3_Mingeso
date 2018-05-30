@@ -175,16 +175,20 @@ const Widgets = Loadable({
 
 //
 const NewEnunciado = Loadable({
-  loader:()=>import('./views/Componentes/NewEnunciado/NewEnunciado'),
+  loader:()=>import('./views/Componentes/Enunciado/NewEnunciado'),
+  loading:Loading,
+});
+const EditEnunciado = Loadable({
+  loader:()=>import('./views/Componentes/Enunciado/EditEnunciado'),
   loading:Loading,
 });
 
 const Enunciado= Loadable({
-  loader:()=>import('./views/Componentes/Enunciado/Enunciado'),
+  loader:()=>import('./views/Componentes/ListaEnunciado/Enunciado'),
   loading:Loading,
 });
 const EnunciadoPro= Loadable({
-  loader:()=>import('./views/Componentes/Enunciado/EnunciadoPro'),
+  loader:()=>import('./views/Componentes/ListaEnunciado/EnunciadoPro'),
   loading:Loading,
 }); 
 const Consola= Loadable({
@@ -202,6 +206,8 @@ const routes = [
   {path: '/enunciadosPro',exact: true, name: 'Enunciado', component:EnunciadoPro },
   {path: '/enunciados/:lenguaje/consola/:num',exact: true, name: 'Consola', component: Consola},
   {path: '/consola/:lenguaje',exact: true, name: 'Consola', component: Consola},
+  {path: '/enunciadosPro/:id/enunciado',exact: true, name: 'Editar', component: EditEnunciado},
+
 
 
   //

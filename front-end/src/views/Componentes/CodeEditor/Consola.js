@@ -16,7 +16,9 @@ import'brace/theme/dracula';
 
 import { isString } from 'util';
 
-
+const basePython="";
+const baseJava='class Main {\n\tpublic static void main(String[] args) {\n\t\t//Codigo\n\t\t//System.out.println("Hello World!");\n\t}\n}';
+const baseC_Cpp="#include <stdio.h>\n\nint main(void) {\n\n\treturn 0;\n}";
 
 class CodeEditor extends Component{
 
@@ -28,9 +30,7 @@ class CodeEditor extends Component{
             lenguaje:["Python","Java","C"],
             lenguajeRA:["python",'java','c_cpp'],
             modo:'python',
-            basePython:"",
-            baseJava:"",
-            baseC_Cpp:"",
+            bases:[basePython,baseJava,baseC_Cpp],
             aceEditorValue:"",
             espera:false
 
@@ -198,7 +198,7 @@ class CodeEditor extends Component{
                                     showPrintMargin={true}
                                     showGutter={true}
                                     highlightActiveLine={true}
-                                    value={''}
+                                    value={this.state.bases[num]}
                                     setOptions={{
                                         enableBasicAutocompletion: true,
                                         enableLiveAutocompletion: true,
