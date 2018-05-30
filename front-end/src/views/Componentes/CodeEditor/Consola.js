@@ -110,8 +110,17 @@ class CodeEditor extends Component{
 	
 }
         */
+
+       var num;
+       
+       for(num in this.state.lenguaje){
+           if(this.state.modo===this.state.lenguajeRA[num]){
+               console.log(num);
+               break;
+           }
+       }
        var data={
-           'language':1,
+           'language':num+1,
            'code':this.state.aceEditorValue
        }
        console.log(data);
