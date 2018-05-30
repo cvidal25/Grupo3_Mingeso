@@ -18,7 +18,7 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
-import DefaultAside from './DefaultAside';
+//import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
@@ -59,14 +59,10 @@ class DefaultLayout extends Component {
               </Switch>
             </Container>
           </main>
-          <AppAside fixed hidden>
-            <DefaultAside />
-          </AppAside>
+          
 
         </div>
-        <AppFooter>
-          <DefaultFooter />
-        </AppFooter>
+      
       </div>
     );
   }
