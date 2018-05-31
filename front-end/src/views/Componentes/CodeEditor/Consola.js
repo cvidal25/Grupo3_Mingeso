@@ -4,7 +4,7 @@ import AceEditor from 'react-ace';
 import brace from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
-import { Card, CardBody, CardHeader, Col, Collapse, Row, Table } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
 
 import '../../../scss/spinner.css';
@@ -16,7 +16,9 @@ import'brace/theme/dracula';
 
 import { isString } from 'util';
 
-
+const basePython="";
+const baseJava='class Main {\n\tpublic static void main(String[] args) {\n\t\t//Codigo\n\t\t//System.out.println("Hello World!");\n\t}\n}';
+const baseC_Cpp="#include <stdio.h>\n\nint main(void) {\n\n\treturn 0;\n}";
 
 class CodeEditor extends Component{
 
@@ -28,9 +30,7 @@ class CodeEditor extends Component{
             lenguaje:["Python","Java","C"],
             lenguajeRA:["python",'java','c_cpp'],
             modo:'python',
-            basePython:"",
-            baseJava:"",
-            baseC_Cpp:"",
+            bases:[basePython,baseJava,baseC_Cpp],
             aceEditorValue:"",
             espera:false
 
@@ -98,48 +98,47 @@ class CodeEditor extends Component{
         this.setState({
             aceEditorValue:NewValue
         });
-        
+        console.log(this.state.aceEditorValue);
     };
 
-    getEnunciado(id){
-        
-    }
+    handleSentCodigo=event=>{
+        /*
+        //http://localhost:8082/answer
+        {
+	"language":1,
+	"code":"i = 0\nwhile(i<3):\n\tprint(i)\n\ti = i+1"
+	
+}
+        */
 
-
-
-    
-
-    /*consumeAPI= event =>{
-        const glot= new GlotAPI('d8c012ba-9fc5-4dda-af2b-8614aae48d30');
-        glot.run('python','2',[{"name": "main.py", "content": "print(42)"}]);
-        Axios({
-            "crossDomain": true,
-            "url": "https://run.glot.io/languages/python/2",
-            "method": "POST",
-            "headers": {
-              "authorization": "Token d8c012ba-9fc5-4dda-af2b-8614aae48d30",
-              "content-type": "application/json",
-              "cache-control": "no-cache",
-              "postman-token": "26652605-dbf5-2cde-ecbe-e06001636891"
-            },
-            "data": "{\"files\": [{\"name\": \"main.py\", \"content\": \"print(42)\"}]}"
-        }).then(response =>{
+       var num;
+       
+       for(num in this.state.lenguaje){
+           if(this.state.modo===this.state.lenguajeRA[num]){
+               console.log(num);
+               break;
+           }
+       }
+       var data={
+           'language':num+1,
+           'code':this.state.aceEditorValue
+       }
+       console.log(data);
+        Axios.post('http://localhost:8082/answer',data)
+        .then(response=>{
             console.log(response.data);
-        }).catch(function (error){
-            console.log(error,"ERRROR");
-        });
-
-    }*/
-    prueba(){
-        console.log(this.state.enunciado);
+        }).catch(function(error){
+            console.log(error);
+        });       
     }
+
 
     render(){
 
         var num;
        
         for(num in this.state.lenguaje){
-            if(this.state.modo===this.state.lenguaje[num]){
+            if(this.state.modo===this.state.lenguajeRA[num]){
                 console.log(num);
                 break;
             }
@@ -178,7 +177,7 @@ class CodeEditor extends Component{
                                     showPrintMargin={true}
                                     showGutter={true}
                                     highlightActiveLine={true}
-                                    value={''}
+                                    value={this.state.bases[num]}
                                     setOptions={{
                                         enableBasicAutocompletion: true,
                                         enableLiveAutocompletion: true,
@@ -191,8 +190,12 @@ class CodeEditor extends Component{
                          
                         
                     </CardBody>
+
+                    <Button block color="success" onClick={this.handleSentCodigo}>Enviar</Button> 
                 </Card>
-                  </Col>  
+                  </Col> 
+
+                  
                 </Row>
                 
             </div>

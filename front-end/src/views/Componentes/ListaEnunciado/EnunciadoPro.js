@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { AppSwitch } from '@coreui/react';
-import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button, Tooltip,Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
 import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
@@ -18,16 +18,15 @@ class EnunciadoPro extends Component{
             items:[],
             lenguaje:['python','java','c_cpp'],
             iconos:[python_icon,java_icon,c_icon],
-            collapse: false,
-            accordion: [],
-            custom: [true, false],
-            status: 'Closed',
             fadeIn: true,
             timeout: 300,
             espera:false,
-      };
-    }s
-
+            openStates:[[],[],[],[]], //0 Acordion 1 tooltiOpenEdit  2 tooltipOpenDelete 3 modalOpen
+            modal: false,
+        };
+        this.toggle = this.toggle.bind(this);
+    }
+    
     componentDidMount(){
 
         this.setState({
@@ -46,8 +45,6 @@ class EnunciadoPro extends Component{
                 let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                 console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
             },
-
-
         }
 
         Axios.get('http://localhost:8082/exercise',config)
@@ -61,7 +58,7 @@ class EnunciadoPro extends Component{
 
             this.setState({
                 items:enunciados,
-                accordion: aux,
+                openStates:[aux,aux,aux,aux],
                 espera:false
             });
         })
@@ -69,18 +66,36 @@ class EnunciadoPro extends Component{
             console.log(error);
         })
     };
+    toggle() {
+        const aux=this.state.modal;
+        this.setState({
+          modal: !aux
+        });
+    }
 
 
-    toggleAccordion(tab) {
+    toggleOpen(tab,posicionOpens) {
+        var tempOpenStates=this.state.openStates;
 
-    const prevState = this.state.accordion;
-    const state = prevState.map((x, index) => tab === index ? !x : false);
+        const prevState = this.state.openStates[posicionOpens];
+        const state = prevState.map((x, index) => tab === index ? !x : false);
 
-    this.setState({
-      accordion: state,
-    });
+        tempOpenStates[posicionOpens]=state;
+        this.setState({
+            openStates:tempOpenStates
+        });
   }
+    toggleOpenModal(tab){
+        var tempOpenStates=this.state.openStates;
+        const prevState = this.state.openStates[3];
+        tempOpenStates[3][tab]=!tempOpenStates[3][tab];
+        this.setState({
+            openStates:tempOpenStates
+        });
+        console.log(this.state.openStates);
 
+    }
+  
     listarInOut(datos){
 
         var datosArray=datos.split("/@");
@@ -109,8 +124,6 @@ class EnunciadoPro extends Component{
                 let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                 console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
             },
-
-
         }
         Axios.post('http://localhost:8082/exercise',enunciado)
         .then(Response =>{
@@ -120,9 +133,26 @@ class EnunciadoPro extends Component{
         ).catch(function(error){
             console.log(error);
         });
-        console.log(enunciado);
         
     }
+
+
+    createModal(key){
+        return
+        <Modal isOpen={this.state.openStates[3][key]} toggle={this.toggleOpen(3,key)}
+                   className='modal-success'>
+              <ModalHeader toggle={this.toggleOpen(3,key)}>Guardado</ModalHeader>
+              <ModalBody>
+                La nueva cuenta de usuario se ha creado satisfactoriamente.
+                <h1>La contraseña del nuevo usuario es:</h1>
+              </ModalBody>
+              <ModalFooter>
+                  <Button color="success">Aceptar</Button>
+              </ModalFooter>
+        </Modal>
+    }
+
+    
 
     listar (listaEnunciados){
         return (
@@ -144,18 +174,18 @@ class EnunciadoPro extends Component{
                             <Table responsive>
                             
                             <thead>
-                            <tr>
-                                <th>Titulo</th>
+                            <tr style={{fontSize:"13"}}>
+                                <th style={{width:"50%"}}>Titulo</th>
                                 <th>Publicado</th>
                                 <th>Lenguaje</th>
                                 <th>Publicado</th>
-                                <th>Acción</th>
+                                <th style={{width:"15%", textAlign:'center'}}>Acción</th>
                             </tr>
                             </thead>
                             
                             {listaEnunciados && listaEnunciados.map((enunciado, key) =>
                             <tbody key={key}>
-                                <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
+                                <tr  onClick={() => this.toggleOpen(key,0)} aria-expanded={this.state.openStates[0][key]} aria-controls={"collapse"+key.toString()}>
                                     <td>{enunciado.exerciseTitle}</td>
                                     {
                                         !enunciado.exercisePublished?<td>- - - -</td>:<td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
@@ -164,15 +194,45 @@ class EnunciadoPro extends Component{
                                     <td><AppSwitch className={'mx-1'} variant={'pill'} color={'success'} label dataOn="Si" dataOff="No" 
                                             checked={enunciado.exercisePublished} onClick={this.HandleSwitch(enunciado)}/></td>
 
-                                    <td>
-                                    <Link to='#'>
-                                            <Button block color="primary">Editar</Button>
-                                        </Link>
+                                    <td >
+                                        <Row>
+                                            <Col>
+                                                <Link to={'/enunciadosPro/'+enunciado.exerciseID +'/enunciado'}>
+                                                    <Button block color="primary" id={"BotonEdit"+key.toString()} style={{ height:"38px" }}>                                                   
+                                                        <i className="cui-settings icons font-2xl d-block" ></i>
+                                                    </Button>
+                                                    <Tooltip placement="top" isOpen={this.state.openStates[1][key]} target={"BotonEdit"+key.toString()} toggle={() => {this.toggleOpen(key,1);}}>
+                                                       Editar 
+                                                    </Tooltip>   
+                                                </Link>
+                                            </Col>
+                                            <Col>
+                                                
+                                                    <Button block color="danger" id={"BotonDelete"+key.toString()}  style={{height:"38px"}} onClick={()=>{this.toggleOpenModal(key);}}>
+                                                        <i className="fa fa-close font-2xl fa-lg d-block"></i>
+                                                    </Button>
+                                                    <Tooltip placement="top" isOpen={this.state.openStates[2][key]} target={"BotonDelete"+key.toString()} toggle={() => {this.toggleOpen(key,2);}}>
+                                                       Eliminar 
+                                                    </Tooltip>
+                                                    <Modal isOpen={this.state.openStates[3][key]} toggle={()=>{this.toggleOpenModal(key);}} className={this.props.className}>
+                                                        <ModalHeader toggle={()=>{this.toggleOpenModal(key);}}>Estas Seguro?</ModalHeader>
+                                                        <ModalBody>
+                                                            Estas Seguro de Eliminar: 
+                                                            <strong> {enunciado.exerciseTitle}</strong>
+                                                        </ModalBody>
+                                                        <ModalFooter>
+                                                        <Button color="primary" onClick={()=>{this.toggleOpenModal(key);}}>Do Something</Button>{' '}
+                                                        <Button color="secondary" onClick={()=>{this.toggleOpenModal(key);}}>Cancel</Button>
+                                                        </ModalFooter>
+                                                    </Modal>
+                                                
+                                            </Col>
+                                        </Row>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colSpan="5" style={{height:'0px',margin:'0px'}}>
-                                        <Collapse isOpen={this.state.accordion[key]} aria-labelledby="headingOne">
+                                        <Collapse isOpen={this.state.openStates[0][key]} aria-labelledby="headingOne">
                                             <fieldset className="form-group">
                                                 <div className="row">
                                                     <legend className="col-form-label col-sm-1 pt-0"><strong> Cuerpo:</strong></legend>
@@ -224,10 +284,10 @@ class EnunciadoPro extends Component{
 
     }
 
-
     render(){
         return(
             <div>
+                
                 {this.listar(this.state.items)}
             </div>
         );
