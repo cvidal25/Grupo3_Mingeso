@@ -120,7 +120,7 @@ class CodeEditor extends Component{
            }
        }
        var data={
-           'language':num+1,
+           'language': parseInt(num)+1,
            'code':this.state.aceEditorValue
        }
        console.log(data);
