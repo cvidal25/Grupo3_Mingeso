@@ -68,7 +68,7 @@ class DefaultHeader extends Component {
           </NavItem>*/}
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav>
-              <span class="navbar-toggler-icon"/> 
+              <span className="navbar-toggler-icon"/> 
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
              <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>

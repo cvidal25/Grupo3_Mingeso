@@ -191,10 +191,7 @@ const Consola= Loadable({
   loader:()=>import('./views/Componentes/CodeEditor/Consola'),
   loading:Loading,
 }); 
-const Ingresar= Loadable({
-  loader:()=>import('./views/Componentes/Ingresar/Ingresar'),
-  loading:Loading,
-}); 
+
 //
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -206,7 +203,7 @@ const routes = [
   {path: '/enunciadosPro',exact: true, name: 'Enunciado', component:EnunciadoPro },
   {path: '/enunciados/:lenguaje/consola/:num',exact: true, name: 'Consola', component: Consola},
   {path: '/consola/:lenguaje',exact: true, name: 'Consola', component: Consola},
-  {path: '/Ingresar',exact: true, name: 'Ingresar', component: Ingresar},
+
 
 
   //

@@ -23,6 +23,12 @@ import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
 class DefaultLayout extends Component {
+   constructor (props, context) {
+    super(props, context);
+      this.state ={
+        //user:this.props,
+      };
+  }
   render() {
     return (
       <div className="app">
@@ -54,7 +60,7 @@ class DefaultLayout extends Component {
                       : (null);
                   },
                 )}
-                <Redirect from="/" to="/dashboard" />
+                <Redirect from="/" to="/Login" />
 
               </Switch>
             </Container>
