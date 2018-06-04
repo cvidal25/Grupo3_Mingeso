@@ -46,6 +46,12 @@ public class Exercise implements Serializable {
     @Column(name = "published", nullable = false)
     private boolean exercisePublished;
 
+    @Column(name = "difficulty", nullable = false) /*1 = baja; 2 = media; 3 = alta*/
+    private int exerciseDifficulty;
+
+    @Column(name = "days",nullable = false)
+    private int exerciseDays;
+
     public void Exercise(){
     }
 
@@ -118,6 +124,18 @@ public class Exercise implements Serializable {
 
     public void setExercisePublished(boolean exercisePublished) { this.exercisePublished = exercisePublished; }
 
+    public int getExerciseDifficulty() { return exerciseDifficulty; }
+
+    public void setExerciseDifficulty(int exerciseDifficulty) { this.exerciseDifficulty = exerciseDifficulty; }
+
+    public int getExerciseDays() {
+        return exerciseDays;
+    }
+
+    public void setExerciseDays(int exerciseDays) {
+        this.exerciseDays = exerciseDays;
+    }
+
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
@@ -129,6 +147,18 @@ public class Exercise implements Serializable {
 
     public void setBookPublishers(Set<UserExercise> userExercise) {
         this.userExercise = userExercise;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
+
+    public Topic getTopic() {
+        return this.topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
     }
 
 }
