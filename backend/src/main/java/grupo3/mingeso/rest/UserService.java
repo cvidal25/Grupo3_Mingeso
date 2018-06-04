@@ -61,4 +61,9 @@ public class UserService {
         user.setUserCareer(userCareer);
         return userRepository.save(user);
     }
+
+    //Get User by their email
+    @RequestMapping(value = "/email/{email}",method = RequestMethod.GET)
+    @ResponseBody
+    public User findMail(@PathVariable("email") String email){ return userRepository.findByUserMail(email); }
 }
