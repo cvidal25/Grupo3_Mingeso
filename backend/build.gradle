@@ -39,6 +39,9 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
+configurations {
+	providedRuntime
+}
 
 ext {
 	springCloudVersion = 'Finchley.RC1'
@@ -50,6 +53,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-web-services')
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
