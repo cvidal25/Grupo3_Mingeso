@@ -18,8 +18,12 @@ class NewEnunciado extends Component{
             PuntosTotales:1,
             dificultad:1,
             entradas:[],
+            inputEntradasEnabled:[],
+            inputSalidasEnabled:[],
             salidas:[],
             tempEntrada:"",
+            inputEntradaEnabled:true,
+            inputSalidaEnabled:true,            
             tempSalida:"",
             publicar:false,
             aceptar:false,
@@ -62,9 +66,11 @@ class NewEnunciado extends Component{
     
     handleInsertArray=nombreInOut=>{
             console.log(nombreInOut);
-        var InOut;
+        var InOut,enabled;
         if(nombreInOut==="entrada"){
             InOut=this.state.entradas;
+            enabled=this.state.inputEntradasEnabled;
+            
             //Validador
             if(this.state.tempEntrada===""){
                 //decir que esta vacio
@@ -72,22 +78,27 @@ class NewEnunciado extends Component{
             }
 
             InOut.push(this.state.tempEntrada);
+            enabled.push(false);
             this.setState({
                 entradas:InOut,
-                tempEntrada:""
+                tempEntrada:"",
+                inputEntradasEnabled:enabled
             });
         }
         else{
             InOut=this.state.salidas;
+            enabled=this.state.inputSalidasEnabled;
             //validador
             if(this.state.tempSalida===""){
                 //decir que esta vacio
                 return;
             }
             InOut.push(this.state.tempSalida);
+            enabled.push(false);
             this.setState({
                 salidas:InOut,
-                tempSalida:""
+                tempSalida:"",
+                inputSalidasEnabled:enabled
             });
         }
         
@@ -118,8 +129,65 @@ class NewEnunciado extends Component{
             default:
                 return;
         }
-
+    
+    }
+    handleEditEnabled=(which,posicion)=>{
+        var array=[];
+        var state;
         
+        switch (which){
+            case 1: //entrada
+                array=this.state.inputEntradasEnabled;
+                if(this.state.entradas[posicion]==''){
+                    return;
+                }
+                state = array.map((x, index) => posicion === index ? !x : false);
+                this.setState({
+                    inputEntradasEnabled:state
+                })
+                
+                break;
+            
+            case 2: //salida
+                array=this.state.inputSalidasEnabled;
+                if(this.state.salidas[posicion]==''){
+                    return;
+                }
+                state = array.map((x, index) => posicion === index ? !x : false);
+                this.setState({
+                    inputSalidasEnabled:state
+                })
+                break;
+            default:
+                return;
+        }
+       
+    }
+
+    handleChangeArray=(which,posicion)=>event=>{
+        var array=[];
+        var value=event.target.value;
+        switch (which){
+            case 1: //entrada
+                    
+                array=this.state.entradas;
+                array[posicion]=value;
+                this.setState({
+                    entradas:array
+                });
+                break;
+            
+            case 2: //salida
+                array=this.state.salidas;
+                array[posicion]=value;
+                this.setState({
+                    salidas:array
+                });
+                break;
+            default:
+                return;
+
+                }
     }
 
     arrayToFormatInOut(array){
@@ -136,6 +204,7 @@ class NewEnunciado extends Component{
         console.log(complete);
         return complete;
     }
+
 
     CrearEnunciadoAPI=event=>{
         console.log(this.state);
@@ -165,19 +234,30 @@ class NewEnunciado extends Component{
     //Entrada: Arreglo
     ListarInOut(InOut,which){
         return (
-            InOut && InOut.map((dato,key)=>
-            <Row key={key}>
-                <Col md={10} style={{width:"80%"}}>
-                    <Input  disabled value={dato}/>
+            InOut && InOut.map((dato,key)=>{
+
+            var estado=(which==1)?this.state.inputEntradasEnabled[key]:this.state.inputSalidasEnabled[key];
+            var iconVar=(!estado)?"fa-pencil btn-outline-info":"fa-check btn-outline-success";
+            return <Row key={key}>
+                
+                <Col md={9} style={{width:"70%"}}>
+                    <Input  disabled={!estado} value={dato} onChange={this.handleChangeArray(which,key)}/>
                     </Col>
+                <Col md={1} style={{width:"10%",textAlign:"left"}}>
+                    <Label>
+                        <i id={key.toString()} className={"btn-pill fa "+iconVar+" fa-lg font-3xl"}
+                         onClick={()=>{this.handleEditEnabled(which,key);}} ></i>
+                    </Label>
+                </Col>
                 <Col md={1} style={{width:"10%",textAlign:"left"}}>
                     <Label>
                         <i id={key.toString()} className="btn-pill fa fa-close fa-lg btn-outline-danger font-3xl"
                          onClick={()=>{this.handleDeleteArray(which,key);}} ></i>
                     </Label>
                 </Col>
+                
             </Row>
-            ));
+        }));
     }
 
     render(){
@@ -194,11 +274,13 @@ class NewEnunciado extends Component{
                     </CardHeader>
                     <CardBody>
                     <form>
+                        
                         <FormGroup>
                             <Label  htmlFor="tituloEnun">Titulo</Label>
                             <Input required type="text" name="titulo" id="tituloEnun" aria-describedby="info" 
                             placeholder="Introduce el titulo del Enunciado" onChange={this.handleChange}/>
-                            
+                            <FormFeedback valid disabled={false} >Non-required</FormFeedback>
+
                         </FormGroup>
                         <FormGroup>
                             <Label htmlFor="bodyEnunciado">Enunciado</Label>
@@ -227,12 +309,13 @@ class NewEnunciado extends Component{
                             <Col md={6}>
                                 <Label  htmlFor="entrada">Entradas</Label>
                                 {this.ListarInOut(this.state.entradas,1)}
+                                <br/>
                                 <Row>
                                     <Col md={10} style={{width:"80%"}}>
-                                        <Input value={this.state.tempEntrada} name="tempEntrada" id="entrada" onChange={this.handleChange}/>
+                                        <Input value={this.state.tempEntrada} disabled={!this.state.inputEntradaEnabled} name="tempEntrada" id="entrada" onChange={this.handleChange}/>
                                     </Col>
                                     <Col md={1} style={{width:"10%",textAlign:"left"}}>
-                                        <Label onClick={()=>{this.handleInsertArray("entrada");}} >
+                                        <Label disabled={!this.state.inputEntradaEnabled} onClick={()=>{this.handleInsertArray("entrada");}} >
                                             <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
                                             style={{ color: '#89e4ff'}} ></i>
                                         </Label>
@@ -247,7 +330,7 @@ class NewEnunciado extends Component{
                                 {this.ListarInOut(this.state.salidas,2)}
                                 <Row>
                                     <Col md={10} style={{width:"80%"}}>
-                                        <Input value={this.state.tempSalida} name="tempSalida" id="salida" onChange={this.handleChange}/>
+                                        <Input value={this.state.tempSalida} name="tempSalida" disabled={!this.state.inputSalidaEnabled} id="salida" onChange={this.handleChange}/>
                                         </Col>
                                     <Col md={1} style={{width:"10%",textAlign:"left"}}>
                                         <Label onClick={()=>{this.handleInsertArray("salida");}} >
@@ -256,7 +339,7 @@ class NewEnunciado extends Component{
                                         </Label>
                                     </Col>
                                 </Row>
-                                <small id="emailHelp" className="form-text text-muted">Las salidas deben estar separadas el salto de linea, y deben corresponder a la misma con las entradas.</small>
+                                <small id="emailHelp" className="form-text text-muted help-block">Las salidas deben estar separadas el salto de linea, y deben corresponder a la misma con las entradas.</small>
                             </Col>
                         </Row>
                         
@@ -265,16 +348,16 @@ class NewEnunciado extends Component{
                             <Label>Dificultad</Label>
                             <div></div>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio1" value="1" defaultChecked onClick={this.handleChange}/>
-                                <Label check htmlFor="inlineRadio1">Fácil</Label>
+                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio4" value="1" defaultChecked onClick={this.handleChange}/>
+                                <Label check htmlFor="inlineRadio4">Fácil</Label>
                             </FormGroup>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio2" value="2" onClick={this.handleChange}/>
-                                <Label check htmlFor="inlineRadio2">Medio</Label>
+                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio5" value="2" onClick={this.handleChange}/>
+                                <Label check htmlFor="inlineRadio5">Medio</Label>
                             </FormGroup>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio3" value="3" onClick={this.handleChange}/>
-                                <Label check htmlFor="inlineRadio3">Difícil </Label>
+                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio6" value="3" onClick={this.handleChange}/>
+                                <Label check htmlFor="inlineRadio6">Difícil </Label>
                             </FormGroup>
                         </FormGroup>
 
