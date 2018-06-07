@@ -2,8 +2,24 @@ import React, {Component} from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
     DropdownToggle,Form,FormGroup,FormText,FormFeedback,InputGroup,InputGroupAddon,
     InputGroupText,Label,Button,ButtonDropdown,} from 'reactstrap';
-import { AppSwitch } from '@coreui/react';
 import Axios from 'axios';
+
+var inputValidadores=
+[{
+    titulo:false,
+    enunciado:false,
+    dias:false,
+    puntaje:false,
+    entrada:false,
+    salida:false
+},{
+    titulo:false,
+    enunciado:false,
+    dias:false,
+    puntaje:false,
+    entrada:false,
+    salida:false
+}]; //valid //invalid
 
 class NewEnunciado extends Component{
     constructor() {
@@ -17,6 +33,7 @@ class NewEnunciado extends Component{
             fechaFinal:"",
             PuntosTotales:1,
             dificultad:1,
+            dias:0,
             entradas:[],
             inputEntradasEnabled:[],
             inputSalidasEnabled:[],
@@ -27,7 +44,8 @@ class NewEnunciado extends Component{
             tempSalida:"",
             publicar:false,
             aceptar:false,
-
+            invalidDias:0,
+            invalidPuntaje:0,
         };
         
     }
@@ -43,29 +61,21 @@ class NewEnunciado extends Component{
         this.setState({
             [name]:value
         });
-        /*if(estados.titulo!=="" && estados.enunciado!=="" && estados.fechaFinal!==""
-        && estados.fechaFinal!=="" && estados.entradas!=="" && estados.salidas!==""){
-            this.setState({
-                aceptar:false
-            });
-        }
-        else{
-            this.setState({
-                aceptar:true
-            })
-        }*/
+        this.HandleValidador(name,value);
+        
     }
+
     handleClickPublicar=event=>{
         console.log(event.target);
         var name=event.target.name;
-        var value=event.target.value;
+        //var value=event.target.value;
        this.setState({
            [name]:!this.state.publicar
        });
     }
     
     handleInsertArray=nombreInOut=>{
-            console.log(nombreInOut);
+        console.log(nombreInOut);
         var InOut,enabled;
         if(nombreInOut==="entrada"){
             InOut=this.state.entradas;
@@ -73,10 +83,13 @@ class NewEnunciado extends Component{
             
             //Validador
             if(this.state.tempEntrada===""){
+                inputValidadores[1].entrada=true;
+                this.setState({
+                    lenguaje:this.state.lenguaje
+                })
                 //decir que esta vacio
                 return;
             }
-
             InOut.push(this.state.tempEntrada);
             enabled.push(false);
             this.setState({
@@ -90,6 +103,11 @@ class NewEnunciado extends Component{
             enabled=this.state.inputSalidasEnabled;
             //validador
             if(this.state.tempSalida===""){
+                inputValidadores[0].salida=false;
+                inputValidadores[1].salida=true;
+                this.setState({
+                    lenguaje:this.state.lenguaje
+                })
                 //decir que esta vacio
                 return;
             }
@@ -138,7 +156,7 @@ class NewEnunciado extends Component{
         switch (which){
             case 1: //entrada
                 array=this.state.inputEntradasEnabled;
-                if(this.state.entradas[posicion]==''){
+                if(this.state.entradas[posicion]===''){
                     return;
                 }
                 state = array.map((x, index) => posicion === index ? !x : false);
@@ -150,7 +168,7 @@ class NewEnunciado extends Component{
             
             case 2: //salida
                 array=this.state.inputSalidasEnabled;
-                if(this.state.salidas[posicion]==''){
+                if(this.state.salidas[posicion]===''){
                     return;
                 }
                 state = array.map((x, index) => posicion === index ? !x : false);
@@ -205,10 +223,125 @@ class NewEnunciado extends Component{
         return complete;
     }
 
+    HandleValidador(nombreInput,value){
+        var valid=(value!=='')?true:false;
+        this.setState({
+            invalidDias:0,
+            invalidPuntaje:0
+        })
+        var invalid=!valid;
+        console.log(nombreInput);
+        switch (nombreInput){
+            case "titulo":
+                inputValidadores[0].titulo=valid;
+                inputValidadores[1].titulo=invalid;
+                break;
+            case "enunciado":
+                inputValidadores[0].enunciado=valid;
+                inputValidadores[1].enunciado=invalid;
+                break;
+            case "dias":
+                var aux=parseInt(value);
+
+                if(isNaN(aux)){
+                    valid=false;
+                    invalid=true;
+                    this.setState({
+                        invalidPuntaje:1
+                    })
+                }
+                else if (aux<0){
+                    valid=false;
+                    invalid=true;
+                    this.setState({
+                        invalidPuntaje:2
+                    })
+                }
+                inputValidadores[0].dias=valid;
+                inputValidadores[1].dias=invalid;
+                break;
+            case "PuntosTotales":
+                var aux=parseInt(value);
+
+                if(isNaN(aux)){
+                    valid=false;
+                    invalid=true;
+                    this.setState({
+                        invalidDias:1
+                    })
+                }
+                else if (aux<1){
+                    valid=false;
+                    invalid=true;
+                    this.setState({
+                        invalidDias:2
+                    })
+                }
+                console.log(valid);
+                inputValidadores[0].puntaje=valid;
+                inputValidadores[1].puntaje=invalid;
+                break;
+            case "tempEntrada":
+                inputValidadores[1].entrada=false;
+                break;
+            case "tempSalida":
+                inputValidadores[1].salida=false;
+        }
+    }
+
+    validador(){
+        var status=true;
+        if(this.state.PuntosTotales<1){
+            status=false;
+        }
+        if(this.state.dias<0){
+            status= false;
+        }
+        if (this.state.titulo===''){
+            inputValidadores[0].titulo=false;
+            inputValidadores[1].titulo=true;
+            status= false;
+        }
+        if (this.state.enunciado===''){
+            inputValidadores[0].enunciado=false;
+            inputValidadores[1].enunciado=true;
+            status= false;
+        }
+        if(this.state.entradas.length===0){
+            //deicr que es 0
+            inputValidadores[0].entrada=false;
+            inputValidadores[1].entrada=true;
+            status= false;
+        }
+        if(this.state.salidas.length===0){
+            //decir que es 0
+            inputValidadores[0].salida=false;
+            inputValidadores[1].salida=true;
+            status= false;
+        }
+
+        if(this.state.entradas.length>this.state.salidas.length){
+            
+            //decir que es cual es mayor
+            status= false;
+        }
+        if(this.state.entradas.length<this.state.salidas.length){
+            
+            // decir cual es mayor
+            status= false;
+        }
+        this.setState({
+            aceptar:status
+        });
+        return status;
+        
+    }
 
     CrearEnunciadoAPI=event=>{
         console.log(this.state);
-
+        this.validador()
+        
+        
 
         /*var exercise={
             'exerciseTitle': this.state.titulo,
@@ -236,7 +369,7 @@ class NewEnunciado extends Component{
         return (
             InOut && InOut.map((dato,key)=>{
 
-            var estado=(which==1)?this.state.inputEntradasEnabled[key]:this.state.inputSalidasEnabled[key];
+            var estado=(which===1)?this.state.inputEntradasEnabled[key]:this.state.inputSalidasEnabled[key];
             var iconVar=(!estado)?"fa-pencil btn-outline-info":"fa-check btn-outline-success";
             return <Row key={key}>
                 
@@ -261,45 +394,47 @@ class NewEnunciado extends Component{
     }
 
     render(){
-        var ej1="ejemplo:\n2\n4\n8";
-        var ej2="ejemplo:\n4\n16\n64";
-
+        var feedBack="Complete este campo"
+        //var feedBackNumDias=(this.state.invalidDias===0)?feedBack:"Debe ser un número"
         return (
 
             <Row>
                   <Col>
                   <Card>
                     <CardHeader >
-                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado
+                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado { isNaN(parseInt("hola mundo")).toString()}
                     </CardHeader>
                     <CardBody>
-                    <form>
+                    <Form>
                         
                         <FormGroup>
                             <Label  htmlFor="tituloEnun">Titulo</Label>
-                            <Input required type="text" name="titulo" id="tituloEnun" aria-describedby="info" 
+                            <Input  type="text" name="titulo" valid={inputValidadores[0].titulo} invalid={inputValidadores[1].titulo} id="tituloEnun" aria-describedby="info" 
                             placeholder="Introduce el titulo del Enunciado" onChange={this.handleChange}/>
-                            <FormFeedback valid disabled={false} >Non-required</FormFeedback>
-
+                            <FormFeedback>{feedBack}</FormFeedback>
                         </FormGroup>
                         <FormGroup>
                             <Label htmlFor="bodyEnunciado">Enunciado</Label>
-                            <Input type="textarea" required name="enunciado" id="bodyEnunciado" rows="10" style={{resize:'none'}} placeholder="Introduce el Cuerpo del Enunciado" onChange={this.handleChange}/>
+                            <Input type="textarea"  name="enunciado" id="bodyEnunciado" rows="10" style={{resize:'none'}} 
+                             valid={inputValidadores[0].enunciado} invalid={inputValidadores[1].enunciado}
+                            placeholder="Introduce el Cuerpo del Enunciado" onChange={this.handleChange}/>
+                            <FormFeedback>{feedBack}</FormFeedback>
+
                         </FormGroup>
 
                         <FormGroup>
                             <Label>Lenguaje</Label>
                             <div></div>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="lenguaje" id="inlineRadio1" value="1" defaultChecked onClick={this.handleChange}/>
+                                <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio1" value="1" defaultChecked onClick={this.handleChange}/>
                                 <Label check htmlFor="inlineRadio1">Python</Label>
                             </FormGroup>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="lenguaje" id="inlineRadio2" value="2" onClick={this.handleChange}/>
+                                <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio2" value="2" onClick={this.handleChange}/>
                                 <Label check htmlFor="inlineRadio2">Java</Label>
                             </FormGroup>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="lenguaje" id="inlineRadio3" value="3" onClick={this.handleChange}/>
+                                <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio3" value="3" onClick={this.handleChange}/>
                                 <Label check htmlFor="inlineRadio3">C </Label>
                             </FormGroup>
                         </FormGroup>
@@ -312,7 +447,9 @@ class NewEnunciado extends Component{
                                 <br/>
                                 <Row>
                                     <Col md={10} style={{width:"80%"}}>
-                                        <Input value={this.state.tempEntrada} disabled={!this.state.inputEntradaEnabled} name="tempEntrada" id="entrada" onChange={this.handleChange}/>
+                                        <Input value={this.state.tempEntrada} disabled={!this.state.inputEntradaEnabled} 
+                                         valid={inputValidadores[0].entrada} invalid={inputValidadores[1].entrada}
+                                        name="tempEntrada" id="entrada" onChange={this.handleChange}/>
                                     </Col>
                                     <Col md={1} style={{width:"10%",textAlign:"left"}}>
                                         <Label disabled={!this.state.inputEntradaEnabled} onClick={()=>{this.handleInsertArray("entrada");}} >
@@ -321,16 +458,20 @@ class NewEnunciado extends Component{
                                         </Label>
                                     </Col>
                                 </Row>
-                                <small id="emailHelp" className="form-text text-muted">Las entradas deben estar separadas el salto de linea, y debe corresponder a la misma en la salidas.</small>
+                                <small id="emailHelp" className="form-text text-muted">Las entradas deben corresponder misma cantidad que las salidas.</small>
                                  
                             </Col>
                             
                             <Col md={6} >
                                 <Label htmlFor="salida" >Salidas</Label>
                                 {this.ListarInOut(this.state.salidas,2)}
+                                <br/>
                                 <Row>
                                     <Col md={10} style={{width:"80%"}}>
-                                        <Input value={this.state.tempSalida} name="tempSalida" disabled={!this.state.inputSalidaEnabled} id="salida" onChange={this.handleChange}/>
+                                        <Input value={this.state.tempSalida} name="tempSalida" 
+                                        disabled={!this.state.inputSalidaEnabled} id="salida" 
+                                        valid={inputValidadores[0].salida} invalid={inputValidadores[1].salida}
+                                        onChange={this.handleChange}/>
                                         </Col>
                                     <Col md={1} style={{width:"10%",textAlign:"left"}}>
                                         <Label onClick={()=>{this.handleInsertArray("salida");}} >
@@ -339,7 +480,7 @@ class NewEnunciado extends Component{
                                         </Label>
                                     </Col>
                                 </Row>
-                                <small id="emailHelp" className="form-text text-muted help-block">Las salidas deben estar separadas el salto de linea, y deben corresponder a la misma con las entradas.</small>
+                                <small id="emailHelp" className="form-text text-muted help-block">Las salidas deben corresponder misma cantidad que las entradas.</small>
                             </Col>
                         </Row>
                         
@@ -348,15 +489,15 @@ class NewEnunciado extends Component{
                             <Label>Dificultad</Label>
                             <div></div>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio4" value="1" defaultChecked onClick={this.handleChange}/>
+                                <Input  className="form-check-input" type="radio" name="dificultad" id="inlineRadio4" value="1" defaultChecked onClick={this.handleChange}/>
                                 <Label check htmlFor="inlineRadio4">Fácil</Label>
                             </FormGroup>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio5" value="2" onClick={this.handleChange}/>
+                                <Input  className="form-check-input" type="radio" name="dificultad" id="inlineRadio5" value="2" onClick={this.handleChange}/>
                                 <Label check htmlFor="inlineRadio5">Medio</Label>
                             </FormGroup>
                             <FormGroup check inline>
-                                <Input required className="form-check-input" type="radio" name="dificultad" id="inlineRadio6" value="3" onClick={this.handleChange}/>
+                                <Input  className="form-check-input" type="radio" name="dificultad" id="inlineRadio6" value="3" onClick={this.handleChange}/>
                                 <Label check htmlFor="inlineRadio6">Difícil </Label>
                             </FormGroup>
                         </FormGroup>
@@ -367,7 +508,10 @@ class NewEnunciado extends Component{
                                 <Col md={10} style={{width:"80%"}}>
                                 <FormGroup >
                                     <Label  htmlFor="dias">Días para Realizar</Label>
-                                    <Input required type="number" id="dias" name="PuntosTotales" className="form-control" min="0" pattern="[0-9]" defaultValue={0} onChange={this.handleChange}/>
+                                    <Input  type="number" id="dias" name="dias"
+                                     className="form-control" min="0" 
+                                     valid={inputValidadores[0].dias} invalid={inputValidadores[1].dias}
+                                     defaultValue={0} onChange={this.handleChange}/>
                                 </FormGroup>
                                 </Col>
                                 </Row>
@@ -377,7 +521,10 @@ class NewEnunciado extends Component{
                                 <Col md={10} style={{width:"80%"}}>
                                 <FormGroup >
                                     <Label htmlFor="puntosTotales">Puntaje Total del Enunciado</Label>
-                                    <Input required type="number" name="PuntosTotales" className="form-control" min="1" pattern="[0-9]" id="puntosTotales"  defaultValue={1} onChange={this.handleChange}/>
+                                    <Input  type="number" name="PuntosTotales" className="form-control" 
+                                    min="1"  id="puntosTotales"  defaultValue={1} 
+                                    valid={inputValidadores[0].puntaje} invalid={inputValidadores[1].puntaje}
+                                    onChange={this.handleChange}/>
                                 </FormGroup>
                                 </Col>
                                 </Row>
@@ -395,13 +542,11 @@ class NewEnunciado extends Component{
                             </Col>
                         </FormGroup>
                         
-                    
-
-                        
-                    </form>
-                    <button  onClick={this.CrearEnunciadoAPI} disabled={this.state.aceptar}>
+    
+                    </Form>
+                    <Button  onClick={this.CrearEnunciadoAPI} disabled={this.state.aceptar}>
                             <strong> Crear</strong>
-                        </button>
+                        </Button>
                     
                     </CardBody>
                 </Card>
