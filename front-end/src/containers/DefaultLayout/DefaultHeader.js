@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink } from 'reactstrap';
+import  { Redirect, Link } from 'react-router-dom';
+import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Row, Col, Input, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { GoogleLogout } from 'react-google-login';
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
+import {connect} from 'react-redux'
+import salirCuenta from '../../actionCreators';
+import store from '../../store';
 
 const propTypes = {
   children: PropTypes.node,
+
 };
 
 const defaultProps = {};
@@ -15,27 +20,11 @@ const responseGoogle = (response) => {
   console.log(response);
 };
 
-/*logoutGoogle (googleUser) {
-
-    this.setState({
-        correo:'';
-    });
-
-    this.getMail();
-    //console.log({ googleId });
-    //console.log({accessToken: id_token});
-    console.log(googleUser);
-    var aux34 = googleUser.w3.U3;
-    console.log(aux34);
-  };*/
-
-
 class DefaultHeader extends Component {
   render() {
-
-    // eslint-disable-next-line
-    const { children, ...attributes } = this.props;
-
+    const { children,  ...attributes } = this.props;
+     console.log("potoo");
+    console.log(this.props);
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -44,38 +33,55 @@ class DefaultHeader extends Component {
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
+              <Nav className="d-md-down-none" navbar>
+                {/*<NavItem className="px-3">
+                  <NavLink href="/">Dashboard</NavLink>
+                </NavItem>
+                <NavItem className="px-3">
+                  <NavLink href="#">Users</NavLink>
+                </NavItem>
+                <NavItem className="px-3">
+                  <NavLink href="#">Settings</NavLink>
+                </NavItem>*/}
+              </Nav>
+             
+              <Nav className="ml-auto" navbar>
 
-        <Nav className="d-md-down-none" navbar>
-          {/*<NavItem className="px-3">
-            <NavLink href="/">Dashboard</NavLink>
-          </NavItem>
-          <NavItem className="px-3">
-            <NavLink href="#">Users</NavLink>
-          </NavItem>
-          <NavItem className="px-3">
-            <NavLink href="#">Settings</NavLink>
-          </NavItem>*/}
-        </Nav>
-        <Nav className="ml-auto" navbar>
-          {/*<NavItem className="d-md-down-none">
-            <NavLink href="#"><i className="icon-bell"></i><Badge pill color="danger">5</Badge></NavLink>
-          </NavItem>
-          <NavItem className="d-md-down-none">
-            <NavLink href="#"><i className="icon-list"></i></NavLink>
-          </NavItem>
-          <NavItem className="d-md-down-none">
-            <NavLink href="#"><i className="icon-location-pin"></i></NavLink>
-          </NavItem>*/}
-          <AppHeaderDropdown direction="down">
-            <DropdownToggle nav>
-              <span className="navbar-toggler-icon"/> 
-            </DropdownToggle>
-            <DropdownMenu right style={{ right: 'auto' }}>
-             <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
-             <DropdownItem><i className="fa fa-lock"></i> Salir </DropdownItem>
-             </DropdownMenu>
-          </AppHeaderDropdown>
-        </Nav>
+
+
+              <div className="ml-auto text-center" >
+                
+                 <strong>{this.props.infoUsuarios.nombre}</strong>
+              </div>
+              <div className="ml-auto text-center" ></div>
+                {/*<NavItem className="d-md-down-none">
+                  <NavLink href="#"><i className="icon-bell"></i><Badge pill color="danger">5</Badge></NavLink>
+                </NavItem>
+                <NavItem className="d-md-down-none">
+                  <NavLink href="#"><i className="icon-list"></i></NavLink>
+                </NavItem>
+                <NavItem className="d-md-down-none">
+                  <NavLink href="#"><i className="icon-location-pin"></i></NavLink>
+                </NavItem>*/}
+                <AppHeaderDropdown direction="down">
+                  <DropdownToggle nav>
+                    <span className="navbar-toggler-icon"/> 
+                  </DropdownToggle>
+                  <DropdownMenu right style={{ right: 'auto' }}>
+                   <DropdownItem header tag="div" className="text-center"><strong>Cuenta</strong></DropdownItem>
+                   <Link to={{
+                      pathname: '/Login',
+                      //state: {this.props. }
+                    }}>
+                       <DropdownItem  className="text-center" onClick={()=> this.props.salirCuenta(this.props.infoUsuario)}>
+                        <i className="fa fa-lock"></i> Salir
+                        </DropdownItem>
+                    </Link>
+                   
+                   
+                  </DropdownMenu>
+                </AppHeaderDropdown>
+              </Nav>
       </React.Fragment>
     );
   }
@@ -84,4 +90,23 @@ class DefaultHeader extends Component {
 DefaultHeader.propTypes = propTypes;
 DefaultHeader.defaultProps = defaultProps;
 
-export default DefaultHeader;
+const mapStateToProps = state =>{
+  return{
+    infoUsuarios: state.infoUsuarios
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return{
+    salirCuenta(infoUsuario){
+    store.dispatch({
+        type:"lOG_OUT",
+        infoUsuario: infoUsuario,
+    });
+}
+  };
+};
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(DefaultHeader);

@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
 import { Button, Card, Row, CardHeader, CardBody, CardGroup, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import  { Redirect, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { GoogleLogin } from 'react-google-login-component';
 import Axios from 'axios';
-//import fondo from '../../../assets/img/fundamentos-programacion-bases-datos.jpg';
+import fondo from '../../../assets/img/imgI3.jpg'; 
+import connect from 'react-redux'
+import store from '../../../store';
+
+
+
+var sectionStyle = {
+    width: "100%",
+    height: "100%",
+    position: "fixed",
+    backgroundRepeat: "no-repeat",
+    opacity: "0.8",
+    backgroundImage: "url(" + fondo + ")"
+  };
+
 class Login extends Component {
 
    constructor (props, context) {
@@ -11,7 +26,8 @@ class Login extends Component {
       this.state ={
         token:"",
         mail:"",//
-        user:"",
+        nombreUsuario:"", 
+        infoUsuario:{id:1, rol:2 , nombre:"Bárbara Sarmiento"},
         correo:"",
         info: false,
         warning: false,
@@ -22,8 +38,10 @@ class Login extends Component {
     this.toggleWarning = this.toggleWarning.bind(this);
     this.filtrarMail = this.filtrarMail.bind(this);
     this.comprobarMail = this.comprobarMail.bind(this);
+    this.agregarUsuario = this.agregarUsuario.bind(this);
   }
- 
+
+
   toggleInfo() {
     this.setState({
       info: !this.state.info,
@@ -65,7 +83,6 @@ class Login extends Component {
         });
   };
 
-
   responseGoogle (googleUser) {
     var id_token = googleUser.getAuthResponse().id_token;
     var googleId = googleUser.getId();
@@ -78,12 +95,12 @@ class Login extends Component {
     this.getMail();
     //console.log({ googleId });
     //console.log({accessToken: id_token});
-    console.log(googleUser);
+    //console.log(googleUser);
     var mailUsuario = googleUser.w3.U3;
-    var nombreUsuario = googleUser.w3.ig;
+    var nombreUsuarios = googleUser.w3.ig;
     this.setState({
       mail:mailUsuario,
-      user:nombreUsuario
+      nombreUsuario:nombreUsuarios
     });
     this.filtrarMail();
   }     
@@ -118,86 +135,84 @@ class Login extends Component {
 
       }
     }
-    console.log(temp);
+    //console.log(temp);
   }
-
 
   render() {
+    console.log(this.state.infoUsuario)
     return (
-      <div className="app flex-row align-items-center">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md="6">
-            ​<picture>
-              <img src="../../../assets/img/imgagenInicio.jpg" class="img-fluid img-thumbnail" alt="..." />
-            </picture>
-            </Col>
-            <Col md="6">
-              <Card className="text-white bg-info p-4" >
-                <CardHeader>
-                  <h2 style={{textAlign: "center" }}>Bienvenido a la plataforma</h2>
-                </CardHeader>
-                <CardBody>
-                <br />
-                <br />
-                <br />
-                   <div style={{textAlign:"center"}}>
-                   
-                  <GoogleLogin socialId="171991856415-96dr3egj16vhs32dg4hr2fhbns24bhh3.apps.googleusercontent.com"
-                               className="google-login btn-lg btn-dark "
-                               scope="profile"
-                               fetchBasicProfile={true}
-                               style={{size:"lg"}}  
-                               responseHandler={this.responseGoogle}
-                               buttonText="Ingresar"
-                               />
-
-                  </div>
-
-                  <br />
-                  <br />
-                  <br />
-
-                  <Modal isOpen={this.state.info} toggle={this.toggleInfo}
-                                 className={'modal-info ' + this.props.className}>
-                    <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
-                    <ModalBody>
-                      Bienvenid@ <strong> {this.state.user}</strong>, su inicio de sesión fue exitoso.
-                    </ModalBody>
-                    <ModalFooter>
-                        <Link to={{
-                        pathname: '/dashboard',
-                        //state: {  this.props. }
-                        }}>
-                        <Button color="primary" onClick={this.toggleInfo}>Continuar</Button>
-                      </Link>
-                    </ModalFooter>
-                  </Modal>
-                  <Modal isOpen={this.state.warning} toggle={this.toggleWarning}
-                       className={'modal-warning ' + this.props.className}>
-                    <ModalHeader toggle={this.toggleWarning}>Inicio de sesión</ModalHeader>
-                    <ModalBody>
-                      Error en el inicio de seción, utilice correo institucional.
-                    </ModalBody>
-                    <ModalFooter>
-                       <Link to={{
-                          pathname: '/Login',
-                          //state: {this,props. }
-                          }}>
-                          <Button color="warning" onClick={this.toggleWarning}>Reintentar</Button>
-                        </Link>
-                      
-                    </ModalFooter>
-                  </Modal>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <section style={ sectionStyle }>     
+        <div className="app flex-row align-items-center">
+          <Container>
+            <Row className="justify-content-center">
+              <Col md="10">
+              <span className="display-3 text-white " style={{textAlign: "center" }} > Bienvenido a la plataforma</span>
+              <br />
+              <h3 className="text-white " style={{textAlign: "center" }}>Un lugar donde puedes practicar y progresar día a día </h3>
+                  <br /><br /><br />
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col md="3">
+               <div style={{textAlign:"center"}}>
+                      <GoogleLogin socialId="171991856415-96dr3egj16vhs32dg4hr2fhbns24bhh3.apps.googleusercontent.com"
+                                   className="google-login btn-lg btn-success btn-block btn-pill  "
+                                   scope="profile"
+                                   fetchBasicProfile={true}
+                                   style={{size:"lg"}}  
+                                   responseHandler={this.responseGoogle}
+                                   buttonText="Ingresar"
+                      />
+                    </div>
+              </Col>
+            </Row>
+          </Container>
+          <Modal isOpen={this.state.info} toggle={this.toggleInfo}
+                   className={'modal-info ' + this.props.className}>
+            <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
+            <ModalBody>
+              Bienvenid@ <strong> {this.state.nombreUsuario}</strong>, su inicio de sesión fue exitoso.
+            </ModalBody>
+            <ModalFooter>
+              <Link to={{
+                pathname: '/dashboard',
+                //state: {  this.props. }
+              }}>
+                <Button color="primary"  onClick={this.toggleInfo}  onClick={() => this.agregarUsuario(this.state.infoUsuario)} //paaaandi
+                >Continuar</Button>
+              </Link>
+            </ModalFooter>
+          </Modal>
+          <Modal isOpen={this.state.warning} toggle={this.toggleWarning}
+                className={'modal-warning ' + this.props.className}>
+            <ModalHeader toggle={this.toggleWarning}>Inicio de sesión</ModalHeader>
+            <ModalBody>
+              Error en el inicio de sesión, utilice correo institucional.
+            </ModalBody>
+            <ModalFooter>
+              <Link to={{
+                pathname: '/Login',
+                //state: {this.props. }
+              }}>
+                <Button color="warning" onClick={this.toggleWarning}>Reintentar</Button>
+              </Link>
+            </ModalFooter>
+          </Modal>
+        </div>
+      </section>
     );
   }
+  agregarUsuario(infoUsuario){
+      console.log("aaaaaaaa");
+    console.log(infoUsuario);
+    console.log("aaaaaaaa");
+      store.dispatch({
+      type:"LOG_IN",
+      infoUsuario: infoUsuario,
+  });
+  }
 }
+
 
 export default Login;
 

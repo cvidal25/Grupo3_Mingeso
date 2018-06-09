@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
+import store from '../../store'
 
 import {
   AppAside,
@@ -25,15 +26,12 @@ import DefaultHeader from './DefaultHeader';
 class DefaultLayout extends Component {
    constructor (props, context) {
     super(props, context);
-      this.state ={
-        //user:this.props,
-      };
   }
   render() {
     return (
       <div className="app">
-        <AppHeader fixed>
-          <DefaultHeader />
+        <AppHeader fixed >
+          <DefaultHeader/>
         </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
@@ -51,12 +49,11 @@ class DefaultLayout extends Component {
               <Switch>
                 {routes.map((route, idx) => {
                     return route.component ? 
-                    (<Route key={idx} path={route.path} 
+                    (<Route key={idx}
+                      path={route.path} 
                       exact={route.exact} 
                       name={route.name} 
-                      render={props => (
-                        <route.component {...props} />
-                      )} />)
+                      render={props => (<route.component {...props} /> )} />)
                       : (null);
                   },
                 )}

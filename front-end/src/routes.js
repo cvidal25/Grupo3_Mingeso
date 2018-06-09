@@ -3,6 +3,7 @@ import Loadable from 'react-loadable'
 
 import DefaultLayout from './containers/DefaultLayout';
 
+
 function Loading() {
   return <div>Loading...</div>;
 }
@@ -196,11 +197,12 @@ const Consola= Loadable({
   loading:Loading,
 }); 
 
+
 //
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true, name: 'Home', component: DefaultLayout },
+  { path: '/', exact: true , name: 'Inicio', component: DefaultLayout },
   //
   {path: '/enunciadosPro/nuevo',exact: true, name:'Nuevo', component:NewEnunciado},
   {path: '/enunciados',exact: true, name: 'Enunciado', component:Enunciado },
@@ -208,9 +210,6 @@ const routes = [
   {path: '/enunciados/:lenguaje/consola/:num',exact: true, name: 'Consola', component: Consola},
   {path: '/consola/:lenguaje',exact: true, name: 'Consola', component: Consola},
   {path: '/enunciadosPro/:id/enunciado',exact: true, name: 'Editar', component: EditEnunciado},
-
-
-
 
   //
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
