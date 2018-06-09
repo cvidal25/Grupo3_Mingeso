@@ -46,6 +46,7 @@ class NewEnunciado extends Component{
             aceptar:false,
             invalidDias:0,
             invalidPuntaje:0,
+            invalidInOut:0,
         };
         
     }
@@ -85,7 +86,7 @@ class NewEnunciado extends Component{
             if(this.state.tempEntrada===""){
                 inputValidadores[1].entrada=true;
                 this.setState({
-                    lenguaje:this.state.lenguaje
+                    invalidInOut:0
                 })
                 //decir que esta vacio
                 return;
@@ -106,8 +107,8 @@ class NewEnunciado extends Component{
                 inputValidadores[0].salida=false;
                 inputValidadores[1].salida=true;
                 this.setState({
-                    lenguaje:this.state.lenguaje
-                })
+                    invalidInOut:0
+                });
                 //decir que esta vacio
                 return;
             }
@@ -118,6 +119,12 @@ class NewEnunciado extends Component{
                 tempSalida:"",
                 inputSalidasEnabled:enabled
             });
+        }
+        if(this.state.entradas.length===this.state.salidas.length){
+            inputValidadores[0].salida=false;
+            inputValidadores[1].salida=false;
+            inputValidadores[0].entrada=false;
+            inputValidadores[1].entrada=false;
         }
         
     }
@@ -286,6 +293,7 @@ class NewEnunciado extends Component{
                 break;
             case "tempSalida":
                 inputValidadores[1].salida=false;
+                break;
         }
     }
 
@@ -311,25 +319,33 @@ class NewEnunciado extends Component{
             //deicr que es 0
             inputValidadores[0].entrada=false;
             inputValidadores[1].entrada=true;
+            this.setState({
+                invalidInOut:1 //arreglo vacio
+            })
             status= false;
         }
         if(this.state.salidas.length===0){
             //decir que es 0
             inputValidadores[0].salida=false;
             inputValidadores[1].salida=true;
+            this.setState({
+                invalidInOut:1 //arreglo vacio
+            })
             status= false;
         }
 
-        if(this.state.entradas.length>this.state.salidas.length){
-            
+        if(this.state.entradas.length!==this.state.salidas.length){
+            inputValidadores[0].salida=false;
+            inputValidadores[1].salida=true;
+            inputValidadores[0].entrada=false;
+            inputValidadores[1].entrada=true;
+            this.setState({
+                invalidInOut:2 // arreglo desicual
+            })
             //decir que es cual es mayor
             status= false;
         }
-        if(this.state.entradas.length<this.state.salidas.length){
-            
-            // decir cual es mayor
-            status= false;
-        }
+       
         this.setState({
             aceptar:status
         });
@@ -394,8 +410,12 @@ class NewEnunciado extends Component{
     }
 
     render(){
-        var feedBack="Complete este campo"
-        //var feedBackNumDias=(this.state.invalidDias===0)?feedBack:"Debe ser un número"
+        const feedBack="Complete este campo";
+        const feedBackNotNull="No puedes agregar un elemento vacio";
+        const feedBackDiference="Las cantidad de entradas no es el mismo que de salidas";
+        const feedBackInOutZero="No tiene entrada o salida, debe agregar al menos una para cada una de ellas"
+        const feedBackNum="Debe ser un número";
+        const feedBackNumPlus="Debe ser un número positivo";
         return (
 
             <Row>
@@ -441,47 +461,58 @@ class NewEnunciado extends Component{
 
                         
                         <Row >
+                            
                             <Col md={6}>
-                                <Label  htmlFor="entrada">Entradas</Label>
-                                {this.ListarInOut(this.state.entradas,1)}
-                                <br/>
-                                <Row>
-                                    <Col md={10} style={{width:"80%"}}>
-                                        <Input value={this.state.tempEntrada} disabled={!this.state.inputEntradaEnabled} 
-                                         valid={inputValidadores[0].entrada} invalid={inputValidadores[1].entrada}
-                                        name="tempEntrada" id="entrada" onChange={this.handleChange}/>
-                                    </Col>
-                                    <Col md={1} style={{width:"10%",textAlign:"left"}}>
-                                        <Label disabled={!this.state.inputEntradaEnabled} onClick={()=>{this.handleInsertArray("entrada");}} >
-                                            <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
-                                            style={{ color: '#89e4ff'}} ></i>
-                                        </Label>
-                                    </Col>
-                                </Row>
-                                <small id="emailHelp" className="form-text text-muted">Las entradas deben corresponder misma cantidad que las salidas.</small>
-                                 
+                                <FormGroup>
+                                    <Label  htmlFor="entrada">Entradas</Label>
+                                    {this.ListarInOut(this.state.entradas,1)}
+                                    <br/>
+                                    <Row>
+                                        
+                                            <Col md={10} style={{width:"80%"}}>
+                                                <Input value={this.state.tempEntrada} disabled={!this.state.inputEntradaEnabled} 
+                                                valid={inputValidadores[0].entrada} invalid={inputValidadores[1].entrada}
+                                                name="tempEntrada" id="entrada" onChange={this.handleChange}/>
+                                                <FormFeedback>{(this.state.invalidInOut===0)?feedBack:(this.state.invalidInOut===1)?feedBackInOutZero:feedBackDiference}</FormFeedback>
+                                            </Col>
+                                            <Col md={1} style={{width:"10%",textAlign:"left"}}>
+                                                <Label disabled={!this.state.inputEntradaEnabled} onClick={()=>{this.handleInsertArray("entrada");}} >
+                                                    <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
+                                                    style={{ color: '#89e4ff'}} ></i>
+                                                </Label>
+                                            </Col>
+                                        
+                                    </Row>
+                                    <small id="emailHelp" className="form-text text-muted">Las entradas deben corresponder misma cantidad que las salidas.</small>
+                                </FormGroup>
                             </Col>
                             
                             <Col md={6} >
-                                <Label htmlFor="salida" >Salidas</Label>
-                                {this.ListarInOut(this.state.salidas,2)}
-                                <br/>
-                                <Row>
-                                    <Col md={10} style={{width:"80%"}}>
-                                        <Input value={this.state.tempSalida} name="tempSalida" 
-                                        disabled={!this.state.inputSalidaEnabled} id="salida" 
-                                        valid={inputValidadores[0].salida} invalid={inputValidadores[1].salida}
-                                        onChange={this.handleChange}/>
+                                <FormGroup>
+                                    <Label htmlFor="salida" >Salidas</Label>
+                                    {this.ListarInOut(this.state.salidas,2)}
+                                    <br/>
+                                    <Row>
+                                    
+                                        <Col md={10} style={{width:"80%"}}>
+                                            <Input value={this.state.tempSalida} name="tempSalida" 
+                                            disabled={!this.state.inputSalidaEnabled} id="salida" 
+                                            valid={inputValidadores[0].salida} invalid={inputValidadores[1].salida}
+                                            onChange={this.handleChange}/>
+                                            <FormFeedback>{(this.state.invalidInOut===0)?feedBack:(this.state.invalidInOut===1)?feedBackInOutZero:feedBackDiference}</FormFeedback>
+                                            </Col>
+                                        <Col md={1} style={{width:"10%",textAlign:"left"}}>
+                                            <Label onClick={()=>{this.handleInsertArray("salida");}} >
+                                                <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
+                                                style={{ color: '#89e4ff'}} ></i>
+                                            </Label>
                                         </Col>
-                                    <Col md={1} style={{width:"10%",textAlign:"left"}}>
-                                        <Label onClick={()=>{this.handleInsertArray("salida");}} >
-                                            <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
-                                            style={{ color: '#89e4ff'}} ></i>
-                                        </Label>
-                                    </Col>
-                                </Row>
-                                <small id="emailHelp" className="form-text text-muted help-block">Las salidas deben corresponder misma cantidad que las entradas.</small>
+                                    
+                                    </Row>
+                                    <small id="emailHelp" className="form-text text-muted help-block">Las salidas deben corresponder misma cantidad que las entradas.</small>
+                                    </FormGroup>
                             </Col>
+                            
                         </Row>
                         
                         <br/>
@@ -512,6 +543,7 @@ class NewEnunciado extends Component{
                                      className="form-control" min="0" 
                                      valid={inputValidadores[0].dias} invalid={inputValidadores[1].dias}
                                      defaultValue={0} onChange={this.handleChange}/>
+                                    <FormFeedback>{(this.state.invalidDias===0)?feedBack:(this.state.invalidDias===1)?feedBackNum:feedBackNumPlus}</FormFeedback>
                                 </FormGroup>
                                 </Col>
                                 </Row>
@@ -525,6 +557,7 @@ class NewEnunciado extends Component{
                                     min="1"  id="puntosTotales"  defaultValue={1} 
                                     valid={inputValidadores[0].puntaje} invalid={inputValidadores[1].puntaje}
                                     onChange={this.handleChange}/>
+                                    <FormFeedback>{(this.state.invalidPuntaje===0)?feedBack:(this.state.invalidPuntaje===1)?feedBackNum:feedBackNumPlus}</FormFeedback>
                                 </FormGroup>
                                 </Col>
                                 </Row>
