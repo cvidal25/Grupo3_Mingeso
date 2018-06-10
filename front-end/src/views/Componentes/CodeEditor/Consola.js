@@ -122,7 +122,7 @@ class CodeEditor extends Component{
        var data={
            //usuario
            //id del ejercicio
-           'language':num+1,
+           'language': parseInt(num)+1,
            'code':this.state.aceEditorValue
        }
        console.log(data);
