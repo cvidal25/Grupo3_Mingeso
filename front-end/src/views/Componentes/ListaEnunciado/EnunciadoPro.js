@@ -156,11 +156,16 @@ class EnunciadoPro extends Component{
         </Modal>
     }
 
-    handleDelete=(id)=>{
+    handleDelete=(id,posicion)=>{
         
         Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
         .then(response=>{
             console.log(response);
+            var array =this.state.items;
+            array.splice(posicion,1);
+            this.setState({
+                items:array
+            });
 
         }).catch(function(error){
             console.log(error);
@@ -236,7 +241,7 @@ class EnunciadoPro extends Component{
                                                         </ModalBody>
                                                         <ModalFooter>
                                                         <Button color="info"  onClick={()=>{this.toggleOpenModal(key);}}>Cancelar</Button>{' '}
-                                                        <Button color="danger" outline onClick={()=>{this.toggleOpenModal(key);this.handleDelete(enunciado.exerciseID);}}>Aceptar</Button>
+                                                        <Button color="danger" outline onClick={()=>{this.toggleOpenModal(key);this.handleDelete(enunciado.exerciseID,key);}}>Aceptar</Button>
                                                         </ModalFooter>
                                                     </Modal>
                                                 
