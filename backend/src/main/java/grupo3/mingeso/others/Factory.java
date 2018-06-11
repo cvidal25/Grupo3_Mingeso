@@ -1,27 +1,7 @@
 package grupo3.mingeso.others;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-//@Component
 public class Factory {
 
-    /*@Autowired
-    Context context;
-
-    @Autowired
-    @Qualifier("strategyPython")
-    Strategy strategyPython;
-
-    @Autowired
-    @Qualifier("strategyJava")
-    Strategy strategyJava;
-
-    @Autowired
-    @Qualifier("strategyC")
-    Strategy strategyC;
-*/
     int language;
     String code;
     int exercise_id;
@@ -75,17 +55,14 @@ public class Factory {
         if(this.language == 1){
             Strategy python = new StrategyPython();
             Context context = new Context(python);
-            //context.setStrategy(strategyPython);
             return context.methodStrategy(code,input,output);
         }else if(language == 2){
             Strategy java = new StrategyJava();
             Context context = new Context(java);
-            //context.setStrategy(strategyJava);
             return context.methodStrategy(code,input,output);
         }else if(language == 3){
             Strategy c = new StrategyC();
             Context context = new Context(c);
-            //context.setStrategy(strategyC);
             return context.methodStrategy(code,input,output);
         }
         return null;

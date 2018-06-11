@@ -1,9 +1,5 @@
 package grupo3.mingeso.others;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-//@Component
 public class Context {
 
     Strategy strategy;

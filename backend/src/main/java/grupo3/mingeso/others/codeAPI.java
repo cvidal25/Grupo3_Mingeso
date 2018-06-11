@@ -1,13 +1,5 @@
 package grupo3.mingeso.others;
 
-import grupo3.mingeso.entities.Exercise;
-import grupo3.mingeso.repository.ExerciseRepository;
-import grupo3.mingeso.rest.ExerciseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-
-import javax.validation.constraints.Null;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,37 +7,19 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Optional;
 
-//@Controller
 public class codeAPI {
-
-    /*@Autowired
-    ExerciseRepository exerciseRepository;*/
 
     public codeAPI(){
     }
 
-    //poner condiciones en caso de que no haya input
     //ver la manera de tener el output en esta función
-    //Corregir en las estrategias el nombre de la función y los parametros de entrada
-    public String[] runProgram(String code, String language, String input, String output){
+    public String[] runProgram(String code, String language, String input, String output) {
         int i = 0;
-        /*Exercise exercise;
-        System.out.println("holi");
-        System.out.println(exerciseRepository.existsById(2));
-        System.out.println("chau");
-        exercise = exerciseRepository.findById(2).get();*/
 
-        System.out.println(input);
-        //String input = exercise.getExerciseInput();
         String[] realInput = input.split("/@");
-        /*for(i = 0; i < realInput.length; i++){
-            System.out.println(realInput[i]);
-        }*/
 
-        //String output = exercise.getExerciseOutput();
-        String[] realOutput = output.split("/@");
+//        String[] realOutput = output.split("/@");
 
         String[] jsonOutput = new String[realInput.length];
 
@@ -57,8 +31,6 @@ public class codeAPI {
         return jsonOutput;
     }
 
-
-    //if input es null
     public String runAPI(String code, String language,String input){
         try {
             URL url;
@@ -84,14 +56,20 @@ public class codeAPI {
                 programName = "main.c";
             }
 
-            realCode = "{\"stdin\":\"" +input+"\"," +
-                    "\"files\":\n" +
+            String stdinCode = "{\"stdin\":\"" +input+"\",";
+            String middleCode = "\"files\":\n" +
                     "\t[\n" +
                     "\t\t{\"name\": \""+programName+"\", \n" +
                     "\t\"content\": \""+code+"\"}\n" +
                     "\t]\n" +
                     "\t\n" +
                     "}";
+
+            if(input.isEmpty()){
+                realCode = "{".concat(middleCode);
+            }else{
+                realCode = stdinCode.concat(middleCode);
+            }
             // String code = "{\"stdin\": \"\",\"files\": [{\"name\" : \"main.py\", \"content\": \"" + input +"\"}]}";
 
             System.out.println(realCode);
