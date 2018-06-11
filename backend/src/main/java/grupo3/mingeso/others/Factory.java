@@ -1,12 +1,34 @@
 package grupo3.mingeso.others;
 
 public class Factory {
+
     int language;
     String code;
+    int exercise_id;
 
-    public void Factory(int lang, String code){
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    String input;
+    String output;
+
+    public void Factory(int lang, String code, int exercise_id){
         this.language = lang;
         this.code = code;
+        this.exercise_id = exercise_id;
     }
 
     public int getLanguage() {
@@ -25,19 +47,23 @@ public class Factory {
         this.code = code;
     }
 
-    public String executeFactory(){
+    public int getExercise_id() { return exercise_id; }
+
+    public void setExercise_id(int exercise_id) { this.exercise_id = exercise_id; }
+
+    public String[] executeFactory(){
         if(this.language == 1){
             Strategy python = new StrategyPython();
             Context context = new Context(python);
-            return context.methodStrategy(code);
+            return context.methodStrategy(code,input,output);
         }else if(language == 2){
             Strategy java = new StrategyJava();
             Context context = new Context(java);
-            return context.methodStrategy(code);
+            return context.methodStrategy(code,input,output);
         }else if(language == 3){
             Strategy c = new StrategyC();
             Context context = new Context(c);
-            return context.methodStrategy(code);
+            return context.methodStrategy(code,input,output);
         }
         return null;
     }

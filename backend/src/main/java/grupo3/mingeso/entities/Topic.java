@@ -1,9 +1,15 @@
 package grupo3.mingeso.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
 @Table(name = "topic")
@@ -28,10 +34,13 @@ public class Topic implements Serializable {
 
     public void setTopicName(String topicName) { this.topicName = topicName; }
 
-    @OneToMany(mappedBy="topic",cascade=CascadeType.ALL)
-    private List<Exercise> Exercise = new ArrayList<Exercise>();
+    @OneToMany(mappedBy="topic",cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
 
-    public List<Exercise> getExercises(){
+    private Set<Exercise> Exercise = new HashSet<>();
+    //private List<Exercise> Exercise = new ArrayList<Exercise>();
+    @JsonIgnore
+    public Set<Exercise> getExercises(){
         return this.Exercise;
     }
 }
