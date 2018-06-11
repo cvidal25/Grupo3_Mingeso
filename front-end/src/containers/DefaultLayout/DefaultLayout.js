@@ -19,14 +19,42 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
-//import DefaultAside from './DefaultAside';
+import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
 class DefaultLayout extends Component {
-   constructor (props, context) {
-    super(props, context);
+   constructor () {
+    super();
+    this.state = {
+      links: navigation
+
+    };
   }
+
+  componentDidMount(){
+    this.filtrarLinks('2');
+  }
+  // Al ejecutar esta funcion desaparecer y aparecen links que
+  // el usuario indicado puede acceder.
+  filtrarLinks(tipoUsuario){
+    let items = navigation.items.filter(function(link){
+
+
+      if(!link.hasOwnProperty("tipoUsuario")) return true;
+
+      if(link["tipoUsuario"] == tipoUsuario) return true;
+
+      return false;
+
+    });
+
+    this.setState({
+      links: { items: items }
+    });
+
+  }
+
   render() {
     return (
       <div className="app">
@@ -38,7 +66,7 @@ class DefaultLayout extends Component {
             <AppSidebarHeader />
             <AppSidebarForm />
             
-            <AppSidebarNav navConfig={navigation} {...this.props} />
+            <AppSidebarNav navConfig={this.state.links}{...this.props} />
             
             <AppSidebarFooter />
             <AppSidebarMinimizer />
