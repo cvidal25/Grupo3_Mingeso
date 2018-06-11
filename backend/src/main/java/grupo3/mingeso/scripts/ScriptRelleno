@@ -1,5 +1,34 @@
-RELLENO EJERCICIOS
+RELLENO TOPICOS
+{
+	"topicName":"Iteracion"
+}
 
+{
+	"topicName":"Recursion"
+}
+
+{
+	"topicName":"Bifurcacion"
+}
+
+{
+	"topicName":"Aritmetica"
+}
+
+{
+	"topicName":"Input Output"
+}
+
+{
+	"topicName":"Funciones"
+}
+
+{
+	"topicName":"Listas"
+}
+
+
+RELLENO EJERCICIOS (CON TOPICOS)
 {
 "exerciseTitle": "Enunciado 1 en Python",
 "exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
@@ -9,23 +38,14 @@ RELLENO EJERCICIOS
 "exerciseScore": 5,
 "exerciseInput":"hola/@chao/@bai",
 "exerciseOutput":"aloh/@oahc/@iab",
-"exercisePublished": true
+"exercisePublished": true,
+"exerciseDays": 10,
+"exerciseDifficulty":3,
+"topic":{
+	"topicID":2,
+	"topicName":"Recursion"
+	}
 }
-
-
-
-{
-"exerciseTitle": "Enunciado 3 en C",
-"exerciseBody": "1Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
-"exerciseLenguge": 3,
-"exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
-"exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
-"exerciseScore": 10,
-"exerciseInput":"hola/@chao/@bai",
-"exerciseOutput":"aloh/@oahc/@iab",
-"exercisePublished": false
-}
-
 
 {
 "exerciseTitle": "Enunciado 2 en Java",
@@ -36,19 +56,51 @@ RELLENO EJERCICIOS
 "exerciseScore": 2,
 "exerciseInput":"hola/@chao/@bai",
 "exerciseOutput":"aloh/@oahc/@iab",
-"exercisePublished": false
+"exercisePublished": false,
+"exerciseDays": 15,
+"exerciseDifficulty":1,
+"topic":{
+	"topicID":4,
+	"topicName":"Aritmetica"
+	}
+}
+
+{
+"exerciseTitle": "Enunciado 3 en C",
+"exerciseBody": "1Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
+"exerciseLenguge": 3,
+"exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+"exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+"exerciseScore": 10,
+"exerciseInput":"hola/@chao/@bai",
+"exerciseOutput":"aloh/@oahc/@iab",
+"exercisePublished": false,
+"exerciseDays": 5,
+"exerciseDifficulty":2,
+"topic":{
+	"topicID":7,
+	"topicName":"Listas"
+	}
+}
+
+{
+"exerciseTitle": "Enunciado 4 en C",
+"exerciseBody": "Ejemplo cuerpo del enunciado 4",
+"exerciseLenguge": 3,
+"exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
+"exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
+"exerciseScore": 10,
+"exerciseInput":"hola/@chao/@bai",
+"exerciseOutput":"aloh/@oahc/@iab",
+"exercisePublished": true,
+"exerciseDays": 5,
+"exerciseDifficulty":2,
+"topic":{
+	"topicID":5
+	}
 }
 
 RELLENO USERS
-
-{
-	"userName": "Javiera Paz Seguel Castro",
-	"userType": 1,
-	"userMail": "javiera.seguel@usach.cl",
-	"userCareer": "Ingeniería de Ejecución en Geomensura",
-	"userCoordination": "B-3"
-}
-
 {
 	"userName": "Shalini Ramchandani Moorjimal",
 	"userType": 3,
@@ -89,8 +141,15 @@ RELLENO USERS
 	"userCoordination": "A-1"
 }
 
+{
+	"userName": "Javiera Paz Seguel Castro",
+	"userType": 1,
+	"userMail": "javiera.seguel@usach.cl",
+	"userCareer": "Ingeniería de Ejecución en Geomensura",
+	"userCoordination": "B-3"
+}
 
-RELLENO USEREXCERCISE
+RELLENO USER_EXERCISE
 {
     "userExerciseID": 1,
     "userScore": 5,
@@ -98,57 +157,18 @@ RELLENO USEREXCERCISE
     "userSolvingTime": "2012-04-30T02:15:12.000+0000",
     "userOutput": "hola/@oahc/@iab",
     "exercise": {
-        "exerciseID": 1,
-        "exerciseTitle": "Enunciado 1 en Python",
-        "exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
-        "exerciseLenguge": 1,
-        "exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
-        "exerciseInput": "hola/@chao/@bai",
-        "exerciseOutput": "aloh/@oahc/@iab",
-        "exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
-        "exerciseScore": 5,
-        "exercisePublished": true
+        "exerciseID": 1
     },
     "user": {
-        "userID": 4,
-        "userName": "Christian David Vidal Cerda",
-        "userType": 2,
-        "userMail": "christian.vidal@usach.cl",
-        "userCareer": "Ingeniería Ejecución en Informática",
-        "userCoordination": "B-3"
+        "userID": 4
     }
 }
 
-
 {
 	"exercise": {
-        "exerciseID": 1,
-        "exerciseTitle": "Enunciado 1 en Python",
-        "exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
-        "exerciseLenguge": 1,
-        "exerciseIntialDate": "2016-03-14T03:00:00.000+0000",
-        "exerciseInput": "hola/@chao/@bai",
-        "exerciseOutput": "aloh/@oahc/@iab",
-        "exerciseFinishlDate": "2016-03-15T03:00:00.000+0000",
-        "exerciseScore": 5,
-        "exercisePublished": true
+        "exerciseID": 1
     },
 	"user":{
-			"userID":2,
-			"userName": "Shalini Ramchandani Moorjimal",
-			"userType": 3,
-			"userMail": "shalini.ramchandani@usach.cl",
-			"userCareer": "Ingeniería Civil en Informática",
-			"userCoordination": "A-1"
+			"userID":2
 		}
 }
-
-
-
-
-
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-CONSULTAS:
-http://localhost:8082/exercise/update?id=2&body=algo
-

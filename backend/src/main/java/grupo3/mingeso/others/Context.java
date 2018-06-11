@@ -1,6 +1,11 @@
 package grupo3.mingeso.others;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+//@Component
 public class Context {
+
     Strategy strategy;
 
     public Context(Strategy strategy){
@@ -12,13 +17,13 @@ public class Context {
     }
 
     //Método de estrategia
-    public String methodStrategy(String input)
+    public String[] methodStrategy(String code, String input, String output)
     {
-        if (input.contains("\"") || input.contains("\\n")) {
-            String mediumInput = input.replace("\"","\\\"");
-            String realInput =  mediumInput.replace("\\n","\\\\n");
-            return strategy.executeCode(realInput);
+        if (code.contains("\"") || code.contains("\\n")) {
+            String mediumCode = code.replace("\"","\\\"");
+            String realCode =  mediumCode.replace("\\n","\\\\n");
+            return strategy.executeCode(realCode,input,output);
         }
-        return strategy.executeCode(input);
+        return strategy.executeCode(code,input,output);
     }
 }
