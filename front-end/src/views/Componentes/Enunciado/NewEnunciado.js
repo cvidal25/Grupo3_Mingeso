@@ -13,14 +13,16 @@ var inputValidadores=
     dias:false,
     puntaje:false,
     entrada:false,
-    salida:false
+    salida:false,
+    topic:false,
 },{
     titulo:false,
     enunciado:false,
     dias:false,
     puntaje:false,
     entrada:false,
-    salida:false
+    salida:false,
+    false:false,
 }]; //valid //invalid
 
 class NewEnunciado extends Component{
@@ -315,6 +317,10 @@ class NewEnunciado extends Component{
             case "tempSalida":
                 inputValidadores[1].salida=false;
                 break;
+            case "topico":
+                inputValidadores[0].topic=valid;
+                inputValidadores[1].topic=invalid;
+                break;
         }
     }
 
@@ -364,6 +370,11 @@ class NewEnunciado extends Component{
                 invalidInOut:2 // arreglo desicual
             })
             //decir que es cual es mayor
+            status= false;
+        }
+        if(this.state.topico===''){
+            inputValidadores[0].topic=false;
+            inputValidadores[1].topic=true;
             status= false;
         }
        
@@ -443,6 +454,7 @@ class NewEnunciado extends Component{
         const feedBackInOutZero="No tiene entrada o salida, debe agregar al menos una para cada una de ellas"
         const feedBackNum="Debe ser un número";
         const feedBackNumPlus="Debe ser un número positivo";
+        const feedBackTopic="Debes seleccionar un topico";
         return (
 
             <Row>
@@ -492,12 +504,15 @@ class NewEnunciado extends Component{
                             <Col>
                                 <FormGroup>
                                     <Label htmlFor="topic">Topico</Label>
-                                    <Input type="select" name="topico"  defaultValue="" style={{width:"80%"}} onChange={this.handleChange}>
+                                    <Input type="select" name="topico"  defaultValue="" style={{width:"80%"}} onChange={this.handleChange} 
+                                        valid={inputValidadores[0].topic} invalid={inputValidadores[1].topic}
+                                    >
                                         <option disabled hidden value="" >Topicos</option>
                                         {this.state.topics && this.state.topics.map((topico,key)=>{
                                             return <option key={key} itemID={topico.topicID} id={key} value={topico.topicName} >{topico.topicName}</option>
                                         })}
                                     </Input>
+                                    <FormFeedback>{feedBackTopic}</FormFeedback>
                                 </FormGroup>
                             </Col>
                         </Row>
