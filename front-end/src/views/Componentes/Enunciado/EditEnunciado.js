@@ -496,6 +496,7 @@ class EditEnunciado extends Component{
         if(this.validador()){
             
             var exercise={
+                'exerciseID': this.data.exerciseID,
                 'exerciseTitle': this.state.titulo,
                 'exerciseBody': this.state.enunciado,
                 'exerciseLenguge': this.state.lenguaje,
@@ -610,7 +611,7 @@ class EditEnunciado extends Component{
                   <Card>
                       
                     <CardHeader >
-                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado {this.state.espera.toString()}
+                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado
                     </CardHeader>
                     <Alert color={this.state.alertType} isOpen={this.state.alertOpen} toggle={this.onDismiss}>
                         {(this.state.alertType==="success")?"Nuevo Enunciado Creado Con Exito":"Se tuvo un problema con la conexion intente mas tarde..."}
