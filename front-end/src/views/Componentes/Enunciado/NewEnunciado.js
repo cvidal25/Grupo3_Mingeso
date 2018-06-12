@@ -381,7 +381,8 @@ class NewEnunciado extends Component{
         }
        
         this.setState({
-            aceptar:status
+            aceptar:status,
+            alertOpen:false
         });
         return status;
         
