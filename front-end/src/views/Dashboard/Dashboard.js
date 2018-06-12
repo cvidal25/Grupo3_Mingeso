@@ -364,23 +364,24 @@ const sparklineChartOpts = {
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+//GETS DE DATOS
 
 var elements = 27;
 var data1 = [];
 var data2 = [];
 var data3 = [];
-
+//LLENADO DE ELEMENTOS
 for (var i = 0; i <= elements; i++) {
   data1.push(random(50, 200));
   data2.push(random(80, 100));
   data3.push(65);
 }
-
+//COLORES Y ESPECIFICACIONES VISUALES DEL CHART
 const mainChart = {
-  labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+  labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30','31'],
   datasets: [
     {
-      label: 'My First dataset',
+      label: 'Dataset prueba 1',
       backgroundColor: hexToRgba(brandInfo, 10),
       borderColor: brandInfo,
       pointHoverBackgroundColor: '#fff',
@@ -388,7 +389,7 @@ const mainChart = {
       data: data1,
     },
     {
-      label: 'My Second dataset',
+      label: 'Dataset prueba 2',
       backgroundColor: 'transparent',
       borderColor: brandSuccess,
       pointHoverBackgroundColor: '#fff',
@@ -396,7 +397,7 @@ const mainChart = {
       data: data2,
     },
     {
-      label: 'My Third dataset',
+      label: 'Dataset prueba 3',
       backgroundColor: 'transparent',
       borderColor: brandDanger,
       pointHoverBackgroundColor: '#fff',
@@ -407,6 +408,7 @@ const mainChart = {
   ],
 };
 
+//CADA CUANTO SALTA, ESCALA DE LABEL
 const mainChartOpts = {
   tooltips: {
     enabled: false,
@@ -424,6 +426,7 @@ const mainChartOpts = {
   legend: {
     display: false,
   },
+  //Scala de los axes
   scales: {
     xAxes: [
       {
@@ -450,7 +453,50 @@ const mainChartOpts = {
     },
   },
 };
-
+const timeChartOpt = {
+  tooltips: {
+    enabled: false,
+    custom: CustomTooltips,
+    intersect: true,
+    mode: 'index',
+    position: 'nearest',
+    callbacks: {
+      labelColor: function(tooltipItem, chart) {
+        return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
+      }
+    }
+  },
+  maintainAspectRatio: false,
+  legend: {
+    display: false,
+  },
+  //Scala de los axes
+  scales: {
+    xAxes: [
+      {
+        gridLines: {
+          drawOnChartArea: false,
+        },
+      }],
+    yAxes: [
+      {
+        ticks: {
+          beginAtZero: true,
+          maxTicksLimit: 5,
+          stepSize: Math.ceil(10 / 5),
+          max: 10,
+        },
+      }],
+  },
+  elements: {
+    point: {
+      radius: 0,
+      hitRadius: 10,
+      hoverRadius: 4,
+      hoverBorderWidth: 3,
+    },
+  },
+};
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -475,37 +521,80 @@ class Dashboard extends Component {
       radioSelected: radioSelected,
     });
   }
+  miniChart(cardDataChart, cardChartOpts){
+    return(
+      <Col xs="12" sm="6" lg="3">
+        <Card className="text-white bg-info">
+          <CardBody className="pb-0">
+            <ButtonGroup className="float-right">
+              <ButtonDropdown id='card2' isOpen={this.state.card2} toggle={() => { this.setState({ card2: !this.state.card2 }); }}>
+                <DropdownToggle caret className="p-0" color="transparent">
+                  <i className="icon-settings"></i>
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem>Ver</DropdownItem>
+                  <DropdownItem>Actualizar</DropdownItem>
+                  <DropdownItem disabled>Disabled action</DropdownItem>
+                  <DropdownItem>Algo Más</DropdownItem>
+                </DropdownMenu>
+              </ButtonDropdown>
+            </ButtonGroup>
+            <div className="text-value">9.823</div>
+            <div>Titulo</div>
+          </CardBody>
+          <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
+            <Line data={cardDataChart} options={cardChartOpts} height={70} />
+          </div>
+        </Card>
+      </Col>
+    )
+  }
+  totalValue(valueName,data){
+    return(
+      <Col sm={12} md className="mb-sm-2 mb-0">
+        <div className="text-muted">Visits</div>
+        <strong>29.703 Users (40%)</strong>
+        <Progress className="progress-xs mt-2" color="success" value="40" />
+      </Col>
+    )
+  }
+  filtro(){
+    return(
+      <Col sm="7" className="d-none d-sm-inline-block">
+      <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
+      <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
+        <ButtonGroup className="mr-3" aria-label="First group">
+          <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)} active={this.state.radioSelected === 1}>Day</Button>
+          <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(2)} active={this.state.radioSelected === 2}>Month</Button>
+          <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)} active={this.state.radioSelected === 3}>Year</Button>
+        </ButtonGroup>
+      </ButtonToolbar>
+      </Col>
+    )
+  }
+  crearChart(chartData,chartOpts){
+    return(
+      <div className="chart-wrapper" style={{ height: 300 + 'px', marginTop: 40 + 'px' }}>
+        <Line data={chartData} options={chartOpts} height={300} />
+      </div>
+    )
+  }
+  diffChart(charData,chartOpts){
+
+  }
+  topicChart(charData,chartOpts){
+
+  }
 
   render() {
 
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-info">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card1' isOpen={this.state.card1} toggle={() => { this.setState({ card1: !this.state.card1 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem disabled>Disabled action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Line data={cardChartData2} options={cardChartOpts2} height={70} />
-              </div>
-            </Card>
-          </Col>
-
+          {this.miniChart(cardChartData1,cardChartOpts1)}
+          {this.miniChart(cardChartData2,cardChartOpts2)}
+          {this.miniChart(cardChartData3,cardChartOpts3)}
+          {this.miniChart(cardChartData4,cardChartOpts4)}
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-primary">
               <CardBody className="pb-0">
@@ -596,11 +685,10 @@ class Dashboard extends Component {
                         <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)} active={this.state.radioSelected === 3}>Year</Button>
                       </ButtonGroup>
                     </ButtonToolbar>
-                  </Col>
+                   </Col>
                 </Row>
-                <div className="chart-wrapper" style={{ height: 300 + 'px', marginTop: 40 + 'px' }}>
-                  <Line data={mainChart} options={mainChartOpts} height={300} />
-                </div>
+                {this.crearChart(mainChart,mainChartOpts)}
+                {this.crearChart(mainChart,timeChartOpt)}
               </CardBody>
               <CardFooter>
                 <Row className="text-center">
