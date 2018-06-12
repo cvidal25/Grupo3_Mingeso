@@ -157,20 +157,25 @@ class EnunciadoPro extends Component{
     }
 
     handleDelete=(id,posicion)=>{
-        
-        Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
-        .then(response=>{
-            console.log(response);
-            var array =this.state.items;
+        var array =this.state.items;
+        var element=array[posicion];
             array.splice(posicion,1);
             this.setState({
                 items:array
             });
 
-        }).catch(function(error){
-            console.log(error);
-        });
+        Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
+        .then(response=>{
+            console.log(response);
+            
 
+        }).catch(error=>{
+            console.log(error);
+            array.splice(posicion,0,element);
+            this.setState({
+                items:array
+            });
+        });
     }
 
     listar (listaEnunciados){

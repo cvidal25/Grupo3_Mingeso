@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
     DropdownToggle,Form,FormGroup,FormText,FormFeedback,InputGroup,InputGroupAddon,
-    InputGroupText,Label,Button,ButtonDropdown,} from 'reactstrap';
+    InputGroupText,Label,Button,ButtonDropdown,Alert,
+    Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
 
 const url= 'http://localhost:8082/';
@@ -52,10 +53,15 @@ class NewEnunciado extends Component{
             invalidPuntaje:0,
             invalidInOut:0,
             topico:'',
-            topics:[]
+            topics:[],
+            alertOpen:false,
+            alertType:"danger"
         };
+
         
     }
+
+    
     componentDidMount(){
         Axios.get(url+'topic')
         .then(Response=>{
@@ -75,14 +81,10 @@ class NewEnunciado extends Component{
         //console.log(event.target.value);
         var name=event.target.name;
         var value=event.target.value;
-        if(name==='topico'){
-            console.log(event);
-            var id=event.target;
-        }else{
-            this.setState({
-                [name]:value
-            });
-        }
+        this.setState({
+            [name]:value
+        });
+        
         console.log(value);
         
         this.HandleValidador(name,value);
@@ -387,36 +389,111 @@ class NewEnunciado extends Component{
 
     CrearEnunciadoAPI=event=>{
         console.log(this.state);
+        var fechaPlus= new Date();
+
         if(this.validador()){
+            
             var exercise={
                 'exerciseTitle': this.state.titulo,
                 'exerciseBody': this.state.enunciado,
                 'exerciseLenguge': this.state.lenguaje,
-                'exerciseIntialDate': this.state.fechaInicial+"T03:00:00.000+0000",
+                'exerciseIntialDate': (this.state.publicar)?fechaPlus:null,//this.state.fechaInicial+"T03:00:00.000+0000",
                 'exerciseInput': this.arrayToFormatInOut(this.state.entradas), 
                 'exerciseOutput': this.arrayToFormatInOut(this.state.salidas),
-                'exerciseFinishlDate': this.state.fechaFinal+"T03:00:00.000+0000",
+                'exerciseFinishlDate':  (this.state.publicar)?this.sumaFecha(this.state.dias,fechaPlus):null,//this.state.fechaFinal+"T03:00:00.000+0000",
                 'exerciseScore': this.state.PuntosTotales,
                 'exercisePublished': this.state.publicar,
                 'exerciseDifficulty':this.state.dificultad,
-                'exerciseDays':	this.state.dias
-            }
+                'exerciseDays':	this.state.dias,
+                'topic': this.state.topics[this.state.topico]
+                }
+            
             console.log(exercise);
-            /*Axios.post('http://localhost:8082/exercise',exercise)
-            .then(Response =>{
-                console.log(Response);
-            }
-            ).catch(function(error){
-                console.log(error);
-            });
-            console.log(exercise);*/
-        
+
+            Axios.post('http://localhost:8082/exercise',exercise)
+                .then(Response =>{
+                    console.log(Response);
+                    this.setState({
+                        alertOpen:true,
+                        alertType: "success",
+                        items:[],
+                        titulo:"",
+                        enunciado:"",
+                        lenguaje:1, /* 1 = Python; 2 = Java; 3 = C */
+                        PuntosTotales:1,
+                        dificultad:1,
+                        dias:0,
+                        entradas:[],
+                        inputEntradasEnabled:[],
+                        inputSalidasEnabled:[],
+                        salidas:[],
+                        tempEntrada:"",
+                        inputEntradaEnabled:true,
+                        inputSalidaEnabled:true,            
+                        tempSalida:"",
+                        publicar:false,
+                        aceptar:false,
+                        invalidDias:0,
+                        invalidPuntaje:0,
+                        invalidInOut:0,
+                        topico:"",
+                        
+                    });
+                    inputValidadores=
+                    [{
+                        titulo:false,
+                        enunciado:false,
+                        dias:false,
+                        puntaje:false,
+                        entrada:false,
+                        salida:false,
+                        topic:false,
+                    },{
+                        titulo:false,
+                        enunciado:false,
+                        dias:false,
+                        puntaje:false,
+                        entrada:false,
+                        salida:false,
+                        false:false,
+                    }];
+                }
+                ).catch(error=>{
+                    this.setState({
+                        alertOpen: true,
+                        alertType: "danger"
+                    });
+                    console.log(error);
+                });
+
+                    
+                    
+                    
+                
+            
+            
         }
         
         
 
         
     }
+    onDismiss=()=> {
+        this.setState({ alertOpen: false });
+      }
+
+    //""
+    sumaFecha(tiempo, fecha)
+        {
+            var dia = fecha.getDate(),
+             mes = fecha.getMonth() + 1,
+             anio = fecha.getFullYear(),
+            //tiempo = prompt("Ingrese la cantidad de días a añadir"),
+             addTime = tiempo * 86400; //Tiempo en segundos
+     
+            fecha.setSeconds(addTime); //Añado el tiempo
+        return (fecha);
+        }
 
     //Entrada: Arreglo
     ListarInOut(InOut,which){
@@ -446,6 +523,18 @@ class NewEnunciado extends Component{
             </Row>
         }));
     }
+    createModal(){
+        return
+        <Modal isOpen={this.state.alertOpen} toggle={this.onDismiss}>
+              <ModalHeader toggle={this.onDismiss}>Nuevo</ModalHeader>
+              <ModalBody>
+              {(this.state.alertType==="success")?"Nuevo Enunciado Creado Con Exito":"Se tuvo un problema con la conexion intente mas tarde..."}
+              </ModalBody>
+              <ModalFooter>
+                  <Button color={this.state.alertType} >Aceptar</Button>
+              </ModalFooter>
+        </Modal>
+    }
 
     render(){
         const feedBack="Complete este campo";
@@ -459,23 +548,28 @@ class NewEnunciado extends Component{
 
             <Row>
                   <Col>
+                    
                   <Card>
+                      
                     <CardHeader >
-                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado { isNaN(parseInt("hola mundo")).toString()}
+                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado
                     </CardHeader>
+                    <Alert color={this.state.alertType} isOpen={this.state.alertOpen} toggle={this.onDismiss}>
+                        {(this.state.alertType==="success")?"Nuevo Enunciado Creado Con Exito":"Se tuvo un problema con la conexion intente mas tarde..."}
+                    </Alert>
                     <CardBody>
                     <Form>
                         
                         <FormGroup>
                             <Label  htmlFor="tituloEnun">Titulo</Label>
                             <Input  type="text" name="titulo" valid={inputValidadores[0].titulo} invalid={inputValidadores[1].titulo} id="tituloEnun" aria-describedby="info" 
-                            placeholder="Introduce el titulo del Enunciado" onChange={this.handleChange}/>
+                            placeholder="Introduce el titulo del Enunciado" onChange={this.handleChange} value={this.state.titulo}/>
                             <FormFeedback>{feedBack}</FormFeedback>
                         </FormGroup>
                         <FormGroup>
                             <Label htmlFor="bodyEnunciado">Enunciado</Label>
                             <Input type="textarea"  name="enunciado" id="bodyEnunciado" rows="10" style={{resize:'none'}} 
-                             valid={inputValidadores[0].enunciado} invalid={inputValidadores[1].enunciado}
+                             valid={inputValidadores[0].enunciado} invalid={inputValidadores[1].enunciado} value={this.state.enunciado}
                             placeholder="Introduce el Cuerpo del Enunciado" onChange={this.handleChange}/>
                             <FormFeedback>{feedBack}</FormFeedback>
 
@@ -504,12 +598,11 @@ class NewEnunciado extends Component{
                             <Col>
                                 <FormGroup>
                                     <Label htmlFor="topic">Topico</Label>
-                                    <Input type="select" name="topico"  defaultValue="" style={{width:"80%"}} onChange={this.handleChange} 
-                                        valid={inputValidadores[0].topic} invalid={inputValidadores[1].topic}
-                                    >
+                                    <Input type="select" name="topico" value={this.state.topico} style={{width:"82%"}} onChange={this.handleChange} 
+                                        valid={inputValidadores[0].topic} invalid={inputValidadores[1].topic}>
                                         <option disabled hidden value="" >Topicos</option>
                                         {this.state.topics && this.state.topics.map((topico,key)=>{
-                                            return <option key={key} itemID={topico.topicID} id={key} value={topico.topicName} >{topico.topicName}</option>
+                                            return <option key={key} itemID={topico.topicID} id={key} value={key} >{topico.topicName}</option>
                                         })}
                                     </Input>
                                     <FormFeedback>{feedBackTopic}</FormFeedback>
@@ -600,7 +693,7 @@ class NewEnunciado extends Component{
                                     <Input  type="number" id="dias" name="dias"
                                      className="form-control" min="0" 
                                      valid={inputValidadores[0].dias} invalid={inputValidadores[1].dias}
-                                     defaultValue={0} onChange={this.handleChange}/>
+                                     value={this.state.dias} onChange={this.handleChange}/>
                                     <FormFeedback>{(this.state.invalidDias===0)?feedBack:(this.state.invalidDias===1)?feedBackNum:feedBackNumPlus}</FormFeedback>
                                 </FormGroup>
                                 </Col>
@@ -612,9 +705,9 @@ class NewEnunciado extends Component{
                                 <FormGroup >
                                     <Label htmlFor="puntosTotales">Puntaje Total del Enunciado</Label>
                                     <Input  type="number" name="PuntosTotales" className="form-control" 
-                                    min="1"  id="puntosTotales"  defaultValue={1} 
+                                    min="1"  id="puntosTotales" 
                                     valid={inputValidadores[0].puntaje} invalid={inputValidadores[1].puntaje}
-                                    onChange={this.handleChange}/>
+                                    onChange={this.handleChange} value={this.state.PuntosTotales}/>
                                     <FormFeedback>{(this.state.invalidPuntaje===0)?feedBack:(this.state.invalidPuntaje===1)?feedBackNum:feedBackNumPlus}</FormFeedback>
                                 </FormGroup>
                                 </Col>
@@ -639,10 +732,15 @@ class NewEnunciado extends Component{
                     <br/>
                     <Button  onClick={this.CrearEnunciadoAPI} disabled={this.state.aceptar}>
                             <strong> Crear</strong>
-                        </Button>
+                    </Button>
                     
                     </CardBody>
+                     <Alert color={this.state.alertType} isOpen={this.state.alertOpen} toggle={this.onDismiss}>
+                        {(this.state.alertType==="success")?"Nuevo Enunciado Creado Con Exito":"Se tuvo un problema con la conexion intente mas tarde..."}
+                    </Alert>
+                    {this.createModal()}
                 </Card>
+               
                   </Col>  
                 </Row>
             
