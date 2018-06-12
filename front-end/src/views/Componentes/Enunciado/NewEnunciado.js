@@ -4,6 +4,8 @@ import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
     InputGroupText,Label,Button,ButtonDropdown,} from 'reactstrap';
 import Axios from 'axios';
 
+const url= 'http://localhost:8082/';
+
 var inputValidadores=
 [{
     titulo:false,
@@ -47,11 +49,23 @@ class NewEnunciado extends Component{
             invalidDias:0,
             invalidPuntaje:0,
             invalidInOut:0,
+            topico:'',
+            topics:[]
         };
         
     }
     componentDidMount(){
-        
+        Axios.get(url+'topic')
+        .then(Response=>{
+
+            console.log(Response.data);
+            this.setState({
+                topics:Response.data
+            });
+
+        }).catch(function(error){
+            console.log(error);
+        });
     };
 
     handleChange=event=>{
@@ -59,9 +73,16 @@ class NewEnunciado extends Component{
         //console.log(event.target.value);
         var name=event.target.name;
         var value=event.target.value;
-        this.setState({
-            [name]:value
-        });
+        if(name==='topico'){
+            console.log(event);
+            var id=event.target;
+        }else{
+            this.setState({
+                [name]:value
+            });
+        }
+        console.log(value);
+        
         this.HandleValidador(name,value);
         
     }
@@ -355,29 +376,35 @@ class NewEnunciado extends Component{
 
     CrearEnunciadoAPI=event=>{
         console.log(this.state);
-        this.validador()
+        if(this.validador()){
+            var exercise={
+                'exerciseTitle': this.state.titulo,
+                'exerciseBody': this.state.enunciado,
+                'exerciseLenguge': this.state.lenguaje,
+                'exerciseIntialDate': this.state.fechaInicial+"T03:00:00.000+0000",
+                'exerciseInput': this.arrayToFormatInOut(this.state.entradas), 
+                'exerciseOutput': this.arrayToFormatInOut(this.state.salidas),
+                'exerciseFinishlDate': this.state.fechaFinal+"T03:00:00.000+0000",
+                'exerciseScore': this.state.PuntosTotales,
+                'exercisePublished': this.state.publicar,
+                'exerciseDifficulty':this.state.dificultad,
+                'exerciseDays':	this.state.dias
+            }
+            console.log(exercise);
+            /*Axios.post('http://localhost:8082/exercise',exercise)
+            .then(Response =>{
+                console.log(Response);
+            }
+            ).catch(function(error){
+                console.log(error);
+            });
+            console.log(exercise);*/
+        
+        }
         
         
 
-        /*var exercise={
-            'exerciseTitle': this.state.titulo,
-           'exerciseBody': this.state.enunciado,
-           'exerciseLenguge': this.state.lenguaje,
-            'exerciseIntialDate': this.state.fechaInicial+"T03:00:00.000+0000",
-            'exerciseInput': this.stringToFormatInOut(this.state.entradas), 
-            'exerciseOutput': this.stringToFormatInOut(this.state.salidas),
-            'exerciseFinishlDate': this.state.fechaFinal+"T03:00:00.000+0000",
-            'exerciseScore': this.state.PuntosTotales,
-            'exercisePublished': false   
-        }
-        Axios.post('http://localhost:8082/exercise',exercise)
-        .then(Response =>{
-            console.log(Response);
-        }
-        ).catch(function(error){
-            console.log(error);
-        });
-        console.log(exercise);*/
+        
     }
 
     //Entrada: Arreglo
@@ -442,22 +469,38 @@ class NewEnunciado extends Component{
 
                         </FormGroup>
 
-                        <FormGroup>
-                            <Label>Lenguaje</Label>
-                            <div></div>
-                            <FormGroup check inline>
-                                <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio1" value="1" defaultChecked onClick={this.handleChange}/>
-                                <Label check htmlFor="inlineRadio1">Python</Label>
-                            </FormGroup>
-                            <FormGroup check inline>
-                                <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio2" value="2" onClick={this.handleChange}/>
-                                <Label check htmlFor="inlineRadio2">Java</Label>
-                            </FormGroup>
-                            <FormGroup check inline>
-                                <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio3" value="3" onClick={this.handleChange}/>
-                                <Label check htmlFor="inlineRadio3">C </Label>
-                            </FormGroup>
-                        </FormGroup>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    
+                                        <Label>Lenguaje</Label>
+                                        <div></div>
+                                        <FormGroup check inline>
+                                            <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio1" value="1" defaultChecked onClick={this.handleChange}/>
+                                            <Label check htmlFor="inlineRadio1">Python</Label>
+                                        </FormGroup>
+                                        <FormGroup check inline>
+                                            <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio2" value="2" onClick={this.handleChange}/>
+                                            <Label check htmlFor="inlineRadio2">Java</Label>
+                                        </FormGroup>
+                                        <FormGroup check inline>
+                                            <Input  className="form-check-input" type="radio" name="lenguaje" id="inlineRadio3" value="3" onClick={this.handleChange}/>
+                                            <Label check htmlFor="inlineRadio3">C </Label>
+                                        </FormGroup>
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Label htmlFor="topic">Topico</Label>
+                                    <Input type="select" name="topico"  defaultValue="" style={{width:"80%"}} onChange={this.handleChange}>
+                                        <option disabled hidden value="" >Topicos</option>
+                                        {this.state.topics && this.state.topics.map((topico,key)=>{
+                                            return <option key={key} itemID={topico.topicID} id={key} value={topico.topicName} >{topico.topicName}</option>
+                                        })}
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                        </Row>
 
                         
                         <Row >
@@ -565,9 +608,10 @@ class NewEnunciado extends Component{
                         </Row>
 
                         <FormGroup row>
-                            <Col md="2"><Label htmlFor="publicar">Publicar Ahora</Label></Col>
+                            <Col md={3}><Label htmlFor="publicar">Publicar Ahora</Label></Col>
                             <Col style={{float:"right"}}>
                                 <FormGroup check className="checkbox">
+                                
                                     <Input className="form-check-input" type="checkbox" id="publicar" name="publicar" 
                                     value={this.state.publicar} checked={this.state.publicar} 
                                     onClick={this.handleClickPublicar}/>
@@ -577,6 +621,7 @@ class NewEnunciado extends Component{
                         
     
                     </Form>
+                    <br/>
                     <Button  onClick={this.CrearEnunciadoAPI} disabled={this.state.aceptar}>
                             <strong> Crear</strong>
                         </Button>
