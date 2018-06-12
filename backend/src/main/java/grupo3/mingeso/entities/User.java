@@ -67,7 +67,7 @@ public class User implements Serializable{
         return userExercise;
     }
 
-    public void setBookPublishers(Set<UserExercise> userExercise) {
+    public void setUserExercise(Set<UserExercise> userExercise) {
         this.userExercise = userExercise;
     }
 }

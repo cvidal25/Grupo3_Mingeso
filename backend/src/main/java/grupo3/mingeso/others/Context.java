@@ -1,6 +1,7 @@
 package grupo3.mingeso.others;
 
 public class Context {
+
     Strategy strategy;
 
     public Context(Strategy strategy){
@@ -12,20 +13,13 @@ public class Context {
     }
 
     //Método de estrategia
-    public String methodStrategy(String input)
+    public String[] methodStrategy(String code, String input, String output)
     {
-        int i = 1;
-        String realInput = "";
-        if (input.contains("\"")) {
-            String[] parts = input.split("(?=\")");
-            realInput = realInput.concat(parts[0]);
-            while(i < parts.length){
-                realInput = realInput.concat("\\");
-                realInput = realInput.concat(parts[i]);
-                i++;
-            }
-            return strategy.executeCode(realInput);
+        if (code.contains("\"") || code.contains("\\n")) {
+            String mediumCode = code.replace("\"","\\\"");
+            String realCode =  mediumCode.replace("\\n","\\\\n");
+            return strategy.executeCode(realCode,input,output);
         }
-        return strategy.executeCode(input);
+        return strategy.executeCode(code,input,output);
     }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
   Badge,
   Button,
@@ -19,6 +19,7 @@ import {
   Progress,
   Row,
   Table,
+  CardColumns,
 } from 'reactstrap';
 import Widget03 from '../../views/Widgets/Widget03'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
@@ -358,7 +359,7 @@ const sparklineChartOpts = {
   },
 };
 
-// Main Chart
+// Main Charts
 
 //Random Numbers
 function random(min, max) {
@@ -381,7 +382,7 @@ const mainChart = {
   labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30','31'],
   datasets: [
     {
-      label: 'Dataset prueba 1',
+      label: 'Enunciados Faciles',
       backgroundColor: hexToRgba(brandInfo, 10),
       borderColor: brandInfo,
       pointHoverBackgroundColor: '#fff',
@@ -389,7 +390,7 @@ const mainChart = {
       data: data1,
     },
     {
-      label: 'Dataset prueba 2',
+      label: 'Enunciados Intermedios',
       backgroundColor: 'transparent',
       borderColor: brandSuccess,
       pointHoverBackgroundColor: '#fff',
@@ -397,7 +398,7 @@ const mainChart = {
       data: data2,
     },
     {
-      label: 'Dataset prueba 3',
+      label: 'Enunciados Dificiles',
       backgroundColor: 'transparent',
       borderColor: brandDanger,
       pointHoverBackgroundColor: '#fff',
@@ -407,7 +408,43 @@ const mainChart = {
     },
   ],
 };
-
+//Chart de Torta
+const pie = {
+  labels: [
+    'Fácil',
+    'Intermedio',
+    'Difícil',
+  ],
+  datasets: [
+    {
+      data: [5, 8, 10],
+      backgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+      ],
+      hoverBackgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+      ],
+    }],
+};
+//Chart de Barra
+const bar = {
+  labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30','31'],
+  datasets: [
+    {
+      label: 'No se, pero algo util',
+      backgroundColor: 'rgba(255,99,132,0.2)',
+      borderColor: 'rgba(255,99,132,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      hoverBorderColor: 'rgba(255,99,132,1)',
+      data: data1,
+    },
+  ],
+};
 //CADA CUANTO SALTA, ESCALA DE LABEL
 const mainChartOpts = {
   tooltips: {
@@ -453,6 +490,14 @@ const mainChartOpts = {
     },
   },
 };
+const options = {
+  tooltips: {
+    enabled: false,
+    custom: CustomTooltips
+  },
+  maintainAspectRatio: false
+};
+
 const timeChartOpt = {
   tooltips: {
     enabled: false,
@@ -497,6 +542,7 @@ const timeChartOpt = {
     },
   },
 };
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -521,34 +567,6 @@ class Dashboard extends Component {
       radioSelected: radioSelected,
     });
   }
-  miniChart(cardDataChart, cardChartOpts){
-    return(
-      <Col xs="12" sm="6" lg="3">
-        <Card className="text-white bg-info">
-          <CardBody className="pb-0">
-            <ButtonGroup className="float-right">
-              <ButtonDropdown id='card2' isOpen={this.state.card2} toggle={() => { this.setState({ card2: !this.state.card2 }); }}>
-                <DropdownToggle caret className="p-0" color="transparent">
-                  <i className="icon-settings"></i>
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>Ver</DropdownItem>
-                  <DropdownItem>Actualizar</DropdownItem>
-                  <DropdownItem disabled>Disabled action</DropdownItem>
-                  <DropdownItem>Algo Más</DropdownItem>
-                </DropdownMenu>
-              </ButtonDropdown>
-            </ButtonGroup>
-            <div className="text-value">9.823</div>
-            <div>Titulo</div>
-          </CardBody>
-          <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-            <Line data={cardDataChart} options={cardChartOpts} height={70} />
-          </div>
-        </Card>
-      </Col>
-    )
-  }
   totalValue(valueName,data){
     return(
       <Col sm={12} md className="mb-sm-2 mb-0">
@@ -558,6 +576,45 @@ class Dashboard extends Component {
       </Col>
     )
   }
+
+  //Grafo de minichart
+  miniChart(miniChartData,miniChartOps){
+    return(
+      <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
+        <Line data={miniChartData} options={miniChartOps} height={70} />
+      </div>
+    )
+  }
+  //Boton de los mini charts
+  buttonCard(idB){
+    return(
+      <ButtonGroup className="float-right">
+        <ButtonDropdown id={idB} isOpen={this.state.idB} toggle={() => { this.setState({ idB: !this.state.idB }); }}>
+          <DropdownToggle caret className="p-0" color="transparent">
+            <i className="icon-settings"></i>
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem>Action</DropdownItem>
+            <DropdownItem>Another action</DropdownItem>
+            <DropdownItem disabled>Disabled action</DropdownItem>
+            <DropdownItem>Something else here</DropdownItem>
+          </DropdownMenu>
+        </ButtonDropdown>
+      </ButtonGroup>
+    )
+  }
+  //Titulo de los minicharts
+  tittleMiniChart(titulo,idB){
+    return(
+      <CardBody className="pb-0">
+        {this.buttonCard(idB)}
+        <div className="text-value">9.823</div>
+        <div>{titulo}</div>
+      </CardBody>
+    )
+  }
+  
+  //Botones de filtro de cada grafo
   filtro(){
     return(
       <Col sm="7" className="d-none d-sm-inline-block">
@@ -572,160 +629,164 @@ class Dashboard extends Component {
       </Col>
     )
   }
-  crearChart(chartData,chartOpts){
+  //Chart de lineas
+  mainChartLine(chartData,chartOpts){
     return(
-      <div className="chart-wrapper" style={{ height: 300 + 'px', marginTop: 40 + 'px' }}>
-        <Line data={chartData} options={chartOpts} height={300} />
+      <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
+        <Line data={chartData} options={chartOpts} height={70} />
       </div>
     )
   }
-  diffChart(charData,chartOpts){
-
+  //Chart de torta
+  mainChartPie(chartData){
+    return(
+      <div className="chart-wrapper"style={{ height: 70 + '%', marginTop: 5 + '%' }}>
+        <Pie data={chartData} height={200} />
+      </div>
+    )
+  }
+  mainChartBar(chartData, chartOpts){
+    return(
+      <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
+        <Bar data={chartData} options={chartOpts} height={200}/>
+      </div>
+    )
+  }
+  //Titulo de los maincharts
+  mainChartTittle(titulo,mes){
+    return(
+      <Col sm="5">
+        <CardTitle className="mb-0">{titulo}</CardTitle>
+        <div className="small text-muted">{mes}</div>
+      </Col>
+    )
+  }
+  //La idea es que aca se muestren mas detalladamente los datos de los charts
+  chartFooter(){
+    return(
+      <CardFooter>
+        <Row className="text-center">
+          <Col sm={12} md className="mb-sm-2 mb-0">
+            <div className="text-muted">Visits</div>
+            <strong>29.703 Users (40%)</strong>
+            <Progress className="progress-xs mt-2" color="success" value="40" />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+            <div className="text-muted">Unique</div>
+            <strong>24.093 Users (20%)</strong>
+            <Progress className="progress-xs mt-2" color="info" value="20" />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0">
+            <div className="text-muted">Pageviews</div>
+            <strong>78.706 Views (60%)</strong>
+            <Progress className="progress-xs mt-2" color="warning" value="60" />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0">
+            <div className="text-muted">New Users</div>
+            <strong>22.123 Users (80%)</strong>
+            <Progress className="progress-xs mt-2" color="danger" value="80" />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+            <div className="text-muted">Bounce Rate</div>
+            <strong>Average Rate (40.15%)</strong>
+            <Progress className="progress-xs mt-2" color="primary" value="40" />
+          </Col>
+        </Row>
+      </CardFooter>
+    )
   }
   topicChart(charData,chartOpts){
 
   }
 
-  render() {
-
+  render() {    
     return (
+      //Minicharts
       <div className="animated fadeIn">
         <Row>
-          {this.miniChart(cardChartData1,cardChartOpts1)}
-          {this.miniChart(cardChartData2,cardChartOpts2)}
-          {this.miniChart(cardChartData3,cardChartOpts3)}
-          {this.miniChart(cardChartData4,cardChartOpts4)}
+          <Col xs="12" sm="6" lg="3">
+            <Card className="text-white bg-info">
+              {this.tittleMiniChart("Ejercicios",'card1')}
+              {this.miniChart(cardChartData1,cardChartOpts1)}
+            </Card>
+          </Col>
+
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-primary">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <Dropdown id='card2' isOpen={this.state.card2} toggle={() => { this.setState({ card2: !this.state.card2 }); }}>
-                    <DropdownToggle className="p-0" color="transparent">
-                      <i className="icon-location-pin"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Line data={cardChartData1} options={cardChartOpts1} height={70} />
-              </div>
+              {this.tittleMiniChart("Promedio",'card2')}
+              {this.miniChart(cardChartData2,cardChartOpts2)}
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-warning">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <Dropdown id='card3' isOpen={this.state.card3} toggle={() => { this.setState({ card3: !this.state.card3 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper" style={{ height: '70px' }}>
-                <Line data={cardChartData3} options={cardChartOpts3} height={70} />
-              </div>
+              {this.tittleMiniChart("Conectados",'card3')}
+              {this.miniChart(cardChartData3,cardChartOpts3)}
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-danger">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card4' isOpen={this.state.card4} toggle={() => { this.setState({ card4: !this.state.card4 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
-              </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Bar data={cardChartData4} options={cardChartOpts4} height={70} />
-              </div>
+              {this.tittleMiniChart("Dificultad",'card4')}
+              {this.miniChart(cardChartData4,cardChartOpts4)}
             </Card>
           </Col>
         </Row>
+        {
+          //MAINCHART
+        }
         <Row>
           <Col>
             <Card>
               <CardBody>
                 <Row>
-                  <Col sm="5">
-                    <CardTitle className="mb-0">Traffic</CardTitle>
-                    <div className="small text-muted">November 2015</div>
-                  </Col>
-                  <Col sm="7" className="d-none d-sm-inline-block">
-                    <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
-                    <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
-                      <ButtonGroup className="mr-3" aria-label="First group">
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)} active={this.state.radioSelected === 1}>Day</Button>
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(2)} active={this.state.radioSelected === 2}>Month</Button>
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)} active={this.state.radioSelected === 3}>Year</Button>
-                      </ButtonGroup>
-                    </ButtonToolbar>
-                   </Col>
+                  {this.mainChartTittle("Enunciados realizados por día","Noviembre")}
+                  {this.filtro()}
                 </Row>
-                {this.crearChart(mainChart,mainChartOpts)}
-                {this.crearChart(mainChart,timeChartOpt)}
+                {this.mainChartLine(mainChart,mainChartOpts)}
               </CardBody>
-              <CardFooter>
-                <Row className="text-center">
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Visits</div>
-                    <strong>29.703 Users (40%)</strong>
-                    <Progress className="progress-xs mt-2" color="success" value="40" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Unique</div>
-                    <strong>24.093 Users (20%)</strong>
-                    <Progress className="progress-xs mt-2" color="info" value="20" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Pageviews</div>
-                    <strong>78.706 Views (60%)</strong>
-                    <Progress className="progress-xs mt-2" color="warning" value="60" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">New Users</div>
-                    <strong>22.123 Users (80%)</strong>
-                    <Progress className="progress-xs mt-2" color="danger" value="80" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Bounce Rate</div>
-                    <strong>Average Rate (40.15%)</strong>
-                    <Progress className="progress-xs mt-2" color="primary" value="40" />
-                  </Col>
+              {this.chartFooter()}
+            </Card>
+            <CardColumns className="cols-2">
+              <Card>
+                <CardBody>
+                  <Row>
+                    {this.mainChartTittle("Enunciados hechos por dificultad","Noviembre")}
+                    {this.filtro()}
+                  </Row>
+                  {this.mainChartPie(pie)}
+                </CardBody>
+                {this.chartFooter()}
+              </Card>
+              <Card>
+                <CardBody>
+                  <Row>
+                    {this.mainChartTittle("Horas gastadas en desarrollar","Noviembre")}
+                    {this.filtro()}
+                  </Row>
+                  {this.mainChartPie(pie)}
+                </CardBody>
+                {this.chartFooter()}
+              </Card>
+            </CardColumns>
+            <Card>
+              <CardBody>
+                <Row>
+                  {this.mainChartTittle("Enunciados realizados por día","Noviembre")}
+                  {this.filtro()}
                 </Row>
-              </CardFooter>
+                {this.mainChartBar(bar,options)}
+              </CardBody>
+              {this.chartFooter()}
             </Card>
           </Col>
         </Row>
-{/*
+        {
+          //RSS INFO
+        }
         <Row>
           <Col xs="6" sm="6" lg="3">
-            <Widget03 dataBox={() => ({ variant: 'facebook', friends: '89k', feeds: '459' })} >
+            <Widget03 dataBox={()                                     => ({ variant: 'facebook', friends: '89k', feeds: '459' })} >
               <div className="chart-wrapper">
                 <Line data={makeSocialBoxData(0)} options={socialChartOpts} height={90} />
               </div>
@@ -795,7 +856,9 @@ class Dashboard extends Component {
             </div>
           </Col>
         </Row>
-
+        {
+          //TRAFIC
+        }
         <Row>
           <Col>
             <Card>
@@ -1008,7 +1071,10 @@ class Dashboard extends Component {
                   </Col>
                 </Row>
                 <br />
-                {/*<Table hover responsive className="table-outline mb-0 d-none d-sm-table">
+                {
+                  //LAST USERS
+                }
+                <Table hover responsive className="table-outline mb-0 d-none d-sm-table">
                   <thead className="thead-light">
                   <tr>
                     <th className="text-center"><i className="icon-people"></i></th>
@@ -1232,11 +1298,11 @@ class Dashboard extends Component {
                     </td>
                   </tr>
                   </tbody>
-                </Table>*
+                </Table>
               </CardBody>
             </Card>
           </Col>
-        </Row>*/}
+        </Row>
       </div>
     );
   }
