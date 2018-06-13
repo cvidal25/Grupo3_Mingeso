@@ -76,8 +76,11 @@ class EnunciadoPro extends Component{
 
     toggleOpen(tab,posicionOpens) {
         var tempOpenStates=this.state.openStates;
-
+        if(tempOpenStates[3][posicionOpens]){
+            return;
+        }
         const prevState = this.state.openStates[posicionOpens];
+        
         const state = prevState.map((x, index) => tab === index ? !x : false);
 
         tempOpenStates[posicionOpens]=state;
@@ -87,8 +90,9 @@ class EnunciadoPro extends Component{
   }
     toggleOpenModal(tab){
         var tempOpenStates=this.state.openStates;
-        const prevState = this.state.openStates[3];
         tempOpenStates[3][tab]=!tempOpenStates[3][tab];
+        
+        
         this.setState({
             openStates:tempOpenStates
         });
@@ -152,7 +156,37 @@ class EnunciadoPro extends Component{
         </Modal>
     }
 
-    
+    handleDelete=(id,posicion)=>{
+        var array =this.state.items;
+        var element=array[posicion];
+
+        /*Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
+        .then(response=>{
+            console.log(response);
+            array.splice(posicion,1);
+            this.setState({
+                items:array
+            });
+
+        }).catch(error=>{
+            console.log(error);
+            array.splice(posicion,0,element);
+            this.setState({
+                items:array
+            });
+        });*/
+        fetch('http://localhost:8082/exercise/delete/'+id.toString(), {
+            method: 'delete'
+        }).then(response =>{
+          console.log(response);
+            //window.location.reload();
+            console.log("EXITO");
+        }
+                
+        ).catch(function (error) {
+                  console.log(error.message);
+                });
+    }
 
     listar (listaEnunciados){
         return (
@@ -221,8 +255,8 @@ class EnunciadoPro extends Component{
                                                             <strong> {enunciado.exerciseTitle}</strong>
                                                         </ModalBody>
                                                         <ModalFooter>
-                                                        <Button color="primary" onClick={()=>{this.toggleOpenModal(key);}}>Do Something</Button>{' '}
-                                                        <Button color="secondary" onClick={()=>{this.toggleOpenModal(key);}}>Cancel</Button>
+                                                        <Button color="info"  onClick={()=>{this.toggleOpenModal(key);}}>Cancelar</Button>{' '}
+                                                        <Button color="danger" outline onClick={()=>{this.toggleOpenModal(key);this.handleDelete(enunciado.exerciseID,key);}}>Aceptar</Button>
                                                         </ModalFooter>
                                                     </Modal>
                                                 

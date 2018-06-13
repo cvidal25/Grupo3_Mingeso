@@ -5,9 +5,7 @@ import grupo3.mingeso.entities.Exercise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -17,8 +15,8 @@ public class ExerciseService {
     @Autowired
     ExerciseRepository exerciseRepository;
     //GET ALL
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+        @RequestMapping(method = RequestMethod.GET)
+        @ResponseBody
     public Iterable<Exercise> getAllExercise() {
         return exerciseRepository.findAll();
     }
@@ -26,8 +24,8 @@ public class ExerciseService {
     //GET ONE
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Optional<Exercise> findOne(@PathVariable("id") Integer id) {
-        return exerciseRepository.findById(id);
+    public Exercise findOne(@PathVariable("id") Integer id) {
+        return exerciseRepository.findById(id).get();
     }
 
     //CREATE ONE
@@ -35,7 +33,6 @@ public class ExerciseService {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Exercise create(@RequestBody Exercise resource) {
-
         return exerciseRepository.save(resource);
     }
 
