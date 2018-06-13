@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -24,8 +25,8 @@ public class ExerciseService {
     //GET ONE
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Exercise findOne(@PathVariable("id") Integer id) {
-        return exerciseRepository.findById(id).get();
+    public Optional<Exercise> findOne(@PathVariable("id") Integer id) {
+        return exerciseRepository.findById(id);
     }
 
     //CREATE ONE
@@ -37,9 +38,9 @@ public class ExerciseService {
     }
 
     //DELETE ONE
-    @DeleteMapping(value = "delete/{id}")
+    @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public void productDelete(@PathVariable Integer id){
+    public void exerciseDelete(@PathVariable Integer id){
         exerciseRepository.deleteById(id);
 
     }

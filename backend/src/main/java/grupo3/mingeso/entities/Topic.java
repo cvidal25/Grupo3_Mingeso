@@ -1,4 +1,4 @@
-package grupo3.mingeso.entities;
+/*package grupo3.mingeso.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
@@ -43,4 +43,4 @@ public class Topic implements Serializable {
     public Set<Exercise> getExercises(){
         return this.Exercise;
     }
-}
+}*/

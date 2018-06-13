@@ -39,9 +39,9 @@ public class UserService {
     }
 
     //DELETE ONE
-    @DeleteMapping(value = "delete/{id}")
+    @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public void productDelete(@PathVariable Integer id){
+    public void userDelete(@PathVariable Integer id){
         userRepository.deleteById(id);
 
     }

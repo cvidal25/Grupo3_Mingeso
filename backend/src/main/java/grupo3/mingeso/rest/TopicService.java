@@ -1,4 +1,4 @@
-package grupo3.mingeso.rest;
+/*package grupo3.mingeso.rest;
 
 import grupo3.mingeso.entities.Topic;
 import grupo3.mingeso.repository.TopicRepository;
@@ -32,4 +32,4 @@ public class TopicService {
     public Topic create(@RequestBody Topic resource){
         return topicRepository.save(resource);
     }
-}
+}*/

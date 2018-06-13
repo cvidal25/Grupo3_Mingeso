@@ -52,6 +52,9 @@ public class Exercise implements Serializable {
     @Column(name = "days",nullable = false)
     private int exerciseDays;
 
+    @Column(name = "topic", nullable = false)
+    private String exerciseTopic;
+
     public void Exercise(){
     }
 
@@ -135,9 +138,10 @@ public class Exercise implements Serializable {
     public void setExerciseDays(int exerciseDays) {
         this.exerciseDays = exerciseDays;
     }
-    @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = false)
-    private Topic topic;
+
+    public String getExerciseTopic() { return exerciseTopic; }
+
+    public void setExerciseTopic(String exerciseTopic) { this.exerciseTopic = exerciseTopic; }
 
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -152,12 +156,16 @@ public class Exercise implements Serializable {
         this.userExercise = userExercise;
     }
 
+    /*@ManyToOne
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
+
     public Topic getTopic() {
         return this.topic;
     }
 
     public void setTopic(Topic topic) {
         this.topic = topic;
-    }
+    }*/
 
 }
