@@ -143,7 +143,7 @@ public class Exercise implements Serializable {
 
     public void setExerciseTopic(String exerciseTopic) { this.exerciseTopic = exerciseTopic; }
 
-    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private Set<UserExercise> userExercise = new HashSet<>();

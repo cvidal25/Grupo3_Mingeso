@@ -38,14 +38,6 @@ public class UserService {
         return userRepository.save(resource);
     }
 
-    //DELETE ONE
-    @DeleteMapping(value = "/{id}")
-    @ResponseBody
-    public void userDelete(@PathVariable Integer id){
-        userRepository.deleteById(id);
-
-    }
-
     //UPDATE
     @PutMapping(value = "/update", params = {"id","username","userCareer"})
     public User update(@RequestParam("id") Integer id, @RequestParam("username") String username, @RequestParam("userCareer") String userCareer,

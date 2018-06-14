@@ -21,7 +21,7 @@ RELLENO EJERCICIOS
 "exercisePublished": true,
 "exerciseDays": 10,
 "exerciseDifficulty":3,
-"topic": "Recursión"
+"exerciseTopic": "Recursión"
 }
 
 {
@@ -36,7 +36,7 @@ RELLENO EJERCICIOS
 "exercisePublished": false,
 "exerciseDays": 15,
 "exerciseDifficulty":1,
-"topic":"Aritmetica"
+"exerciseTopic":"Aritmetica"
 }
 
 {
@@ -51,7 +51,7 @@ RELLENO EJERCICIOS
 "exercisePublished": false,
 "exerciseDays": 5,
 "exerciseDifficulty":2,
-"topic":"Listas"
+"exerciseTopic":"Listas"
 }
 
 {
@@ -66,7 +66,7 @@ RELLENO EJERCICIOS
 "exercisePublished": true,
 "exerciseDays": 5,
 "exerciseDifficulty":2,
-"topic":"Input Output"
+"exerciseTopic":"Input Output"
 }
 
 RELLENO USERS
@@ -134,10 +134,35 @@ RELLENO USER_EXERCISE
 }
 
 {
-	"exercise": {
-        "exerciseID": 1
+    "userScore": 5,
+    "userDateResolution": "2012-04-30T02:15:12.000+0000",
+    "userSolvingTime": "2012-04-30T02:15:12.000+0000",
+    "userOutput": "hola/@oahc/@iab",
+    "exercise": {
+        "exerciseID": 4
     },
-	"user":{
-			"userID":2
-		}
+    "user": {
+        "userID": 6
+    }
 }
+
+{
+    "userScore": 5,
+    "userDateResolution": "2012-04-30T02:15:12.000+0000",
+    "userSolvingTime": "2012-04-30T02:15:12.000+0000",
+    "userOutput": "hola/@oahc/@iab",
+    "exercise": {
+        "exerciseID": 4
+    },
+    "user": {
+        "userID": 4
+    }
+}
+
+
+
+URL for update:
+http://localhost:8082/exercise/update?id=2&body=Lorem%20ipsumÑAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA%20dolor%20sit%20amet%20consectetur%20adipiscing,%20elit%20imperdiet%20cras%20facilisi%20hac,%20laoreet%20etiam%20nec%20accumsan%20nascetur.%20Rhoncus%20non%20metus%20quam%20semper%20nulla%20orci%20integer%20consequat%20gravida,%20viverra%20porta%20lectus%20volutpat%20nec%20nascetur%20hendrerit%20enim,%20facilisis%20bibendum%20pellentesque%20proin%20tempus%20quisque%20vivamus%20at.%20Cubilia%20mattis%20mauris%20montes%20volutpat%20imperdiet%20in%20quis%20nec,%20vivamus%20rhoncus%20natoque%20neque%20morbi%20himenaeos%20platea%20enim%20sollicitudin,%20a%20libero%20aenean%20erat%20elementum%20est%20mus.%20Habitasse%20curabitur%20mi%20aliquet%20ultricies%20ornare%20magnis%20tristique%20cubilia%20augue,%20nostra%20massa%20leo%20eget%20iaculis%20sodales%20sollicitudin%20pretium,%20sed%20dapibus%20faucibus%20hac%20nam%20ligula%20aenean%20eros.%20Dictum%20aenean%20netus%20cursus%20convallis%20fames%20nibh%20sagittis%20tellus%20cras%20eget,%20purus%20augue%20condimentum%20primis%20vestibulum%20bibendum%20taciti%20consequat%20vel%20potenti,%20turpis%20montes%20tortor%20odio%20praesent%20phasellus%20class%20at%20ligula.%20Eu%20semper%20nullam%20vel%20ultricies%20enim%20habitasse%20proin%20lobortis%20natoque%20curae,%20tortor%20non%20sollicitudin%20venenatis%20lectus%20placerat%20interdum%20egestas%20in%20suspendisse%20taciti,%20tincidunt%20nulla%20magnis%20hendrerit%20sodales%20id%20nec%20tempor%20scelerisque.&published=true
+
+http://localhost:8082/user/update?id=3&username=Christiancito+David+Vidal+Cerda&userCareer=Ingenieria+Ejecucion+Quimica
+
