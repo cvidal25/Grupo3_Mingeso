@@ -4,6 +4,7 @@ import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
     InputGroupText,Label,Button,ButtonDropdown,Alert,
     Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
+import Topicos from './Topicos';
 
 const url= 'http://localhost:8082/';
 
@@ -53,7 +54,6 @@ class NewEnunciado extends Component{
             invalidPuntaje:0,
             invalidInOut:0,
             topico:'',
-            topics:[],
             alertOpen:false,
             alertType:"danger"
         };
@@ -63,17 +63,7 @@ class NewEnunciado extends Component{
 
     
     componentDidMount(){
-        Axios.get(url+'topic')
-        .then(Response=>{
-
-            console.log(Response.data);
-            this.setState({
-                topics:Response.data
-            });
-
-        }).catch(function(error){
-            console.log(error);
-        });
+        
     };
 
     handleChange=event=>{
@@ -406,7 +396,7 @@ class NewEnunciado extends Component{
                 'exercisePublished': this.state.publicar,
                 'exerciseDifficulty':this.state.dificultad,
                 'exerciseDays':	this.state.dias,
-                'topic': this.state.topics[this.state.topico]
+                'topic': this.state.topico
                 }
             
             console.log(exercise);
@@ -474,8 +464,6 @@ class NewEnunciado extends Component{
             
             
         }
-        
-        
 
         
     }
@@ -491,11 +479,9 @@ class NewEnunciado extends Component{
              anio = fecha.getFullYear(),
             //tiempo = prompt("Ingrese la cantidad de días a añadir"),
              addTime = tiempo * 86400; //Tiempo en segundos
-     
             fecha.setSeconds(addTime); //Añado el tiempo
         return (fecha);
         }
-
     //Entrada: Arreglo
     ListarInOut(InOut,which){
         return (
@@ -545,6 +531,7 @@ class NewEnunciado extends Component{
         const feedBackNum="Debe ser un número";
         const feedBackNumPlus="Debe ser un número positivo";
         const feedBackTopic="Debes seleccionar un topico";
+        console.log(Topicos);
         return (
 
             <Row>
@@ -599,11 +586,11 @@ class NewEnunciado extends Component{
                             <Col>
                                 <FormGroup>
                                     <Label htmlFor="topic">Topico</Label>
-                                    <Input type="select" name="topico" value={this.state.topico} style={{width:"82%"}} onChange={this.handleChange} 
+                                    <Input type="select" name="topico" defaultValue="" style={{width:"82%"}} onChange={this.handleChange} 
                                         valid={inputValidadores[0].topic} invalid={inputValidadores[1].topic}>
                                         <option disabled hidden value="" >Topicos</option>
-                                        {this.state.topics && this.state.topics.map((topico,key)=>{
-                                            return <option key={key} itemID={topico.topicID} id={key} value={key} >{topico.topicName}</option>
+                                        {Topicos &&  Topicos.map((topico,key)=>{
+                                            return <option key={key} id={key} value={topico} >{topico}</option>
                                         })}
                                     </Input>
                                     <FormFeedback>{feedBackTopic}</FormFeedback>
@@ -731,7 +718,7 @@ class NewEnunciado extends Component{
     
                     </Form>
                     <br/>
-                    <Button  onClick={this.CrearEnunciadoAPI} disabled={this.state.aceptar}>
+                    <Button  onClick={this.CrearEnunciadoAPI}>
                             <strong> Crear</strong>
                     </Button>
                     
