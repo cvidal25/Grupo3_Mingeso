@@ -15,6 +15,20 @@ public class AnswerService {
     ExerciseRepository exerciseRepository;
 
     //obtain and execute code having the exercise
+    /*Parameters:
+    Enters as JSON:
+        - language
+        - code
+        - exerciseID
+        - date
+        - solving time
+        - userID
+     Calculated in backend or obtained from database (These should be shown by frontend):
+        - score
+        - user output
+        - exercise input
+        - exercise output
+    * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String[] obtainCode(@RequestBody Factory factory){
@@ -23,5 +37,6 @@ public class AnswerService {
         factory.setOutput(exercise.getExerciseOutput());
         //Obtener el id del usuario, tiempo en resolver el ejercicio y la fecha en que se solucionó eso para guardarlo en userExercise.
         return factory.executeFactory();
+
     }
 }

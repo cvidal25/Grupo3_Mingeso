@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 public class TrialService {
 
     //obtain and execute code with just an input
+    /*Parameters:
+        - language
+        - code
+        - input
+    * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String[] obtainCode(@RequestBody Factory factory){

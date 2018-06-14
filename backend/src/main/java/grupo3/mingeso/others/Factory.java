@@ -5,23 +5,6 @@ public class Factory {
     int language;
     String code;
     int exercise_id;
-
-    public String getInput() {
-        return input;
-    }
-
-    public void setInput(String input) {
-        this.input = input;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
-    }
-
     String input;
     String output;
 
@@ -50,6 +33,22 @@ public class Factory {
     public int getExercise_id() { return exercise_id; }
 
     public void setExercise_id(int exercise_id) { this.exercise_id = exercise_id; }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
 
     public String[] executeFactory(){
         if(this.language == 1){

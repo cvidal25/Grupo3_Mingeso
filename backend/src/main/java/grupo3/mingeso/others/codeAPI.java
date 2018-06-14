@@ -13,21 +13,29 @@ public class codeAPI {
     public codeAPI(){
     }
 
-    //ver la manera de tener el output en esta función
     public String[] runProgram(String code, String language, String input, String output) {
         int i = 0;
+        int score = 0;
 
         String[] realInput = input.split("/@");
+        String[] jsonOutput = new String[realInput.length+1];
+        if(output != null){
 
-//        String[] realOutput = output.split("/@");
+            String[] realOutput = output.split("/@");
+            while(i < realInput.length){
+                jsonOutput[i] = runAPI(code,language,realInput[i]);
+                if(jsonOutput[i].contains(realOutput[i]))
+                    score++;
+                i++;
+            }
+            jsonOutput[i] = Integer.toString(score);
+        }else{
 
-        String[] jsonOutput = new String[realInput.length];
-
-        while(i < realInput.length){
-            jsonOutput[i] = runAPI(code,language,realInput[i]);
-            i++;
+            while(i < realInput.length){
+                jsonOutput[i] = runAPI(code,language,realInput[i]);
+                i++;
+            }
         }
-
         return jsonOutput;
     }
 
