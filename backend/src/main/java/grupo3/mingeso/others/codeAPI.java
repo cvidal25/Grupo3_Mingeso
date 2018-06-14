@@ -18,9 +18,10 @@ public class codeAPI {
         int score = 0;
 
         String[] realInput = input.split("/@");
-        String[] jsonOutput = new String[realInput.length+1];
-        if(output != null){
 
+        String[] jsonOutput = new String[realInput.length+1];
+
+        if(output != null){
             String[] realOutput = output.split("/@");
             while(i < realInput.length){
                 jsonOutput[i] = runAPI(code,language,realInput[i]);
@@ -30,7 +31,6 @@ public class codeAPI {
             }
             jsonOutput[i] = Integer.toString(score);
         }else{
-
             while(i < realInput.length){
                 jsonOutput[i] = runAPI(code,language,realInput[i]);
                 i++;
@@ -38,6 +38,7 @@ public class codeAPI {
         }
         return jsonOutput;
     }
+
 
     public String runAPI(String code, String language,String input){
         try {

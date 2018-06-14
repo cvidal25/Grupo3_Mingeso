@@ -1,5 +1,8 @@
 package grupo3.mingeso.others;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class Factory {
 
     int language;
@@ -7,6 +10,9 @@ public class Factory {
     int exercise_id;
     String input;
     String output;
+    int user_id;
+    Timestamp resolving_time;
+    Date resolving_date;
 
     public void Factory(int lang, String code, int exercise_id){
         this.language = lang;
@@ -49,6 +55,18 @@ public class Factory {
     public void setOutput(String output) {
         this.output = output;
     }
+
+    public int getUser_id() { return user_id; }
+
+    public void setUser_id(int user_id) { this.user_id = user_id; }
+
+    public Timestamp getResolving_time() { return resolving_time; }
+
+    public void setResolving_time(Timestamp resolving_time) { this.resolving_time = resolving_time; }
+
+    public Date getResolving_date() { return resolving_date; }
+
+    public void setResolving_date(Date resolving_date) { this.resolving_date = resolving_date; }
 
     public String[] executeFactory(){
         if(this.language == 1){
