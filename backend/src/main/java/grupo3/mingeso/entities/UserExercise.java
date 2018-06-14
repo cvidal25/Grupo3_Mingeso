@@ -15,16 +15,16 @@ public class UserExercise implements Serializable {
     @Column(name = "user_exercise_id",unique = true, nullable = false)
     private Integer userExerciseID;
 
-    @Column(name = "score",nullable = true)
+    @Column(name = "score",nullable = false)
     private Integer userScore;
 
-    @Column(name = "date_resolution",nullable = true)
+    @Column(name = "date_resolution",nullable = false)
     private Date userDateResolution;
 
-    @Column(name = "solving_time",nullable = true)
+    @Column(name = "solving_time",nullable = false)
     private Timestamp userSolvingTime;
 
-    @Column(name = "user_output",nullable = true, length = 2048)
+    @Column(name = "user_output",nullable = false, length = 2048)
     private String userOutput;
 
     @ManyToOne
