@@ -120,8 +120,14 @@ class CodeEditor extends Component{
            }
        }
        var data={
+           //usuario
+           //id del ejercicio
+           //tiempo de realizacion
+           //fecha de realizacion
            'language': parseInt(num)+1,
            'code':this.state.aceEditorValue
+           //solo para el answer
+           //falta trial -> input
        }
        console.log(data);
         Axios.post('http://localhost:8082/answer',data)

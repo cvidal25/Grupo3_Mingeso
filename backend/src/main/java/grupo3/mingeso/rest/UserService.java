@@ -38,14 +38,6 @@ public class UserService {
         return userRepository.save(resource);
     }
 
-    //DELETE ONE
-    @DeleteMapping(value = "delete/{id}")
-    @ResponseBody
-    public void productDelete(@PathVariable Integer id){
-        userRepository.deleteById(id);
-
-    }
-
     //UPDATE
     @PutMapping(value = "/update", params = {"id","username","userCareer"})
     public User update(@RequestParam("id") Integer id, @RequestParam("username") String username, @RequestParam("userCareer") String userCareer,
@@ -61,4 +53,9 @@ public class UserService {
         user.setUserCareer(userCareer);
         return userRepository.save(user);
     }
+
+    //Get User by their email
+    @RequestMapping(value = "/email/{email}",method = RequestMethod.GET)
+    @ResponseBody
+    public User findMail(@PathVariable("email") String email){ return userRepository.findByUserMail(email); }
 }
