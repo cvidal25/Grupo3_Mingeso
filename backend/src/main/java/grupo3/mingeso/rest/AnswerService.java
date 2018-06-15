@@ -49,7 +49,7 @@ public class AnswerService {
     * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, String> obtainCode(@RequestBody Factory factory){
+    /*public Map<String, String> obtainCode(@RequestBody Factory factory){
         //Exercise exercise = exerciseRepository.findById(factory.getExercise_id()).get();
         //factory.setInput(exercise.getExerciseInput());
         //factory.setOutput(exercise.getExerciseOutput());
@@ -59,8 +59,11 @@ public class AnswerService {
         //list.put("Lo de la Shalu",factory.executeFactory().toString());
 
         //Obtener el id del usuario, tiempo en resolver el ejercicio y la fecha en que se solucionó eso para guardarlo en userExercise.
-        return list;
-    public String[] executeCode(@RequestBody Factory factory){
+        return list;*/
+    public Map<String, String> executeCode(@RequestBody Factory factory){
+        CodeAnalysis code = new CodeAnalysis();
+        HashMap<String,String> list =code.Analysis(factory.getCode(),factory.getLanguage());
+
         Exercise exercise = exerciseRepository.findById(factory.getExercise_id()).get();
 
         factory.setInput(exercise.getExerciseInput());
@@ -78,9 +81,18 @@ public class AnswerService {
         int score = Integer.parseInt(arrayJson[arrayJson.length-1]);
         userExercise.setUserScore(score);
         userExercise.setUserOutput("aloh/@oahc/@iab"); //estático
-        userExerciseRepository.save(userExercise);
+        //userExerciseRepository.save(userExercise);
 
-        return arrayJson;
+        int i;
+        for(i = 0; i < arrayJson.length; i++){
+            if(i == arrayJson.length-1)
+                list.put("score",arrayJson[i]);
+            else
+                list.put("codeExecution".concat(Integer.toString(i)),arrayJson[i]);
+        }
+
+
+        return list;
     }
 }
 
