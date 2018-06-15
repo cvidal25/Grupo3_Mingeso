@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 //import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
-import brace from 'brace';
+import brace, { Split } from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
-import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button,Input,Label} from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
 
 import '../../../scss/spinner.css';
@@ -12,7 +12,7 @@ import 'brace/mode/java';
 import 'brace/mode/python';
 import 'brace/mode/c_cpp';
 
-import'brace/theme/dracula';
+import 'brace/theme/dracula';
 
 import { isString } from 'util';
 
@@ -32,10 +32,26 @@ class CodeEditor extends Component{
             modo:'python',
             bases:[basePython,baseJava,baseC_Cpp],
             aceEditorValue:"",
-            espera:false
+            espera:false,
+            url:"",
+            stdin:"",
 
         }
     };
+
+    componentWillMount(){
+
+        var lenguaje,url;
+        url=this.props.location.pathname;
+        url=url.split("/");
+        console.log(url,"original");
+        if(this.state.url===""){    
+            this.setState({
+                url:url[2]
+            });
+            return;
+        }
+    }
 
     componentDidMount(){
         this.setState({
@@ -90,7 +106,20 @@ class CodeEditor extends Component{
         }
       }
 
-
+      ComponentDidUpdate(){
+        console.log(this.props.match);    
+      }
+    
+    verificarURL(){
+        
+        var lenguaje,url;
+        url=this.props.location.pathname;
+        console.log(url);
+        url=url.split("/");
+        if(this.state.url!==url[2]){
+            window.location.reload();
+        }
+    }
 
 
     onChange=(NewValue)=>{
@@ -98,7 +127,7 @@ class CodeEditor extends Component{
         this.setState({
             aceEditorValue:NewValue
         });
-        console.log(this.state.aceEditorValue);
+        //console.log(this.state.aceEditorValue);
     };
 
     handleSentCodigo=event=>{
@@ -149,6 +178,7 @@ class CodeEditor extends Component{
                 break;
             }
         }
+        this.verificarURL();
 
         return (
             <div>
@@ -163,34 +193,53 @@ class CodeEditor extends Component{
                 
                     </CardHeader>
                     <CardBody>
-
-                        
                         {this.state.espera ?
                              <div className="defaultSpinner"></div>
                             :
                             <div >
-                            <div style={{textAlign:"justify",fontSize:"18"}}>
-                            {this.state.enunciado.exerciseBody}
-                            </div>
-                                <div style={{height:"20px"}}> </div>
-                                <AceEditor
-                                    mode={this.state.modo}
-                                    theme='dracula'
-                                    name="blah2"
-                                    width="70%"
-                                    onChange={this.onChange}
-                                    fontSize={18}
-                                    showPrintMargin={true}
-                                    showGutter={true}
-                                    highlightActiveLine={true}
-                                    value={this.state.bases[num]}
-                                    setOptions={{
-                                        enableBasicAutocompletion: true,
-                                        enableLiveAutocompletion: true,
-                                        enableSnippets: true,
-                                        showLineNumbers: true,
-                                        tabSize: 2,
-                                    }}/>
+                                <Row>
+                                    <Col style={{textAlign:"justify",fontSize:"18"}}>
+                                    {this.state.enunciado.exerciseBody}
+                                    </Col>
+                                </Row>
+                                <br/>
+                                <Row>
+                                    <Col>
+                                        <Label> Entrada: </Label>
+                                    </Col> 
+                                </Row>
+
+                                <Row>
+                                        <Col>
+                                            stdin
+                                        </Col>
+                                        <Col>
+                                            <Input type="text" placeholder="En caso de probar necesitar probar un entrada ingresala aqui"/>
+                                        </Col>
+                                </Row>
+
+                                <Row>
+                                    <Col md={8}>
+                                        <AceEditor
+                                            mode={this.state.modo}
+                                            theme='dracula'
+                                            name="blah2"
+                                            width="100%"
+                                            onChange={this.onChange}
+                                            fontSize={18}
+                                            showPrintMargin={true}
+                                            showGutter={true}
+                                            highlightActiveLine={true}
+                                            value={this.state.bases[num]}
+                                            setOptions={{
+                                                enableBasicAutocompletion: true,
+                                                enableLiveAutocompletion: true,
+                                                enableSnippets: true,
+                                                showLineNumbers: true,
+                                                tabSize: 2,
+                                            }}/>
+                                        </Col>
+                                </Row>
                             </div>
                         }
                          
