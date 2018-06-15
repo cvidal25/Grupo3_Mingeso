@@ -2,19 +2,19 @@ import {createStore} from 'redux';
 
 const reducer = (state,action)=>{
 	if(action.type ==="LOG_IN"){
+			console.log("bbbbbbbbbbbbbbb");
 		return{
 			...state,
 			infoUsuarios:action.infoUsuario,
 		}
+			
 	}
 	else if(action.type==="lOG_OUT"){
+		console.log("lalalalalalalalalal");
 		return{
 			...state,
-			infoUsuarios: "",
+			infoUsuarios:{id:'', rol:'' , nombre:''},
 		}
-	console.log("bbbbbbbbbbbbbbb")
-	console.log(this.state.infoUsuarios)
-	console.log("bbbbbbbbbbbbbbb")
 	}
 	return state;
 };

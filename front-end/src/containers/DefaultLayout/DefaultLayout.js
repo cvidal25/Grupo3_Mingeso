@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
-import store from '../../store'
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
 
 import {
   AppAside,
@@ -23,18 +24,25 @@ import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
+
+
+
+
 class DefaultLayout extends Component {
    constructor () {
     super();
     this.state = {
-      links: navigation
+      links: navigation,
 
     };
   }
 
   componentDidMount(){
-    this.filtrarLinks('2');
+
+   this.filtrarLinks(this.props.infoUsuarios.userType);
   }
+  
+
   // Al ejecutar esta funcion desaparecer y aparecen links que
   // el usuario indicado puede acceder.
   filtrarLinks(tipoUsuario){
@@ -52,7 +60,6 @@ class DefaultLayout extends Component {
     this.setState({
       links: { items: items }
     });
-
   }
 
   render() {
@@ -98,5 +105,10 @@ class DefaultLayout extends Component {
     );
   }
 }
+const mapStateToProps = state =>{
+  return{
+    infoUsuarios: state.infoUsuarios
+  };
+};
 
-export default DefaultLayout;
+export default connect(mapStateToProps)(DefaultLayout);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card, Row, CardHeader, CardBody, CardGroup, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
-import  { Redirect, Link } from 'react-router-dom';
+import  { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { GoogleLogin } from 'react-google-login-component';
 import Axios from 'axios';
@@ -27,10 +27,11 @@ class Login extends Component {
         token:"",
         mail:"",//
         nombreUsuario:"", 
-        infoUsuario:{id:1, rol:2 , nombre:"Bárbara Sarmiento"},
+        infoUsuario:"",
         correo:"",
         info: false,
         warning: false,
+        tipoUsuario: 1,
       };
     this.responseGoogle = this.responseGoogle.bind(this);
     this.getMail= this.getMail.bind(this);
@@ -56,7 +57,7 @@ class Login extends Component {
   getMail(){  
     Axios.get('https://www.googleapis.com/gmail/v1/users/'+this.state.token+'/profile')
         .then(Response =>{
-          console.log("lala");
+          //console.log("lala");
             console.log(Response);
         }
         ).catch(function(error){
@@ -64,24 +65,7 @@ class Login extends Component {
         });
     };
 
-  comprobarMail(){
-    Axios.get('http://localhost:8082/user') //mails
-        .then(response=>{
-          var respuesta = response.data.result;
-          var validador = false;
-          for (var usuario in respuesta) {
-            if (usuario.mail == this.state.mail) {
-              validador = true;
-            }
-            
-          }
-          return validador; 
-        })
-
-        .catch(function(error){
-            console.log(error);
-        });
-  };
+  
 
   responseGoogle (googleUser) {
     var id_token = googleUser.getAuthResponse().id_token;
@@ -109,20 +93,27 @@ class Login extends Component {
 
     var mailUsuario = this.state.mail;
     var temp;
-    var validador = this.comprobarMail();
     for (var i = 0; i< this.state.mail.length; i++){
       if (mailUsuario[i] == "@") {
         temp = mailUsuario.slice(i,mailUsuario.length);
         if (temp=="@usach.cl") {
-
-          this.toggleInfo();
-          /*if (validador) {
-            
+           var validador = this.comprobarMail();
+           if(validador){
+            infoUsuario:validador,
             this.toggleInfo();
-          }else{
-            alert('mail no registrado')
-          }*/
-
+           }
+           else{
+              this.setState({
+                mail:'',
+                token:'',
+                user:'',
+              });
+              this.toggleWarning();
+            }
+        //  this.agregarUsuario(this.state.infoUsuario);
+         // console.log(this.state.infoUsuario);
+          //console.log("yoooooooooooooooooooooo");
+         //window.location.replace('http://localhost:3000/dashboard');
         }else{
           this.setState({
             mail:'',
@@ -137,6 +128,25 @@ class Login extends Component {
     }
     //console.log(temp);
   }
+
+  comprobarMail(){
+    Axios.get('http://localhost:8082/user/email'+this.state.mail) //mails
+        .then(response=>{
+          var respuesta = response.data;
+          var validador = false;
+          if(respuesta != null ){
+            validador= true;
+            this.setState({
+              infoUsuario:respuesta,
+            });
+          }
+          return validador; 
+        })
+
+        .catch(function(error){
+            console.log(error);
+        });
+  };
 
   render() {
     console.log(this.state.infoUsuario)
@@ -167,8 +177,11 @@ class Login extends Component {
               </Col>
             </Row>
           </Container>
+
+
           <Modal isOpen={this.state.info} toggle={this.toggleInfo}
                    className={'modal-info ' + this.props.className}>
+
             <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
             <ModalBody>
               Bienvenid@ <strong> {this.state.nombreUsuario}</strong>, su inicio de sesión fue exitoso.
@@ -178,11 +191,15 @@ class Login extends Component {
                 pathname: '/dashboard',
                 //state: {  this.props. }
               }}>
-                <Button color="primary"  onClick={this.toggleInfo}  onClick={() => this.agregarUsuario(this.state.infoUsuario)} //paaaandi
+                <Button color="primary"  onClick={this.toggleInfo}  onClick={() => this.agregarUsuario(this.state.infoUsuario)} 
                 >Continuar</Button>
               </Link>
             </ModalFooter>
           </Modal>
+
+
+
+
           <Modal isOpen={this.state.warning} toggle={this.toggleWarning}
                 className={'modal-warning ' + this.props.className}>
             <ModalHeader toggle={this.toggleWarning}>Inicio de sesión</ModalHeader>
@@ -203,9 +220,7 @@ class Login extends Component {
     );
   }
   agregarUsuario(infoUsuario){
-      console.log("aaaaaaaa");
-    console.log(infoUsuario);
-    console.log("aaaaaaaa");
+    //console.log(infoUsuario);
       store.dispatch({
       type:"LOG_IN",
       infoUsuario: infoUsuario,

@@ -202,7 +202,7 @@ const Consola= Loadable({
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true , name: 'Inicio', component: DefaultLayout },
+  //{ path: '/', exact: true , name: 'Inicio', component: DefaultLayout },
   //
   {path: '/enunciadosPro/nuevo',exact: true, name:'Nuevo', component:NewEnunciado},
   {path: '/enunciados',exact: true, name: 'Enunciado', component:Enunciado },

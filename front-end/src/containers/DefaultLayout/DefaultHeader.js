@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import  { Redirect, Link } from 'react-router-dom';
+import  {  Link } from 'react-router-dom';
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Row, Col, Input, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { GoogleLogout } from 'react-google-login';
@@ -17,14 +17,37 @@ const propTypes = {
 
 const defaultProps = {};
 const responseGoogle = (response) => {
-  console.log(response);
+  //console.log(response);
 };
 
 class DefaultHeader extends Component {
+     constructor () {
+    super();
+    this.state = {
+    //  tipoUsuario: ''
+
+    };
+  }
+
+  componentDidMount(){
+    this.notUser(this.props.infoUsuarios.userName);
+  }
+
+  notUser(tipoUsuario){
+    if((tipoUsuario==='') || (tipoUsuario=== null )){
+      //console.log(window.location.href);
+      if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
+
+      }
+      else{
+        window.location.replace('/Login');
+      }
+    }
+  }
+
+
   render() {
     const { children,  ...attributes } = this.props;
-     console.log("potoo");
-    console.log(this.props);
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -51,7 +74,7 @@ class DefaultHeader extends Component {
 
               <div className="ml-auto text-center" >
                 
-                 <strong>{this.props.infoUsuarios.nombre}</strong>
+                 <strong>{this.props.infoUsuarios.userName}</strong>
               </div>
               <div className="ml-auto text-center" ></div>
                 {/*<NavItem className="d-md-down-none">
@@ -71,7 +94,6 @@ class DefaultHeader extends Component {
                    <DropdownItem header tag="div" className="text-center"><strong>Cuenta</strong></DropdownItem>
                    <Link to={{
                       pathname: '/Login',
-                      //state: {this.props. }
                     }}>
                        <DropdownItem  className="text-center" onClick={()=> this.props.salirCuenta(this.props.infoUsuario)}>
                         <i className="fa fa-lock"></i> Salir

@@ -1,6 +1,6 @@
 export default {
   items: [
-    {
+    /*{
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
@@ -9,7 +9,7 @@ export default {
         variant: 'info',
         text: 'NEW',
       },
-    },
+    },*/
     /*{
       title: true,
       name: 'Theme',
@@ -71,7 +71,7 @@ export default {
     {
       name:'Consola Libre',
       url: '/consola',
-      tipoUsuario: '1',//ALUMNO
+      tipoUsuario: '1',//ALUMNO 
       children:[
         {
           name:'Python',
