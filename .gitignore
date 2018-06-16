@@ -52,3 +52,5 @@ front-end/yarn-error.log*
 front-end/*.lock
 
 front-end/.idea
+
+\.DS_Store

@@ -3,7 +3,7 @@ import { Button, Card, Row, CardHeader, CardBody, CardGroup, Col, Container, Inp
 import  { Redirect, Link } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login-component';
 import Axios from 'axios';
-//import fondo from '../../../assets/img/fundamentos-programacion-bases-datos.jpg';
+import fondo from '../../../assets/img/imagenInicio.jpg';
 class Login extends Component {
 
    constructor (props, context) {
@@ -127,70 +127,71 @@ class Login extends Component {
       <div className="app flex-row align-items-center">
         <Container>
           <Row className="justify-content-center">
-            <Col md="6">
-            ​<picture>
-              <img src="../../../assets/img/imgagenInicio.jpg" class="img-fluid img-thumbnail" alt="..." />
-            </picture>
-            </Col>
-            <Col md="6">
-              <Card className="text-white bg-info p-4" >
-                <CardHeader>
-                  <h2 style={{textAlign: "center" }}>Bienvenido a la plataforma</h2>
-                </CardHeader>
-                <CardBody>
-                <br />
-                <br />
-                <br />
-                   <div style={{textAlign:"center"}}>
-                   
-                  <GoogleLogin socialId="171991856415-96dr3egj16vhs32dg4hr2fhbns24bhh3.apps.googleusercontent.com"
-                               className="google-login btn-lg btn-dark "
-                               scope="profile"
-                               fetchBasicProfile={true}
-                               style={{size:"lg"}}  
-                               responseHandler={this.responseGoogle}
-                               buttonText="Ingresar"
-                               />
-
-                  </div>
-
+            
+              <Col md="10">
+              <CardGroup>
+              ​ <Card className="text-white bg-primary d-md-down-none">
+                <img src={fondo} className="img-fluid" alt="..." style={{height:"100%"}}/>
+                </Card>
+                <Card className="text-white bg-info p-3"  >
+                  <CardHeader>
+                    <h2 style={{textAlign: "center" }}>Bienvenido a la plataforma</h2>
+                  </CardHeader>
+                  <CardBody>
                   <br />
                   <br />
                   <br />
+                    <div style={{textAlign:"center"}}>
+                    
+                    <GoogleLogin socialId="171991856415-96dr3egj16vhs32dg4hr2fhbns24bhh3.apps.googleusercontent.com"
+                                className="google-login btn-lg btn-dark "
+                                scope="profile"
+                                fetchBasicProfile={true}
+                                style={{size:"lg"}}  
+                                responseHandler={this.responseGoogle}
+                                buttonText="Ingresar"
+                                />
 
-                  <Modal isOpen={this.state.info} toggle={this.toggleInfo}
-                                 className={'modal-info ' + this.props.className}>
-                    <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
-                    <ModalBody>
-                      Bienvenid@ <strong> {this.state.user}</strong>, su inicio de sesión fue exitoso.
-                    </ModalBody>
-                    <ModalFooter>
-                        <Link to={{
-                        pathname: '/dashboard',
-                        //state: {  this.props. }
-                        }}>
-                        <Button color="primary" onClick={this.toggleInfo}>Continuar</Button>
-                      </Link>
-                    </ModalFooter>
-                  </Modal>
-                  <Modal isOpen={this.state.warning} toggle={this.toggleWarning}
-                       className={'modal-warning ' + this.props.className}>
-                    <ModalHeader toggle={this.toggleWarning}>Inicio de sesión</ModalHeader>
-                    <ModalBody>
-                      Error en el inicio de seción, utilice correo institucional.
-                    </ModalBody>
-                    <ModalFooter>
-                       <Link to={{
-                          pathname: '/Login',
-                          //state: {this,props. }
+                    </div>
+
+                    <br />
+                    <br />
+                    <br />
+
+                    <Modal isOpen={this.state.info} toggle={this.toggleInfo}
+                                  className={'modal-info ' + this.props.className}>
+                      <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
+                      <ModalBody>
+                        Bienvenid@ <strong> {this.state.user}</strong>, su inicio de sesión fue exitoso.
+                      </ModalBody>
+                      <ModalFooter>
+                          <Link to={{
+                          pathname: '/dashboard',
+                          //state: {  this.props. }
                           }}>
-                          <Button color="warning" onClick={this.toggleWarning}>Reintentar</Button>
+                          <Button color="primary" onClick={this.toggleInfo}>Continuar</Button>
                         </Link>
-                      
-                    </ModalFooter>
-                  </Modal>
-                </CardBody>
-              </Card>
+                      </ModalFooter>
+                    </Modal>
+                    <Modal isOpen={this.state.warning} toggle={this.toggleWarning}
+                        className={'modal-warning ' + this.props.className}>
+                      <ModalHeader toggle={this.toggleWarning}>Inicio de sesión</ModalHeader>
+                      <ModalBody>
+                        Error en el inicio de seción, utilice correo institucional.
+                      </ModalBody>
+                      <ModalFooter>
+                        <Link to={{
+                            pathname: '/Login',
+                            //state: {this,props. }
+                            }}>
+                            <Button color="warning" onClick={this.toggleWarning}>Reintentar</Button>
+                          </Link>
+                        
+                      </ModalFooter>
+                    </Modal>
+                  </CardBody>
+                </Card>
+              </CardGroup>
             </Col>
           </Row>
         </Container>
