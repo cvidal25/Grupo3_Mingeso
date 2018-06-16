@@ -99,7 +99,6 @@ class Login extends Component {
         if (temp=="@usach.cl") {
            var validador = this.comprobarMail();
            if(validador){
-            infoUsuario:validador,
             this.toggleInfo();
            }
            else{
@@ -130,7 +129,7 @@ class Login extends Component {
   }
 
   comprobarMail(){
-    Axios.get('http://localhost:8082/user/email'+this.state.mail) //mails
+    Axios.get('http://localhost:8082/user/email/'+this.state.mail) //mails
         .then(response=>{
           var respuesta = response.data;
           var validador = false;
