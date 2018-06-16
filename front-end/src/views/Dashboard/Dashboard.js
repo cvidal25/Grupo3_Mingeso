@@ -33,8 +33,33 @@ const brandDanger = getStyle('--danger')
 
 //PULL REQUEST
 //DATOS ESTATICOS PARA GRAFICOS
-//EJERCICIOS POR DIA
-/*Matrices de 31 espacios que representa la cantidad de ejercicios por dia realizados, 
+/* Se presentan los datos a utilizar para graficar, por ahora esta pensado, para el profesor y el alumno, 
+adicionalmente y POR AHORA solo se podra filtrar por carrera y totales, 
+pero tambien se debera tener en cuenta el graficar por cada coordinacion del curso de fundamentos.
+El profesor puede ver la informacion por carrera y por alumno en especifico (enunciado hechos, tiempo por enunciad),
+mientras que el alumno solo puede ver sus estadisticas.
+Ademas el profesor puede ver la cantidad de alumnos totales conectados al día o tambien filtrado por carrera.
+Ambos tipos de usuario pueden ver las estadisticas de forma día día del mes o ver los promedios y totales mensuales.
+/*Para resumir la verborria a continuación necesito de la base de datos:
+-La cantidad de cada tipo de enunciados (Facil, Intermedio, Dificil) hechos por cada alumno de cada carrera al día (Informatica, Electrica, etc).
+-La cantidad de minutos gastados en cada tipo de enunciado, hechos por cada alumno de cada carrera al día.
+-La cantidad de intentos realizados y la cantidad de fallos en cada tipo de enunciado, 
+ hecho por cada alumno de cada carrera al día. (Lease en "1.-" explicación de esto)
+-La cantidad de conecciones(al menos una vez al dias) hechas por cada alumno de cada carrera al día.
+
+Si puedo obtener los valores ya sea pidiendo por tipo de enunciado nombre del alumno,por carrera, por mes, por día, 
+se pueden calcular los promedios maximos y minimos. Calculos los cuales se podrian almacenar para evitar tantos 
+llamados a la base de datos, lo dejo a discusión del backend.*/
+
+/* 1.- Decidi la evaluacion de cada enunciado de forma binaria, es decir, al intentar el enunciado o lo tiene bueno o lo tiene malo,
+   ya que es lo mas facil de evaluar dado el sistema de respuestas que tienen los ejercicios, 
+   ahora no tengo entendido si el alumno puede repetir muchas veces el mismo enunciado, si es que puede repetir que solo sea hasta tenerlo bueno,
+   de esta manera se puede evaluar el rendimiento del alumno de forma, cuantos intentos necesito para resolver el ejercicio*/
+
+//ENUNCIADOS POR DIA
+//Por cada dia necesito que se almacene los enunciados por dificultad realizados por el alumno en el dia.
+
+/*Matrices de 31 espacios que representa la cantidad de enunciados por dia realizados, 
   cada espacio de la matriz representa al dia trabajado, es decir, el espacio [0] es el dia 1 del mes,
   el espacio [1] al dia 2 del mes y así. Los datos almacenados corresponden a enteros numericos.
   Puede contener datos vacios aunque se recomienda llenar con 0 (a criterio de backend),
@@ -42,40 +67,74 @@ const brandDanger = getStyle('--danger')
   Pero tambien se estaria dateando dias que quizas no hayan todavia pasado , como 0 tambn es un numero valido
   (por ejemplo estamos a 5, pero resto del mes aparece dateado ya que se relleno con ceros).*/
 
-//Ejercicios faciles por dia
-//Cantidad de ejercicios faciles realizados por dia, en un mes.
+//Enunciados faciles por dia
+//Cantidad de enunciados faciles realizados por dia, en un mes.
 const facilesPerDay = [2, 2, 10, 1, 2, 0
   , 2, 0, 0, 0, 1, 0
   , 8, 3, 6, 0, 0, 0
   , 0, 2, 8, 0, 0, 1
   , 4, 0, 3, 4, 6, 0
   , 0];
-//Ejercicios intermedios por dia
-//Cantidad de ejercicios faciles realizados por dia, en un mes
+//Enunciados intermedios por dia
+//Cantidad de enunciados faciles realizados por dia, en un mes.
 const intermediosPerDay = [2, 6, 6, 1, 3, 2
   , 2, 1, 0, 0, 1, 0
   , 10, 1, 6, 3, 0, 0
   , 1, 1, 8, 0, 0, 3
   , 3, 0, 3, 4, 5, 0
   , 0];
-//Ejercicios faciles por dia
-//Cantidad de ejercicios faciles realizados por dia, en un mes
+//Enunciados faciles por dia
+//Cantidad de enunciados faciles realizados por dia, en un mes.
 const dificilesPerDay = [2, 4, 7, 2, 0, 0
   , 4, 3, 0, 0, 0, 0
   , 10, 1, 1, 3, 17, 0
   , 0, 1, 5, 2, 0, 1
   , 0, 0, 3, 4, 5, 0
   , 2];
-//Ejercicios totales por día
+
+//Enunciados totales por día
 //Este almacenamiento de datos puede ser precindible,ya que se puede obtener los 
 //valores de los datos anteriores (cantidad de enunciados faciles, inter, dificiles)
-
-const exercisesPerDay = [6, 12, 23, 4, 5, 2
+const enunciadosPerDay = [6, 12, 23, 4, 5, 2
   , 8, 4, 0, 0, 2, 0
   , 28, 5, 13, 6, 17, 0
   , 1, 4, 21, 2, 0, 5
   , 7, 0, 9, 12, 16, 0
   , 2];
+//ENUNCIADOS GLOBALES POR DIA (Hechos por todos los alumnos en el sistema)
+/*Con esto se quiere graficar la cantidad de enunciados hechos al dia para mostrarle al profesor, 
+sigue las mismas reglas que los datos ya expuestos*/
+//Enunciados globales faciles hechos en el día
+const enunGFacilPerDay = [6, 12, 23, 4, 5, 2
+  , 8, 4, 0, 0, 2, 0
+  , 28, 5, 13, 6, 17, 0
+  , 1, 4, 21, 2, 0, 5
+  , 7, 0, 9, 12, 16, 0
+  , 2];
+//Enunciados globales intermedios hechos en el dia
+const enunGIntermediosPerDay = [6, 12, 23, 4, 5, 2
+  , 8, 4, 0, 0, 2, 0
+  , 28, 5, 13, 6, 17, 0
+  , 1, 4, 21, 2, 0, 5
+  , 7, 0, 9, 12, 16, 0
+  , 2];
+//Enunciados globales dificiles hechos en el dia
+const enunGDificilesPerDay = [6, 12, 23, 4, 5, 2
+  , 8, 4, 0, 0, 2, 0
+  , 28, 5, 13, 6, 17, 0
+  , 1, 4, 21, 2, 0, 5
+  , 7, 0, 9, 12, 16, 0
+  , 2];
+//Enunciados globales totales hechos en el día
+//Este almacenamiento de datos puede ser precindible,ya que se puede obtener los 
+//valores de los datos anteriores (cantidad de enunciados faciles, inter, dificiles)
+const enunGPerDay = [6, 12, 23, 4, 5, 2
+  , 8, 4, 0, 0, 2, 0
+  , 28, 5, 13, 6, 17, 0
+  , 1, 4, 21, 2, 0, 5
+  , 7, 0, 9, 12, 16, 0
+  , 2];
+
 //MINUTOS POR DÍA
 /*Matrices de 31 espacios que almacena un valor numerico entero que indica la cantidad de minutos 
   totales gastados en la realizacion de los enunciados.Puede contener datos vacios aunque se recomienda 
@@ -85,7 +144,7 @@ const exercisesPerDay = [6, 12, 23, 4, 5, 2
 
 //Minutos en faciles
 //Total de minutos por dia gastado en enunciados faciles
-  const minutesPerFaciles = [10, 10, 50, 5, 10, 0
+const minutesPerFaciles = [10, 10, 50, 5, 10, 0
   , 10, 0, 0, 0, 5, 0
   , 40, 15, 30, 0, 0, 0
   , 0, 10, 40, 0, 0, 5
@@ -112,12 +171,16 @@ const minutesPerDificiles = [40, 80, 140, 40, 0, 0
 
 //Minutos en total
 //Total de minutos gastados por día
+/*Este almacenamiento de datos puede ser precindible,ya que se puede obtener los 
+  valores de los datos anteriores (cantidad de enunciados faciles, inter, dificiles)*/
 const minutesPerDay = [70, 150, 250, 55, 40, 20
   , 110, 70, 0, 0, 15, 0
   , 340, 45, 110, 90, 340, 0
   , 10, 40, 220, 40, 0, 55
   , 50, 0, 105, 140, 180, 0
   , 40];
+//Minutos globales
+//No se si sera necesario mostrarle las cantidades de minutos globales ocupadas al profesor.
 
 //USUARIOS POR DÍA
 /*Matrices de 31 espacios que almacena un valor numerico entero que indica la cantidad de usuarios 
@@ -125,7 +188,7 @@ const minutesPerDay = [70, 150, 250, 55, 40, 20
   llenar con 0 (a criterio de backend),esto pensando en que si bien son 31 espacios con el fin de representar el mes, 
   hay meses que no tienen 31 días. Pero tambien se estaria dateando dias que quizas no hayan todavia pasado , como 0 tambn es un numero valido
   (por ejemplo estamos a 5, pero resto del mes aparece dateado ya que se relleno con ceros).*/
-const usersPerDay=[70, 150, 250, 55, 40, 20
+const usersPerDay = [70, 150, 250, 55, 40, 20
   , 110, 70, 0, 0, 15, 0
   , 340, 45, 110, 90, 340, 0
   , 10, 40, 220, 40, 0, 55
@@ -134,23 +197,49 @@ const usersPerDay=[70, 150, 250, 55, 40, 20
 //Usuarios conectados por carrera
 /*Usuarios conetados al dia por carrera*/
 //Informatica
-const userPerDayInformatica= [70, 150, 250, 55, 40, 20
+const userPerDayInformatica = [140, 75, 125, 110, 20, 40
+  , 55, 140, 32, 0, 15, 10
+  , 340, 90, 55, 945, 170, 1
+  , 20, 80, 110, 80, 0, 55
+  , 100, 0, 215, 70, 180, 0
+  , 120];
+//Electrica
+const userPerDayElectrica = [70, 150, 250, 55, 40, 20
   , 110, 70, 0, 0, 15, 0
   , 340, 45, 110, 90, 340, 0
   , 10, 40, 220, 40, 0, 55
   , 50, 0, 105, 140, 180, 0
   , 40];
+//TOTALES Y PROMEDIOS POR MESES
+/*Como se dijo anteriormente quizas no sea necesario almacenar este tipo de datos ya que es calculable, con los datos anteriores,
+pero en el caso de necesitarse, seria guardar los promedios y totales de los datos ya mencionados por cada mes*/
+//TOTALES
+
+//Total de enunciados por dificultad realizados por los alumnos del sistema en cada mes
+/*Matriz de tamaño 12 donde cada espacio representa un mes del año y en el cual se almacena 
+un dato numerico entero que indica el total de enunciado hecho ese mes*/
+const alu_facilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+const alu_intermedioPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+const alu_dificilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+//Total de enunciados
+const alu_enunPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+
+//Total de enunciados por tipo realizados por todas las carreras al mes
+const car_facilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+const car_intermedioPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+const car_dificilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+//Total de enunciados realizados al mes por todas las carreras
+const car_enunPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
+
+//TOTALES CONECTADOS AL MES
+//Informatica
+const usersPerMonthInformatica = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
 //Electrica
-const userPerDayElectrica= [70, 150, 250, 55, 40, 20
-    , 110, 70, 0, 0, 15, 0
-    , 340, 45, 110, 90, 340, 0
-    , 10, 40, 220, 40, 0, 55
-    , 50, 0, 105, 140, 180, 0
-    , 40];
-//PROMEDIOS POR MESES
-/*Almacenar los promedios calculados de meses completos, en este caso, representado por una matriz de 12 espacios en el cual cada espacio representa un mes*/
-const
-// Card Chart 1
+const usersPerMonthElectrica = [0, 0, 0, 716, 1620, 157, 246, 327, 2012, 740, 890, 543];
+
+/*Almacenar los promedios calculados de meses completos, en este caso, 
+representado por una matriz de 12 espacios en el cual cada espacio representa un mes*/
+// Card Chart 1*/
 const cardChartData1 = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
@@ -497,7 +586,7 @@ for (var i = 0; i <= elements; i++) {
   data3.push(65);
 }
 //COLORES Y ESPECIFICACIONES VISUALES DEL CHART
-const mainChart = {
+const enunChart = {
   labels: ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
     , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
     , 'Día 11', 'Día 12', 'Día 13', 'Día 14', 'Día 15'
@@ -512,7 +601,7 @@ const mainChart = {
       borderColor: brandInfo,
       pointHoverBackgroundColor: '#fff',
       borderWidth: 2,
-      data: exercisesPerDay,
+      data: enunciadosPerDay,
     },
     {
       label: 'Enunciados Faciles',
@@ -542,8 +631,53 @@ const mainChart = {
     },
   ],
 };
+const timeChart = {
+  labels: ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
+    , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
+    , 'Día 11', 'Día 12', 'Día 13', 'Día 14', 'Día 15'
+    , 'Día 16', 'Día 17', 'Día 18', 'Día 19', 'Día 20'
+    , 'Día 21', 'Día 22', 'Día 23', 'Día 24', 'Día 25'
+    , 'Día 26', 'Día 27', 'Día 28', 'Día 29', 'Día 30'
+    , 'Día 31'],
+  datasets: [
+    {
+      label: 'Enunciados Totales',
+      backgroundColor: hexToRgba(brandInfo, 10),
+      borderColor: brandInfo,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      data: minutesPerDay,
+    },
+    {
+      label: 'Enunciados Faciles',
+      backgroundColor: 'transparent',
+      borderColor: brandSuccess,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      data: minutesPerFaciles,
+    },
+    {
+      label: 'Enunciados Intermedios',
+      backgroundColor: 'transparent',
+      borderColor: brandDanger,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      //borderDash: [8, 5],
+      data: minutesPerIntermedios,
+    },
+    {
+      label: 'Enunciados Dificiles',
+      backgroundColor: 'transparent',
+      borderColor: brandWarning,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      //borderDash: [8, 5],
+      data: minutesPerDificiles,
+    },
+  ],
+};
 //Chart de Torta
-const pie = {
+const pieTime = {
   labels: [
     'Fácil',
     'Intermedio',
@@ -551,7 +685,29 @@ const pie = {
   ],
   datasets: [
     {
-      data: [5, 8, 10],
+      data: [325, 720, 1540],
+      backgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+      ],
+      hoverBackgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+      ],
+    }],
+};
+//
+const pieEnun = {
+  labels: [
+    'Fácil',
+    'Intermedio',
+    'Difícil',
+  ],
+  datasets: [
+    {
+      data: [65, 72, 77],
       backgroundColor: [
         '#FF6384',
         '#36A2EB',
@@ -566,21 +722,61 @@ const pie = {
 };
 //Chart de Barra
 const bar = {
-  labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+  labels: ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
+    , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
+    , 'Día 11', 'Día 12', 'Día 13', 'Día 14', 'Día 15'
+    , 'Día 16', 'Día 17', 'Día 18', 'Día 19', 'Día 20'
+    , 'Día 21', 'Día 22', 'Día 23', 'Día 24', 'Día 25'
+    , 'Día 26', 'Día 27', 'Día 28', 'Día 29', 'Día 30'
+    , 'Día 31'],
   datasets: [
     {
-      label: 'No se, pero algo util',
+      label: 'Informatica',
       backgroundColor: 'rgba(255,99,132,0.2)',
       borderColor: 'rgba(255,99,132,1)',
       borderWidth: 1,
       hoverBackgroundColor: 'rgba(255,99,132,0.4)',
       hoverBorderColor: 'rgba(255,99,132,1)',
-      data: data1,
+      data: userPerDayInformatica,
+    },
+    {
+      label: 'Electrica',
+      backgroundColor: 'rgba(99,255,132,0.2)',
+      borderColor: 'rgba(99,255,132,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(99,255,132,0.4)',
+      hoverBorderColor: 'rgba(99,255,132,1)',
+      data: userPerDayElectrica,
+    },
+  ],
+};
+const barMonth = {
+  labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
+    , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
+    , 'Noviembre', 'Diciebre'],
+  datasets: [
+    {
+      label: 'Informatica',
+      backgroundColor: 'rgba(255,99,132,0.2)',
+      borderColor: 'rgba(255,99,132,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      hoverBorderColor: 'rgba(255,99,132,1)',
+      data: usersPerMonthInformatica,
+    },
+    {
+      label: 'Electrica',
+      backgroundColor: 'rgba(99,255,132,0.2)',
+      borderColor: 'rgba(99,255,132,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(99,255,132,0.4)',
+      hoverBorderColor: 'rgba(99,255,132,1)',
+      data: usersPerMonthElectrica,
     },
   ],
 };
 //CADA CUANTO SALTA, ESCALA DE LABEL
-const mainChartOpts = {
+const enunChartOpts = {
   tooltips: {
     enabled: false,
     custom: CustomTooltips,
@@ -610,8 +806,8 @@ const mainChartOpts = {
         ticks: {
           beginAtZero: true,
           maxTicksLimit: 5,
-          stepSize: Math.ceil(exercisesPerDay.max / 5),
-          max: exercisesPerDay.max,
+          stepSize: Math.ceil(enunciadosPerDay.max / 5),
+          max: enunciadosPerDay.max,
         },
       }],
   },
@@ -662,8 +858,8 @@ const timeChartOpt = {
         ticks: {
           beginAtZero: true,
           maxTicksLimit: 5,
-          stepSize: Math.ceil(10 / 5),
-          max: 10,
+          stepSize: Math.ceil(minutesPerDay.max / 5),
+          max: minutesPerDay.max,
         },
       }],
   },
@@ -677,6 +873,7 @@ const timeChartOpt = {
   },
 };
 //Variables utiles a usar
+//Enunciados
 var totalEnunciados;
 var totalFaciles;
 var totalIntermedios;
@@ -684,6 +881,14 @@ var totalDificiles;
 var percentFaciles;
 var percentIntermedios;
 var percentDificiles;
+//Minutos
+var totalMinutes;
+var minutesFaciles;
+var minutesIntermedios;
+var minutesDificiles;
+var percentTimeF;
+var percentTimeI;
+var percentTimeD;
 
 class Dashboard extends Component {
   constructor(props) {
@@ -781,6 +986,8 @@ class Dashboard extends Component {
   }
   //Chart de torta
   mainChartPie(chartData) {
+    this.calculoDeEstadisticas();
+    console.log(totalFaciles);
     return (
       <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
         <Pie data={chartData} height={200} />
@@ -816,7 +1023,7 @@ class Dashboard extends Component {
   }
   //Calculo de values importantes
   calculoDeEstadisticas() {
-    totalEnunciados = this.sumaDeArray(exercisesPerDay, exercisesPerDay.length);
+    totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
     totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
     totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
     totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
@@ -824,20 +1031,28 @@ class Dashboard extends Component {
     percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
     percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
 
+    totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
+    minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
+    minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
+    minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
+    percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
+    percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
+    percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
+
   }
   //La idea es que aca se muestren mas detalladamente los datos de los charts
-  chartFooter() {
+  chartEnunFooter() {
     this.calculoDeEstadisticas();
     return (
       <CardFooter>
         <Row className="text-center">
           <Col sm={12} md className="mb-sm-2 mb-0">
             <div className="text-muted">Enunciados Realizados</div>
-            <strong>{totalEnunciados} Enunciados Totales </strong>
+            <strong>{totalEnunciados} Enunciados</strong>
             <Progress className="progress-xs mt-2" color="info" value="100" />
           </Col>
           <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-            <div className="text-muted">Faciles</div>
+            <div className="text-muted">Faciles Realizados</div>
             <strong>{totalFaciles} Enunciados ({percentFaciles}%)</strong>
             <Progress className="progress-xs mt-2" color="succes" value={String(percentFaciles)} />
           </Col>
@@ -855,6 +1070,35 @@ class Dashboard extends Component {
       </CardFooter>
     )
   }
+  chartTimeFooter() {
+    this.calculoDeEstadisticas();
+    return (
+      <CardFooter>
+        <Row className="text-center">
+          <Col sm={12} md className="mb-sm-2 mb-0">
+            <div className="text-muted">Tiempo Utilizado</div>
+            <strong>{totalMinutes} Minutos Totales </strong>
+            <Progress className="progress-xs mt-2" color="info" value="100" />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+            <div className="text-muted">Minutos en Faciles</div>
+            <strong>{minutesFaciles} Minutos ({percentTimeF}%)</strong>
+            <Progress className="progress-xs mt-2" color="succes" value={String(percentTimeF)} />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0">
+            <div className="text-muted">Minutos en Intermedios</div>
+            <strong>{minutesIntermedios} Minutos ({percentTimeI}%)</strong>
+            <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeI)} />
+          </Col>
+          <Col sm={12} md className="mb-sm-2 mb-0">
+            <div className="text-muted">Minutos por Difíciles</div>
+            <strong>{minutesDificiles} Minutos ({percentTimeD}%)</strong>
+            <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeD)} />
+          </Col>
+        </Row>
+      </CardFooter>
+    )
+  }
   topicChart(charData, chartOpts) {
 
   }
@@ -866,28 +1110,28 @@ class Dashboard extends Component {
         <Row>
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-info">
-              {this.tittleMiniChart("Ejercicios", 'card1')}
+              {this.tittleMiniChart("Enunciados", 'card1')}
               {this.miniChart(cardChartData1, cardChartOpts1)}
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-primary">
-              {this.tittleMiniChart("Promedio", 'card2')}
+              {this.tittleMiniChart("Logro", 'card2')}
               {this.miniChart(cardChartData2, cardChartOpts2)}
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-warning">
-              {this.tittleMiniChart("Conectados", 'card3')}
+              {this.tittleMiniChart("Minutos", 'card3')}
               {this.miniChart(cardChartData3, cardChartOpts3)}
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-danger">
-              {this.tittleMiniChart("Dificultad", 'card4')}
+              {this.tittleMiniChart("Conectados", 'card4')}
               {this.miniChart(cardChartData4, cardChartOpts4)}
             </Card>
           </Col>
@@ -903,9 +1147,19 @@ class Dashboard extends Component {
                   {this.mainChartTittle("Enunciados realizados por día", "Noviembre")}
                   {this.filtro()}
                 </Row>
-                {this.mainChartLine(mainChart, mainChartOpts)}
+                {this.mainChartLine(enunChart, enunChartOpts)}
               </CardBody>
-              {this.chartFooter()}
+              {this.chartEnunFooter()}
+            </Card>
+            <Card>
+              <CardBody>
+                <Row>
+                  {this.mainChartTittle("Minutos utilizado por día", "Noviembre")}
+                  {this.filtro()}
+                </Row>
+                {this.mainChartLine(timeChart, timeChartOpt)}
+              </CardBody>
+              {this.chartTimeFooter()}
             </Card>
             <CardColumns className="cols-2">
               <Card>
@@ -914,9 +1168,9 @@ class Dashboard extends Component {
                     {this.mainChartTittle("Enunciados hechos por dificultad", "Noviembre")}
                     {this.filtro()}
                   </Row>
-                  {this.mainChartPie(pie)}
+                  {this.mainChartPie(pieEnun)}
                 </CardBody>
-                {this.chartFooter()}
+                {this.chartEnunFooter()}
               </Card>
               <Card>
                 <CardBody>
@@ -924,20 +1178,26 @@ class Dashboard extends Component {
                     {this.mainChartTittle("Horas gastadas en desarrollar", "Noviembre")}
                     {this.filtro()}
                   </Row>
-                  {this.mainChartPie(pie)}
+                  {this.mainChartPie(pieTime)}
                 </CardBody>
-                {this.chartFooter()}
+                {this.chartTimeFooter()}
               </Card>
             </CardColumns>
             <Card>
               <CardBody>
                 <Row>
-                  {this.mainChartTittle("Enunciados realizados por día", "Noviembre")}
+                  {this.mainChartTittle("Usuarios conectados al día", "Noviembre")}
                   {this.filtro()}
                 </Row>
                 {this.mainChartBar(bar, options)}
               </CardBody>
-              {this.chartFooter()}
+              <CardBody>
+                <Row>
+                  {this.mainChartTittle("Usuarios conectados por mes", "Noviembre")}
+                  {this.filtro()}
+                </Row>
+                {this.mainChartBar(barMonth, options)}
+              </CardBody>
             </Card>
           </Col>
         </Row>
