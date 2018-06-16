@@ -27,7 +27,7 @@ class Login extends Component {
         token:"",
         mail:"",//
         nombreUsuario:"", 
-        infoUsuario:"",
+        infoUsuario:{"userID":3,"userName":"Jorge Paredes","userType":3,"userMail":"jorge.paredes@usach.cl","userCareer":"Ingeniería Ejecución en Informática","userCoordination":"A-1"},
         correo:"",
         info: false,
         warning: false,
@@ -76,7 +76,7 @@ class Login extends Component {
         token:id_token
     });
 
-    this.getMail();
+    //this.getMail();
     //console.log({ googleId });
     //console.log({accessToken: id_token});
     //console.log(googleUser);
@@ -97,9 +97,12 @@ class Login extends Component {
       if (mailUsuario[i] == "@") {
         temp = mailUsuario.slice(i,mailUsuario.length);
         if (temp=="@usach.cl") {
-           var validador = this.comprobarMail();
-           if(validador){
+          this.toggleInfo();
+
+           //var validador = this.comprobarMail();
+           /*if(validador){
             this.toggleInfo();
+
            }
            else{
               this.setState({
@@ -108,7 +111,9 @@ class Login extends Component {
                 user:'',
               });
               this.toggleWarning();
-            }
+            }*/
+
+
         //  this.agregarUsuario(this.state.infoUsuario);
          // console.log(this.state.infoUsuario);
           //console.log("yoooooooooooooooooooooo");
@@ -148,7 +153,7 @@ class Login extends Component {
   };
 
   render() {
-    console.log(this.state.infoUsuario)
+   // console.log(this.state.infoUsuario)
     return (
       <section style={ sectionStyle }>     
         <div className="app flex-row align-items-center">
@@ -163,7 +168,7 @@ class Login extends Component {
             </Row>
             <Row className="justify-content-center">
               <Col md="3">
-               <div style={{textAlign:"center"}}>
+                <div style={{textAlign:"center"}}>
                       <GoogleLogin socialId="171991856415-96dr3egj16vhs32dg4hr2fhbns24bhh3.apps.googleusercontent.com"
                                    className="google-login btn-lg btn-success btn-block btn-pill  "
                                    scope="profile"
@@ -172,7 +177,7 @@ class Login extends Component {
                                    responseHandler={this.responseGoogle}
                                    buttonText="Ingresar"
                       />
-                    </div>
+                </div>
               </Col>
             </Row>
           </Container>

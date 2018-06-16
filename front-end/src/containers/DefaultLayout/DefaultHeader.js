@@ -27,14 +27,25 @@ class DefaultHeader extends Component {
     //  tipoUsuario: ''
 
     };
+    this.notUser=this.notUser.bind(this);
+    this.showName = this.showName.bind(this);
   }
 
   componentDidMount(){
-    this.notUser(this.props.infoUsuarios.userName);
+    this.notUser(this.props.infoUsuarios);
+    
+    
+    console.log("1");
+    console.log(this.props.infoUsuarios.userName);
+    console.log("2");
+    console.log(this.props);
+    console.log("3");
   }
 
   notUser(tipoUsuario){
+    console.log("entre");
     if((tipoUsuario==='') || (tipoUsuario=== null )){
+      console.log("entre al primer if");
       //console.log(window.location.href);
       if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
 
@@ -45,7 +56,20 @@ class DefaultHeader extends Component {
     }
   }
 
+  showName(props){
+    if(props.infoUsuarios==null){
+      if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
 
+      }
+      else{
+        window.location.replace('/Login');
+      }
+    }
+    else{
+      return <strong>{this.props.infoUsuarios.userName}</strong>
+    }
+  }
+  
   render() {
     const { children,  ...attributes } = this.props;
     return (
@@ -73,8 +97,7 @@ class DefaultHeader extends Component {
 
 
               <div className="ml-auto text-center" >
-                
-                 <strong>{this.props.infoUsuarios.userName}</strong>
+                {this.showName(this.props)}
               </div>
               <div className="ml-auto text-center" ></div>
                 {/*<NavItem className="d-md-down-none">

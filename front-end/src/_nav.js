@@ -1,15 +1,12 @@
 export default {
   items: [
-    /*{
+    {
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
-      tipoUsuario: '3',//coordinador
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
-    },*/
+     /// tipoUsuario: '3','1','2',//coordinador
+     
+    },
     /*{
       title: true,
       name: 'Theme',

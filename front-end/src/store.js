@@ -12,8 +12,9 @@ const reducer = (state,action)=>{
 	else if(action.type==="lOG_OUT"){
 		console.log("lalalalalalalalalal");
 		return{
-			...state,
-			infoUsuarios:{id:'', rol:'' , nombre:''},
+			
+			infoUsuario:{"userID":'',"userName":'',"userType":'',"userMail":'',"userCareer":'',"userCoordination":''},
+
 		}
 	}
 	return state;
