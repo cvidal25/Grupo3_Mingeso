@@ -48,27 +48,35 @@ public class AnswerService {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> executeCode(@RequestBody Factory factory){
+
+        /*if existe userejercicio: return null o "", else lo demas*/
+        Exercise exercise = exerciseRepository.findById(factory.getExercise_id()).get();
+        User user = userRepository.findById(factory.getUser_id()).get();
+        if(userExerciseRepository.findByExerciseAndUser(exercise,user)!= null) {
+            System.out.println("Este ejercicio ya fue resulto por el usuario");
+            return null;
+        }
+        //Análisis del código
         CodeAnalysis code = new CodeAnalysis();
         HashMap<String,String> list =code.Analysis(factory.getCode(),factory.getLanguage());
 
-        Exercise exercise = exerciseRepository.findById(factory.getExercise_id()).get();
-
+        //Obtención Inputs y Outputs del ejercicio
         factory.setInput(exercise.getExerciseInput());
         factory.setOutput(exercise.getExerciseOutput());
 
-        User user = userRepository.findById(factory.getUser_id()).get();
-
+        //Obtención de datos para la tabla UsuarioEjercicio
         UserExercise userExercise = new UserExercise();
         userExercise.setUserDateResolution(factory.getResolving_date());
         userExercise.setUserSolvingTime(factory.getResolving_time());
         userExercise.setExercise(exercise);
         userExercise.setUser(user);
 
+        //Ejecución del código con todos los inputs y retorna un arreglo con todos los outputs correspondientes.
         String[] arrayJson = factory.executeFactory();
         int score = Integer.parseInt(arrayJson[arrayJson.length-1]);
         userExercise.setUserScore(score);
 
-        //output
+        //outputs
         String outputs = "";
         for(int i = 0; i < arrayJson.length-1; i++){
             if(i != 0){
@@ -76,11 +84,12 @@ public class AnswerService {
             }
             outputs = outputs.concat(separateOutput(arrayJson[i]));
         }
-        System.out.println(outputs);
-        userExercise.setUserOutput(outputs);
 
+        userExercise.setUserOutput(outputs);
+        //Almacenamiento de los datos en la tabla UsuarioEjercicio
         userExerciseRepository.save(userExercise);
 
+        //Formación de la respuesta a retornar con los resultados del análisis y ejecución del código..
         int i;
         for(i = 0; i < arrayJson.length; i++){
             if(i == arrayJson.length-1)
@@ -111,6 +120,6 @@ public class AnswerService {
         - Obtener tiempo
         - Obtener fecha
 
-- Obtener output user (backend) --> Complejo
+        - Obtener output user (backend) --> Complejo
         - Obtener puntaje calculado (backend)
 * */

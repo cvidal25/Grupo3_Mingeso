@@ -118,6 +118,14 @@ RELLENO USERS
 	"userCoordination": "B-3"
 }
 
+{
+	"userName": "Barbara Sarmiento",
+	"userType": 1,
+	"userMail": "barbara.sarmiento@usach.cl",
+	"userCareer": "Ingeniería de Ejecución en Informática",
+	"userCoordination": "B-3"
+}
+
 RELLENO USER_EXERCISE
 {
     "userExerciseID": 1,
