@@ -39,6 +39,7 @@ class CodeEditor extends Component{
           stdout:"",
           date:"",
           time:"",
+          click:false,
 
       }
   };
@@ -120,8 +121,7 @@ class CodeEditor extends Component{
             [name]:value
         });
     }
-    handleTime=event=>time=>{
-        event.preventDefault();
+    handleTime=time=>{
         this.setState({
             time:time
         });
@@ -147,6 +147,10 @@ class CodeEditor extends Component{
       //console.log(this.state.aceEditorValue);
   };
 
+  handletryCodigo=event=>{
+      console.log(Timer.prototype.getTime(this.state.date));
+      console.log(this.state.time);
+  }
   handleSentCodigo=event=>{
       /*
       //http://localhost:8082/answer
@@ -219,7 +223,8 @@ class CodeEditor extends Component{
                                 </Col>
                             </Row>
                             <br/>
-                            <Timer timeInit={this.state.date} handler={this.handleTime}/>
+                            <Timer timeInit={this.state.date} handler={this.handleTime} click={this.state.click}/>
+                            <br/>
                             <Row >
                               <Col md={7}>
                                 <Row style={{padding: "5px 8px",borderStyle:"solid",borderWidth:"1px", borderColor:"#73818f",backgroundColor: "rgba(91, 192, 222, 0.7)"}}>
@@ -261,14 +266,14 @@ class CodeEditor extends Component{
                                     
                                 <Row style={{padding: "8px 8px 8px",borderStyle:"solid",borderWidth:"1px",borderLeft:null, borderColor:"#73818f", height:"100%", backgroundColor: "rgba(91, 192, 222, 0.7)"}}>
                                      <Label >{"Salida:\tStdout"}</Label>
-                                     <Input type="textarea" name="salida" id="salida" style={{resize:'none'}} rows={24} value={""} placeholder={"El resultado del programa saldra aquí"}/>
+                                     <Input type="textarea" name="salida" id="salida" style={{resize:'none'}} rows={22} value={""} placeholder={"El resultado del programa saldra aquí"}/>
                                   </Row>
                               </Col>
                             </Row>
                             <br/>
-                            <Button color="info" onClick={this.handleSentCodigo}>Probar</Button>
+                            <Button color="info" onClick={this.handletryCodigo}>Probar</Button>
                             &emsp;
-                            <Button color="success">Enviar</Button>
+                            <Button color="success" onClick={this.handleSentCodigo}>Enviar</Button>
                           </div>
                       }
                          

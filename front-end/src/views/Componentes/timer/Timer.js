@@ -40,17 +40,28 @@ class Timer extends Component{
         const horaP=(hora<10)?"0"+hora:hora;
         const minP=(min<10)?"0"+min:min;
         const segP=(seg<10)?"0"+seg:seg;
-        this.setState({hora,min,seg,time:horaP+":"+minP+":"+seg});
-        this.props.handler(horaP+":"+minP+":"+seg);
+        this.setState({hora,min,seg,time:horaP+":"+minP+":"+segP});
+        
+        //this.props.handler(horaP+":"+minP+":"+seg);
     }
+    getTime(timeInit){
+        const time=Date.parse(new Date) - Date.parse(timeInit);
+        const seg=Math.floor((time/1000) % 60);
+        const min=Math.floor((time/(1000*60)) % 60);
+        const hora=Math.floor((time/(1000*60*60)) % 24);
+        const horaP=(hora<10)?"0"+hora:hora;
+        const minP=(min<10)?"0"+min:min;
+        const segP=(seg<10)?"0"+seg:seg;
+        return (horaP+":"+minP+":"+segP);
+    }
+    
     render(){
         return(
-
-        <Card className="text-center">
-            <CardBody >
+            <div style={{border:"solid",borderWidth:"1px", padding:"5px 5px 5px 5px",textAlign:"center",width:"200px"} }>
                 {this.printResult()}
-            </CardBody>
-        </Card>
+            </div>
+                
+           
         ); 
     }
         
