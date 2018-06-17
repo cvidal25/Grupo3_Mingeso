@@ -6,6 +6,7 @@ import Axios from 'axios';
 //import GlotAPI from 'glot-api';
 import { Card, CardBody, CardHeader, Col, Collapse,FormGroup, Row, Table,Button,Input,Label} from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
+import Timer from "../timer/Timer";
 
 import '../../../scss/spinner.css';
 import 'brace/mode/java';
@@ -35,6 +36,9 @@ class CodeEditor extends Component{
           espera:false,
           url:"",
           stdin:"",
+          stdout:"",
+          date:"",
+          time:"",
 
       }
   };
@@ -56,7 +60,8 @@ class CodeEditor extends Component{
   componentDidMount(){
       this.setState({
           espera:true,
-          modo:this.props.match.params.lenguaje
+          modo:this.props.match.params.lenguaje,
+          date: new Date()
       })
       var num=this.props.match.params.num;
       if(isString(num)){
@@ -65,7 +70,8 @@ class CodeEditor extends Component{
                       this.setState({
                           enunciado:response.data,
                           existeEnunciado:true,
-                          espera:false
+                          espera:false,
+                          date: new Date()
                       });
                       var aux;
                       for(aux in this.state.lenguaje){
@@ -105,16 +111,27 @@ class CodeEditor extends Component{
         return true;
       }
     }
-
-    ComponentDidUpdate(){
-      console.log(this.props.match);    
-    }
   
+    handleChange=event=>{
+        var value=event.target.value;
+        var name=event.target.name;
+
+        this.setState({
+            [name]:value
+        });
+    }
+    handleTime=event=>time=>{
+        event.preventDefault();
+        this.setState({
+            time:time
+        });
+
+    }
+//se debe cambiar para realizar una actualizacion de los componentes
   verificarURL(){
-      
       var lenguaje,url;
       url=this.props.location.pathname;
-      console.log(url);
+      //console.log(url);
       url=url.split("/");
       if(this.state.url!==url[2]){
           window.location.reload();
@@ -123,7 +140,7 @@ class CodeEditor extends Component{
 
 
   onChange=(NewValue)=>{
-      console.log('Change',NewValue);
+      //console.log('Change',NewValue);
       this.setState({
           aceEditorValue:NewValue
       });
@@ -190,7 +207,6 @@ class CodeEditor extends Component{
                       <h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle}</h2>:
                       <h2 style={{textAlign: "center" }}>Consola de {this.state.lenguaje[num]}</h2>
                   }
-              
                   </CardHeader>
                   <CardBody>
                       {this.state.espera ?
@@ -203,18 +219,18 @@ class CodeEditor extends Component{
                                 </Col>
                             </Row>
                             <br/>
-                            
+                            <Timer timeInit={this.state.date} handler={this.handleTime}/>
                             <Row >
-                              <Col md={8}>
-                                <Row style={{padding: "5px 8px",borderStyle:"solid",borderWidth:"1px", borderColor:"#c8ced3",backgroundColor: "rgba(91, 192, 222, 0.7)"}}>
+                              <Col md={7}>
+                                <Row style={{padding: "5px 8px",borderStyle:"solid",borderWidth:"1px", borderColor:"#73818f",backgroundColor: "rgba(91, 192, 222, 0.7)"}}>
                                     <Col  md={2} >
-                                      <Label htmlFor="input" style={{paddingTop:"5px"}}>{"Entrada:\tStdin"}</Label>
+                                      <Label htmlFor="stdin" style={{paddingTop:"5px"}}>{"Entrada:\tStdin"}</Label>
                                     </Col>
                                     <Col>
-                                    <Input type="text" name="input" id="input" placeholder="El texto ingresado aquí será enviado a stdin"/>
+                                    <Input type="text" name="stdin" id="stdin" placeholder="El texto ingresado aquí será enviado a stdin" onChange={this.handleChange}/>
                                   </Col>
                                 </Row>
-                                <Row style={{padding:"10px" ,borderStyle:"solid",borderWidth:"1px",borderColor:"#c8ced3", borderTop:null }}> 
+                                <Row style={{padding:"10px" ,borderStyle:"solid",borderWidth:"1px",borderColor:"#73818f",borderTop:null }}> 
                                   <Col  >
                                     
                                     <AceEditor
@@ -241,20 +257,25 @@ class CodeEditor extends Component{
                                       </Col>
                                 </Row>
                               </Col>
-                              <Col>
-                                <Row style={{padding: "5px 8px",borderStyle:"solid",borderWidth:"1px",borderLeft:null, borderColor:"#c8ced3"}}>
-                                     
+                              <Col style={{textAlign:"justify"}}>
+                                    
+                                <Row style={{padding: "8px 8px 8px",borderStyle:"solid",borderWidth:"1px",borderLeft:null, borderColor:"#73818f", height:"100%", backgroundColor: "rgba(91, 192, 222, 0.7)"}}>
+                                     <Label >{"Salida:\tStdout"}</Label>
+                                     <Input type="textarea" name="salida" id="salida" style={{resize:'none'}} rows={24} value={""} placeholder={"El resultado del programa saldra aquí"}/>
                                   </Row>
                               </Col>
                             </Row>
-                              
+                            <br/>
+                            <Button color="info" onClick={this.handleSentCodigo}>Probar</Button>
+                            &emsp;
+                            <Button color="success">Enviar</Button>
                           </div>
                       }
-                        
+                         
                       
                   </CardBody>
 
-                  <Button block color="success" onClick={this.handleSentCodigo}>Enviar</Button> 
+                  
               </Card>
                 </Col> 
 
