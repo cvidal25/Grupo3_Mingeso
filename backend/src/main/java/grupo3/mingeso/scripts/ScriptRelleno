@@ -10,6 +10,32 @@ RELLENO TOPICOS
 
 RELLENO EJERCICIOS
 {
+	"topicName":"Recursion"
+}
+
+{
+	"topicName":"Bifurcacion"
+}
+
+{
+	"topicName":"Aritmetica"
+}
+
+{
+	"topicName":"Input Output"
+}
+
+{
+	"topicName":"Funciones"
+}
+
+{
+	"topicName":"Listas"
+}
+
+
+RELLENO EJERCICIOS (CON TOPICOS)
+{
 "exerciseTitle": "Enunciado 1 en Python",
 "exerciseBody": "Lorem ipsum dolor sit amet consectetur adipiscing, elit imperdiet cras facilisi hac, laoreet etiam nec accumsan nascetur. Rhoncus non metus quam semper nulla orci integer consequat gravida, viverra porta lectus volutpat nec nascetur hendrerit enim, facilisis bibendum pellentesque proin tempus quisque vivamus at. Cubilia mattis mauris montes volutpat imperdiet in quis nec, vivamus rhoncus natoque neque morbi himenaeos platea enim sollicitudin, a libero aenean erat elementum est mus. Habitasse curabitur mi aliquet ultricies ornare magnis tristique cubilia augue, nostra massa leo eget iaculis sodales sollicitudin pretium, sed dapibus faucibus hac nam ligula aenean eros. Dictum aenean netus cursus convallis fames nibh sagittis tellus cras eget, purus augue condimentum primis vestibulum bibendum taciti consequat vel potenti, turpis montes tortor odio praesent phasellus class at ligula. Eu semper nullam vel ultricies enim habitasse proin lobortis natoque curae, tortor non sollicitudin venenatis lectus placerat interdum egestas in suspendisse taciti, tincidunt nulla magnis hendrerit sodales id nec tempor scelerisque.",
 "exerciseLenguge": 1,

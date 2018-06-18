@@ -138,6 +138,9 @@ public class Exercise implements Serializable {
     public void setExerciseDays(int exerciseDays) {
         this.exerciseDays = exerciseDays;
     }
+    @ManyToOne
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
 
     public String getExerciseTopic() { return exerciseTopic; }
 

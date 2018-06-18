@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -23,8 +22,8 @@ public class ExerciseService {
     ExerciseRepository exerciseRepository;
 
     //GET ALL
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+        @RequestMapping(method = RequestMethod.GET)
+        @ResponseBody
     public Iterable<Exercise> getAllExercise() {
         return exerciseRepository.findAll();
     }
@@ -32,8 +31,8 @@ public class ExerciseService {
     //GET ONE
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Optional<Exercise> findOne(@PathVariable("id") Integer id) {
-        return exerciseRepository.findById(id);
+    public Exercise findOne(@PathVariable("id") Integer id) {
+        return exerciseRepository.findById(id).get();
     }
 
     //CREATE ONE
