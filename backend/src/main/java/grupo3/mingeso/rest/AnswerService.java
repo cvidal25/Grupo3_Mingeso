@@ -110,16 +110,3 @@ public class AnswerService {
         return output;
     }
 }
-
-
-//Obtener el id del usuario, tiempo en resolver el ejercicio y la fecha en que se solucionó eso para guardarlo en userExercise.
-/*IDEA:
-    - Del ejercicio obtener input y output y asignarle al factory
-        - Obtener ejercicio
-        - Obtener user
-        - Obtener tiempo
-        - Obtener fecha
-
-        - Obtener output user (backend) --> Complejo
-        - Obtener puntaje calculado (backend)
-* */
