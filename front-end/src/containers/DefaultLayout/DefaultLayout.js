@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
 
 import {
   AppAside,
@@ -18,29 +20,60 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
-//import DefaultAside from './DefaultAside';
+import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
+
+
+
+
 class DefaultLayout extends Component {
-   constructor (props, context) {
-    super(props, context);
-      this.state ={
-        //user:this.props,
-      };
+   constructor () {
+    super();
+    this.state = {
+      links: navigation,
+
+    };
   }
+
+  componentDidMount(){
+
+   this.filtrarLinks(this.props.infoUsuarios.userType);
+  }
+  
+
+  // Al ejecutar esta funcion desaparecer y aparecen links que
+  // el usuario indicado puede acceder.
+  filtrarLinks(tipoUsuario){
+    let items = navigation.items.filter(function(link){
+
+
+      if(!link.hasOwnProperty("tipoUsuario")) return true;
+
+      if(link["tipoUsuario"] == tipoUsuario) return true;
+
+      return false;
+
+    });
+
+    this.setState({
+      links: { items: items }
+    });
+  }
+
   render() {
     return (
       <div className="app">
-        <AppHeader fixed>
-          <DefaultHeader />
+        <AppHeader fixed >
+          <DefaultHeader/>
         </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
             <AppSidebarHeader />
             <AppSidebarForm />
             
-            <AppSidebarNav navConfig={navigation} {...this.props} />
+            <AppSidebarNav navConfig={this.state.links}{...this.props} />
             
             <AppSidebarFooter />
             <AppSidebarMinimizer />
@@ -51,12 +84,11 @@ class DefaultLayout extends Component {
               <Switch>
                 {routes.map((route, idx) => {
                     return route.component ? 
-                    (<Route key={idx} path={route.path} 
+                    (<Route key={idx}
+                      path={route.path} 
                       exact={route.exact} 
                       name={route.name} 
-                      render={props => (
-                        <route.component {...props} />
-                      )} />)
+                      render={props => (<route.component {...props} /> )} />)
                       : (null);
                   },
                 )}
@@ -73,5 +105,10 @@ class DefaultLayout extends Component {
     );
   }
 }
+const mapStateToProps = state =>{
+  return{
+    infoUsuarios: state.infoUsuarios
+  };
+};
 
-export default DefaultLayout;
+export default connect(mapStateToProps)(DefaultLayout);
