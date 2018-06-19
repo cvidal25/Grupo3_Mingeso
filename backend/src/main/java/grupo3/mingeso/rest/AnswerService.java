@@ -49,7 +49,6 @@ public class AnswerService {
     @ResponseBody
     public Map<String, String> executeCode(@RequestBody Factory factory){
 
-        /*if existe userejercicio: return null o "", else lo demas*/
         Exercise exercise = exerciseRepository.findById(factory.getExercise_id()).get();
         User user = userRepository.findById(factory.getUser_id()).get();
         if(userExerciseRepository.findByExerciseAndUser(exercise,user)!= null) {

@@ -11,8 +11,8 @@ public class Factory {
     String input;
     String output;
     int user_id;
-    Timestamp resolving_time;
-    Date resolving_date;
+    int resolving_time; //in minutes
+    Timestamp resolving_date;
 
     public void Factory(int lang, String code, int exercise_id){
         this.language = lang;
@@ -60,13 +60,13 @@ public class Factory {
 
     public void setUser_id(int user_id) { this.user_id = user_id; }
 
-    public Timestamp getResolving_time() { return resolving_time; }
+    public int getResolving_time() { return resolving_time; }
 
-    public void setResolving_time(Timestamp resolving_time) { this.resolving_time = resolving_time; }
+    public void setResolving_time(int resolving_time) { this.resolving_time = resolving_time; }
 
-    public Date getResolving_date() { return resolving_date; }
+    public Timestamp getResolving_date() { return resolving_date; }
 
-    public void setResolving_date(Date resolving_date) { this.resolving_date = resolving_date; }
+    public void setResolving_date(Timestamp resolving_date) { this.resolving_date = resolving_date; }
 
     public String[] executeFactory(){
         if(this.language == 1){
