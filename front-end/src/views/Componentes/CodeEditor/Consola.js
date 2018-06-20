@@ -7,6 +7,8 @@ import Axios from 'axios';
 import { Card, CardBody, CardHeader, Col, Collapse,FormGroup, Row, Table,Button,Input,Label} from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
 import Timer from "../timer/Timer";
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
 
 import '../../../scss/spinner.css';
 import 'brace/mode/java';
@@ -15,8 +17,17 @@ import 'brace/mode/c_cpp';
 
 import 'brace/theme/dracula';
 
+
 import { isString } from 'util';
 
+/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
+ejempplo: this.props.infoUsuario.userID,
+{"userID":7,"userName":"Barbara Sarmiento",
+"userType":1,
+"userMail":"barbara.sarmiento@usach.cl",
+"userCareer":"Ingeniería de Ejecución en Informática",
+"userCoordination":"B-3"}
+*/
 
 const urlBase="http://localhost:8082";
 const basePython="";
@@ -322,5 +333,10 @@ class CodeEditor extends Component{
 	}
 
 }
-
-export default CodeEditor;
+const mapStateToProps = state =>{
+    return{
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
+export default connect(mapStateToProps)(CodeEditor);
