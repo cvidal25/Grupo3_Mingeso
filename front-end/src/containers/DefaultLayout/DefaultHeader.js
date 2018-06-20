@@ -33,20 +33,10 @@ class DefaultHeader extends Component {
 
   componentDidMount(){
     this.notUser(this.props.infoUsuarios);
-    
-    
-    console.log("1");
-    console.log(this.props.infoUsuarios.userName);
-    console.log("2");
-    console.log(this.props);
-    console.log("3");
   }
 
   notUser(tipoUsuario){
-    console.log("entre");
     if((tipoUsuario==='') || (tipoUsuario=== null )){
-      console.log("entre al primer if");
-      //console.log(window.location.href);
       if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
 
       }

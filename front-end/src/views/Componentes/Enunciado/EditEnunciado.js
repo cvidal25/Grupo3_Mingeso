@@ -6,8 +6,20 @@ import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
     InputGroupText,Label,Button,ButtonDropdown,Alert,
     Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
-import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
+import Topicos from './Topicos';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
+
+/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
+ejempplo: this.props.infoUsuario.userID,
+{"userID":7,"userName":"Barbara Sarmiento",
+"userType":1,
+"userMail":"barbara.sarmiento@usach.cl",
+"userCareer":"Ingeniería de Ejecución en Informática",
+"userCoordination":"B-3"}
+*/
+
 
 const url= 'http://localhost:8082/';
 
@@ -665,11 +677,11 @@ class EditEnunciado extends Component{
                             <Col>
                                 <FormGroup>
                                     <Label htmlFor="topic">Topico</Label>
-                                    <Input type="select" name="topico" value={this.state.topico} style={{width:"82%"}} onChange={this.handleChange} 
+                                    <Input type="select" name="topico" defaultValue="" style={{width:"82%"}} onChange={this.handleChange} 
                                         valid={inputValidadores[0].topic} invalid={inputValidadores[1].topic}>
                                         <option disabled hidden value="" >Topicos</option>
-                                        {this.state.topics && this.state.topics.map((topico,key)=>{
-                                            return <option key={key} itemID={topico.topicID} id={key} value={key} >{topico.topicName}</option>
+                                        {Topicos &&  Topicos.map((topico,key)=>{
+                                            return <option key={key} id={key} value={topico} >{topico}</option>
                                         })}
                                     </Input>
                                     <FormFeedback>{feedBackTopic}</FormFeedback>
@@ -817,6 +829,11 @@ class EditEnunciado extends Component{
         );
     }
 }
+const mapStateToProps = state =>{
+    return{
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
 
-
-export default EditEnunciado;
+export default connect(mapStateToProps)(EditEnunciado);
