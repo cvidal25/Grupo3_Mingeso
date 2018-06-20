@@ -4,6 +4,18 @@ import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
     InputGroupText,Label,Button,ButtonDropdown,Alert,
     Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
+
+/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
+<span>{this.props.infoUsuarios.userName}</span>
+ejemplo: this.props.infoUsuarios.userID,
+{"userID":7,"userName":"Barbara Sarmiento",
+"userType":1,
+"userMail":"barbara.sarmiento@usach.cl",
+"userCareer":"Ingeniería de Ejecución en Informática",
+"userCoordination":"B-3"}
+*/
 
 const url= 'http://localhost:8082/';
 
@@ -749,4 +761,11 @@ class NewEnunciado extends Component{
     }
 }
 
-export default NewEnunciado;
+const mapStateToProps = state =>{
+    return{
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
+
+export default connect(mapStateToProps)(NewEnunciado);

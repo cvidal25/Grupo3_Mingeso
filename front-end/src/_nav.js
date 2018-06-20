@@ -37,6 +37,18 @@ export default {
       },
     },*/
 
+    //MENU PARA
+    //TIPO DE USUARIO Profesor
+  {
+    name:'Nuevo Enunciado',
+    url: '/enunciadosPro/nuevo',
+     tipoUsuario: '3',//coordinador
+  },
+  {
+    name:'Lista de Enunciados',
+    url: '/enunciadosPro',
+     tipoUsuario: '3',//coordinador
+  },
 
     //MENU PARA
     //TIPO DE USUARIO Profesor

@@ -8,6 +8,18 @@ import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
 import Axios from 'axios';
 import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
+
+/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
+ejempplo: this.props.infoUsuario.userID,
+{"userID":7,"userName":"Barbara Sarmiento",
+"userType":1,
+"userMail":"barbara.sarmiento@usach.cl",
+"userCareer":"Ingeniería de Ejecución en Informática",
+"userCoordination":"B-3"}
+*/
+
 
 const url= 'http://localhost:8082/';
 
@@ -817,6 +829,11 @@ class EditEnunciado extends Component{
         );
     }
 }
+const mapStateToProps = state =>{
+    return{
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
 
-
-export default EditEnunciado;
+export default connect(mapStateToProps)(EditEnunciado);
