@@ -1,11 +1,8 @@
 package grupo3.mingeso.rest;
 
-import com.sun.org.apache.xml.internal.utils.SystemIDResolver;
-import grupo3.mingeso.entities.UserExercise;
 import grupo3.mingeso.repository.ExerciseRepository;
 import grupo3.mingeso.entities.Exercise;
 
-import grupo3.mingeso.repository.UserExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +20,8 @@ public class ExerciseService {
     ExerciseRepository exerciseRepository;
 
     //GET ALL
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+        @RequestMapping(method = RequestMethod.GET)
+        @ResponseBody
     public Iterable<Exercise> getAllExercise() {
         return exerciseRepository.findAll();
     }

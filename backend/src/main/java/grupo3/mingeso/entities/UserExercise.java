@@ -3,7 +3,6 @@ package grupo3.mingeso.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @Table(name = "user_excercise")
@@ -19,10 +18,10 @@ public class UserExercise implements Serializable {
     private Integer userScore;
 
     @Column(name = "date_resolution",nullable = false)
-    private Date userDateResolution;
+    private Timestamp userDateResolution;
 
     @Column(name = "solving_time",nullable = false)
-    private Timestamp userSolvingTime;
+    private int userSolvingTime; //in minutes
 
     @Column(name = "user_output",nullable = false, length = 2048)
     private String userOutput;
@@ -53,19 +52,19 @@ public class UserExercise implements Serializable {
         this.userScore = userScore;
     }
 
-    public Date getUserDateResolution() {
+    public Timestamp getUserDateResolution() {
         return userDateResolution;
     }
 
-    public void setUserDateResolution(Date userDateResolution) {
+    public void setUserDateResolution(Timestamp userDateResolution) {
         this.userDateResolution = userDateResolution;
     }
 
-    public Timestamp getUserSolvingTime() {
+    public int getUserSolvingTime() {
         return userSolvingTime;
     }
 
-    public void setUserSolvingTime(Timestamp userSolvingTime) {
+    public void setUserSolvingTime(int userSolvingTime) {
         this.userSolvingTime = userSolvingTime;
     }
 
