@@ -7,7 +7,8 @@ import Axios from 'axios';
 import fondo from '../../../assets/img/imgI3.jpg'; 
 import connect from 'react-redux'
 import store from '../../../store';
-
+import Loading from 'react-loading-spinner';
+import '../../../scss/spinner.css';
 
 
 var sectionStyle = {
@@ -27,8 +28,9 @@ class Login extends Component {
         token:"",
         mail:"",//
         nombreUsuario:"", 
-        infoUsuario:{"userID":3,"userName":"Jorge Paredes","userType":3,"userMail":"jorge.paredes@usach.cl","userCareer":"Ingeniería Ejecución en Informática","userCoordination":"A-1"},
+        infoUsuario:{"userID":3,"userName":"Jorge Paredes","userType":2,"userMail":"jorge.paredes@usach.cl","userCareer":"Ingeniería Ejecución en Informática","userCoordination":"A-1"},
         correo:"",
+        espera:false,
         info: false,
         warning: false,
         tipoUsuario: 1,
@@ -40,6 +42,11 @@ class Login extends Component {
     this.filtrarMail = this.filtrarMail.bind(this);
     this.comprobarMail = this.comprobarMail.bind(this);
     this.agregarUsuario = this.agregarUsuario.bind(this);
+  }
+  componentDidMount(){
+    this.setState({
+        espera:true
+    });
   }
 
 
@@ -63,7 +70,7 @@ class Login extends Component {
         ).catch(function(error){
             console.log(error);
         });
-    };
+  };
 
   
 
@@ -97,12 +104,11 @@ class Login extends Component {
       if (mailUsuario[i] == "@") {
         temp = mailUsuario.slice(i,mailUsuario.length);
         if (temp=="@usach.cl") {
-          this.toggleInfo();
-
-           //var validador = this.comprobarMail();
-           /*if(validador){
+          this.comprobarMail();
+          //this.toggleInfo();
+           /*var validador = this.comprobarMail();
+           if(validador){
             this.toggleInfo();
-
            }
            else{
               this.setState({
@@ -112,8 +118,6 @@ class Login extends Component {
               });
               this.toggleWarning();
             }*/
-
-
         //  this.agregarUsuario(this.state.infoUsuario);
          // console.log(this.state.infoUsuario);
           //console.log("yoooooooooooooooooooooo");
@@ -140,13 +144,17 @@ class Login extends Component {
           var validador = false;
           if(respuesta != null ){
             validador= true;
+            this.toggleInfo();
             this.setState({
               infoUsuario:respuesta,
+              espera:false,
             });
+            /*this.agregarUsuario(this.state.infoUsuario);
+            if(this.state.infoUsuario.userName !== null){
+              window.location.replace('/Dashboard');
+             }*/
           }
-          return validador; 
         })
-
         .catch(function(error){
             console.log(error);
         });
@@ -188,8 +196,16 @@ class Login extends Component {
 
             <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
             <ModalBody>
-              Bienvenid@ <strong> {this.state.nombreUsuario}</strong>, su inicio de sesión fue exitoso.
-            </ModalBody>
+            {this.state.espera?
+              <div className="row">
+                <div className ='col'>
+                  <div className='defaultSpinner' ></div>
+                </div>
+              </div>
+              :
+              <span>Bienvenida o bienvenido <strong> {this.state.infoUsuario.userName}</strong>, su inicio de sesión fue exitoso.</span>
+            }
+              </ModalBody>
             <ModalFooter>
               <Link to={{
                 pathname: '/dashboard',
@@ -223,6 +239,8 @@ class Login extends Component {
       </section>
     );
   }
+
+
   agregarUsuario(infoUsuario){
     //console.log(infoUsuario);
       store.dispatch({
