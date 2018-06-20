@@ -21,8 +21,8 @@ public class UserExerciseTest {
         userExercise.setUserDateResolution(timestamp);
         assertEquals(timestamp, userExercise.getUserDateResolution());
 
-        userExercise.setUserSolvingTime(timestamp);
-        assertEquals(timestamp,userExercise.getUserSolvingTime());
+        userExercise.setUserSolvingTime(123);
+        assertEquals(123,userExercise.getUserSolvingTime());
 
         userExercise.setUserOutput("aloh");
         assertEquals("aloh",userExercise.getUserOutput());
