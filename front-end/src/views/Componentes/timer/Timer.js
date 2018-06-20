@@ -41,8 +41,7 @@ class Timer extends Component{
         const minP=(min<10)?"0"+min:min;
         const segP=(seg<10)?"0"+seg:seg;
         this.setState({hora,min,seg,time:horaP+":"+minP+":"+segP});
-        
-        //this.props.handler(horaP+":"+minP+":"+seg);
+        this.props.handler(horaP+":"+minP+":"+seg);
     }
     getTime(timeInit){
         const time=Date.parse(new Date) - Date.parse(timeInit);

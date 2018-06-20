@@ -11,8 +11,7 @@
     "type": "git",
     "url": "git@github.com:coreui/coreui-free-react-admin-template.git"
   },
-  "proxy":"http://localhost:8082"
-  ,
+  "proxy": "http://localhost:8082",
   "dependencies": {
     "@coreui/coreui": "^2.0.1",
     "@coreui/coreui-plugin-chartjs-custom-tooltips": "^1.2.0",
