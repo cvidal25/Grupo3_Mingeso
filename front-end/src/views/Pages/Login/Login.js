@@ -42,6 +42,7 @@ class Login extends Component {
     this.filtrarMail = this.filtrarMail.bind(this);
     this.comprobarMail = this.comprobarMail.bind(this);
     this.agregarUsuario = this.agregarUsuario.bind(this);
+    this.redirigir = this.redirigir.bind(this);
   }
   componentDidMount(){
     this.setState({
@@ -149,15 +150,22 @@ class Login extends Component {
               infoUsuario:respuesta,
               espera:false,
             });
-            /*this.agregarUsuario(this.state.infoUsuario);
-            if(this.state.infoUsuario.userName !== null){
-              window.location.replace('/Dashboard');
-             }*/
+            //this.agregarUsuario(this.state.infoUsuario);
+            //this.redirigir();
           }
         })
         .catch(function(error){
             console.log(error);
         });
+  };
+  redirigir(){
+    if(this.state.infoUsuario.userName !== null){
+      console.log("yu")
+      console.log(this.state.infoUsuario);
+      console.log("ya");
+      //window.location.replace('/Dashboard');
+      console.log("redirigir")
+     }
   };
 
   render() {
