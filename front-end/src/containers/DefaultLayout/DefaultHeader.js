@@ -41,7 +41,7 @@ class DefaultHeader extends Component {
 
       }
       else{
-        window.location.replace('/Login');
+        window.location.replace('/#/Login');
       }
     }
   }
@@ -52,7 +52,7 @@ class DefaultHeader extends Component {
 
       }
       else{
-        window.location.replace('/Login');
+        window.location.replace('/#/Login');
       }
     }
     else{
