@@ -127,9 +127,11 @@ class CodeEditor extends Component{
 				});
 		}
 		handleTime=time=>{
+
 				this.setState({
 						time:time
 				});
+				//console.log(time);
 
 		}
 //se debe cambiar para realizar una actualizacion de los componentes
@@ -145,11 +147,9 @@ class CodeEditor extends Component{
 
 
 	onChange=(NewValue)=>{
-			//console.log('Change',NewValue);
 			this.setState({
 					aceEditorValue:NewValue
 			});
-			//console.log(this.state.aceEditorValue);
 	};
 
 	handletryCodigo=event=>{
@@ -190,15 +190,7 @@ class CodeEditor extends Component{
 	
 	}
 	handleSentCodigo=event=>{
-			/*
-			//http://localhost:8082/answer
-			{
-"language":1,
-"code":"i = 0\nwhile(i<3):\n\tprint(i)\n\ti = i+1"
-
-}
-			*/
-
+			
 			var num;
 			
 			for(num in this.state.lenguaje){
@@ -214,19 +206,21 @@ class CodeEditor extends Component{
 					'language': lenguajeJson[this.state.modo],
 					'code':this.state.aceEditorValue,
 					'exercise_id':this.state.idExercise,
-					'user:_id':1, // temporal debe ser dinamico
-					'resolving_time': this.state.time,
-					'resolvinf_date':new Date()
+					'user_id':this.props.infoUsuarios.userID, // temporal debe ser dinamico
+					'resolving_time': Timer.prototype.getTimeMin(this.state.time),
+					'resolving_date':new Date()
 			}
+
 			console.log(data);
 			Axios.post('http://localhost:8082/answer',data)
 			.then(response=>{
+					console.log(response);
 					console.log(response.data);
 			}).catch(function(error){
 					console.log(error);
-			});       
+			});
+			console.log(data, Timer.prototype.getTimeMin(this.state.time));   
 	}
-
 
 	render(){
 
@@ -234,7 +228,7 @@ class CodeEditor extends Component{
 			
 			for(num in this.state.lenguaje){
 					if(this.state.modo===this.state.lenguajeRA[num]){
-							console.log(num);
+							//console.log(num);
 							break;
 					}
 			}
