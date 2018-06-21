@@ -683,14 +683,14 @@ class Dashboard extends Component {
     this.state = {
 
       cardsButton: new Array(4).fill(false),
-      monthButton: false,
+      monthButtonOpen: false,
       dropdownOpen: false,
       radioSelected: 1,
-      monthSelected: 5,
+      monthSelected: monthsLabel[5],
       //Chart States
       dataLineChart: enunChart,
       optLineChart: enunChartOpts,
-      dataPieChart: pieEnun,
+      dataPieChart: pieEnun
     };
   }
   toggle(i) {
@@ -701,25 +701,17 @@ class Dashboard extends Component {
   }
 
   onRadioBtnClick(radioSelected) {
-    this.setState({
-      radioSelected: radioSelected,
-    });
-
     if (radioSelected == 1) {
       this.setState({
-        dataLineChart: enunChart,
-        optLineChart: enunChartOpts,
         dataPieChart: pieEnun,
+        radioSelected: radioSelected
       });
-      console.log(this.state.dataLineChart);
     }
     else if (radioSelected == 2) {
       this.setState({
-        dataLineChart: timeChart,
-        optLineChart: timeChartOpt,
         dataPieChart: pieTime,
+        radioSelected: radioSelected
       });
-      console.log(this.state.dataLineChart);
     }
     else if (radioSelected == 3) {
 
@@ -731,8 +723,9 @@ class Dashboard extends Component {
     });
   }
   oNMonthItemSelected(i) {
+    console.log(i);
     this.setState({
-      monthSelected: i,
+      monthSelected: monthsLabel[i],
     });
   }
   //Grafo de minichart
@@ -773,23 +766,22 @@ class Dashboard extends Component {
   }
 
   //Botones de selector de meses
-  buttonMonth() {
+  buttonMonth(month) {
     return (
-      <ButtonDropdown className="mr-1" isOpen={this.state.monthButton} toggle={() => { this.setState({ monthButton: !this.state.monthButton }); }}>
-        <DropdownToggle caret className="p-0" color="primary">{monthsLabel[this.state.monthSelected]}
-        </DropdownToggle>
+      <ButtonDropdown className="mr-1" isOpen={this.state.monthButtonOpen} toggle={() => { this.setState({ monthButtonOpen: !this.state.monthButtonOpen }); }}>
+        <DropdownToggle caret className="p-0" onClick={() => this.oNMonthItemSelected(  )}  color="primary">{month}</DropdownToggle>
         <DropdownMenu left>
           <DropdownItem header>Mes</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(2)}>Marzo</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(3)}>Abril</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(4)}>Mayo</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(5)}>Junio</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(6)}>Julio</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(7)}>Agosto</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(8)}>Septiembre</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(9)}>Octubre</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(10)}>Noviembre</DropdownItem>
-          <DropdownItem onClick={() => this.oNMonthItemSelected(11)}>Diciembre</DropdownItem>
+          <DropdownItem >Marzo</DropdownItem>
+          <DropdownItem >Abril</DropdownItem>
+          <DropdownItem >Mayo</DropdownItem>
+          <DropdownItem >Junio</DropdownItem>
+          <DropdownItem >Julio</DropdownItem>
+          <DropdownItem >Agosto</DropdownItem>
+          <DropdownItem >Septiembre</DropdownItem>
+          <DropdownItem >Octubre</DropdownItem>
+          <DropdownItem >Noviembre</DropdownItem>
+          <DropdownItem >Diciembre</DropdownItem>
           <DropdownItem divider />
         </DropdownMenu>
       </ButtonDropdown>
@@ -811,19 +803,19 @@ class Dashboard extends Component {
   }
 
   //Chart de lineas
-  chartLine() {
+  chartLine(dataIn,optIn) {
     return (
       <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-        <Line data={this.state.dataLineChart} options={this.state.optLineChart} height={70} />
+        <Line data={dataIn} options={optIn} height={70} />
       </div>
     )
   }
   //Chart de torta
-  chartPie() {
+  chartPie(dataIn) {
     this.calculoDeEstadisticas();
     return (
       <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-        <Pie data={this.state.dataPieChart} height={200} />
+        <Pie data={dataIn} height={200} />
       </div>
     )
   }
@@ -897,84 +889,84 @@ class Dashboard extends Component {
     )
   }
   //Make de graficos (acoplar header, botones, grfico y footer)
-  makeEnunLineChart(month) {
+  makeEnunLineChart(dataIn, optIn, month) {
     //PEDIR ENUNCIADOS SEGUN MES
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Enunciados realizados por día", monthsLabel[this.state.monthSelected])}
+            {this.chartTittle("Enunciados realizados por día", month)}
             {this.filtro()}
           </Row>
-          {this.chartLine()}
+          {this.chartLine(dataIn,optIn)}
         </CardBody>
         {this.chartEnunFooter()}
       </Card>
     );
   }
-  makeTimeLineChart(month) {
+  makeTimeLineChart(dataIn, optIn, month) {
     //PEDIR TIEMPO SEGUN MES
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Minutos utilizado por día", monthsLabel[this.state.monthSelected])}
+            {this.chartTittle("Minutos utilizado por día", month)}
             {this.filtro()}
           </Row>
-          {this.chartLine()}
+          {this.chartLine(dataIn,optIn)}
         </CardBody>
         {this.chartTimeFooter()}
       </Card>
     );
   }
-  makeEnunPieChart() {
+  makeEnunPieChart(dataIn, month) {
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Enunciados hechos por dificultad", monthsLabel[this.state.monthSelected])}
+            {this.chartTittle("Enunciados hechos por dificultad", month)}
             {this.filtro()}
           </Row>
-          {this.chartPie()}
+          {this.chartPie(dataIn, month)}
         </CardBody>
         {this.chartEnunFooter()}
       </Card>
     );
   }
-  makeTimePieChart() {
+  makeTimePieChart(dataIn, month) {
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Horas gastadas en desarrollo", monthsLabel[this.state.monthSelected])}
+            {this.chartTittle("Horas gastadas en desarrollo", month)}
             {this.filtro()}
           </Row>
-          {this.chartPie()}
+          {this.chartPie(dataIn, month)}
         </CardBody>
         {this.chartTimeFooter()}
       </Card>
     );
   }
   //Renders
-  renderChartsByFilter() {
-    if (this.state.radioSelected == 1) {
+  renderChartsByFilter(filter, month) {
+    if (filter == 1) {
       return (
         <Col>
           {this.makeEnunLineChart()}
           <CardColumns className="cols-2">
-            {this.makeEnunPieChart()}
-            {this.makeEnunPieChart()}
+            {this.makeEnunPieChart(this.state.dataPieChart,month)}
+            {this.makeEnunPieChart(this.state.dataPieChart,month)}
           </CardColumns>
         </Col>
       );
     }
-    else if (this.state.radioSelected == 2) {
+    else if (filter == 2) {
       return (
         <Col>
           {this.makeTimeLineChart()}
           <CardColumns className="cols-2">
-            {this.makeTimePieChart()}
-            {this.makeTimePieChart()}
+            {this.makeTimePieChart(this.state.dataPieChart, month)}
+            {this.makeTimePieChart(this.state.dataPieChart, month)}
           </CardColumns>
         </Col>
       );
@@ -1052,7 +1044,7 @@ class Dashboard extends Component {
           //MAINCHART
         }
         <Row>
-          {this.renderChartsByFilter()}
+          {this.renderChartsByFilter(this.state.radioSelected,this.state.monthSelected)}
         </Row>
         {
           //RSS INFO
