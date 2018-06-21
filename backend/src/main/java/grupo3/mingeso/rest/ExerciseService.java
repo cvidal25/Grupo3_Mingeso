@@ -1,17 +1,15 @@
 package grupo3.mingeso.rest;
 
-import com.sun.org.apache.xml.internal.utils.SystemIDResolver;
-import grupo3.mingeso.entities.UserExercise;
 import grupo3.mingeso.repository.ExerciseRepository;
 import grupo3.mingeso.entities.Exercise;
 
-import grupo3.mingeso.repository.UserExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -31,8 +29,8 @@ public class ExerciseService {
     //GET ONE
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Exercise findOne(@PathVariable("id") Integer id) {
-        return exerciseRepository.findById(id).get();
+    public Optional<Exercise> findOne(@PathVariable("id") Integer id) {
+        return exerciseRepository.findById(id);
     }
 
     //CREATE ONE

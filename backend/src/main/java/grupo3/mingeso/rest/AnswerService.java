@@ -49,7 +49,6 @@ public class AnswerService {
     @ResponseBody
     public Map<String, String> executeCode(@RequestBody Factory factory){
 
-        /*if existe userejercicio: return null o "", else lo demas*/
         Exercise exercise = exerciseRepository.findById(factory.getExercise_id()).get();
         User user = userRepository.findById(factory.getUser_id()).get();
         if(userExerciseRepository.findByExerciseAndUser(exercise,user)!= null) {
@@ -110,16 +109,3 @@ public class AnswerService {
         return output;
     }
 }
-
-
-//Obtener el id del usuario, tiempo en resolver el ejercicio y la fecha en que se solucionó eso para guardarlo en userExercise.
-/*IDEA:
-    - Del ejercicio obtener input y output y asignarle al factory
-        - Obtener ejercicio
-        - Obtener user
-        - Obtener tiempo
-        - Obtener fecha
-
-        - Obtener output user (backend) --> Complejo
-        - Obtener puntaje calculado (backend)
-* */

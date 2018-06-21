@@ -24,6 +24,17 @@ import {
 import Widget03 from '../../views/Widgets/Widget03'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+
+/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
+ejempplo: this.props.infoUsuario.userID,
+{"userID":7,"userName":"Barbara Sarmiento",
+"userType":1,
+"userMail":"barbara.sarmiento@usach.cl",
+"userCareer":"Ingeniería de Ejecución en Informática",
+"userCoordination":"B-3"}
+*/
 
 const brandPrimary = getStyle('--primary')
 const brandSuccess = getStyle('--success')
@@ -674,8 +685,8 @@ var percentTimeI;
 var percentTimeD;
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.toggle = this.toggle.bind(this);
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
@@ -1197,5 +1208,10 @@ class Dashboard extends Component {
     );
   }
 }
+const mapStateToProps = state =>{
+  return{
+    infoUsuarios: state.infoUsuarios,
+  };
+};
 
-export default Dashboard;
+export default connect(mapStateToProps)(Dashboard);

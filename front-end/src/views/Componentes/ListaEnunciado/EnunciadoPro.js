@@ -8,7 +8,18 @@ import '../../../scss/spinner.css';
 import c_icon from '../../../assets/img/logos_lenguajes/c_logo.png';
 import python_icon from '../../../assets/img/logos_lenguajes/python_logo.png';
 import java_icon from '../../../assets/img/logos_lenguajes/java_logo.png';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
 
+/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
+<span>{this.props.infoUsuarios.userName}</span>
+ejemplo: this.props.infoUsuarios.userID,
+{"userID":7,"userName":"Barbara Sarmiento",
+"userType":1,
+"userMail":"barbara.sarmiento@usach.cl",
+"userCareer":"Ingeniería de Ejecución en Informática",
+"userCoordination":"B-3"}
+*/
 //import prueba from './prueba.json';
 
 class EnunciadoPro extends Component{
@@ -327,9 +338,13 @@ class EnunciadoPro extends Component{
         );
     };
 
-
-
-
 }
 
-export default EnunciadoPro;
+const mapStateToProps = state =>{
+    return{
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
+
+export default connect(mapStateToProps)(EnunciadoPro);

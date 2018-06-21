@@ -4,10 +4,8 @@ export default {
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
+     /// tipoUsuario: '3','1','2',//coordinador
+     
     },
     /*{
       title: true,
@@ -22,11 +20,13 @@ export default {
       name: 'Colors',
       url: '/theme/colors',
       icon: 'icon-drop',
+      tipoUsuario: 'aaa',//extra
     },
     {
       name: 'Typography',
       url: '/theme/typography',
       icon: 'icon-pencil',
+      tipoUsuario: 'aaa',//extra
     },
     /*{
       title: true,
@@ -36,40 +36,60 @@ export default {
         attributes: {},
       },
     },*/
-    {
-      name:'Enunciados-Profesor',
-      url: '/enunciadosPro',
-      children:[
-        {
-          name:'Lista de Enunciados',
-          url: '/enunciadosPro'
-        },
-        {
-          name:'Nuevo Enunciado',
-          url: '/enunciadosPro/nuevo'
-        }
-      ]
-    },
-    {
-      name:'Enunciados-Alumno',
-      url: "/enunciados",
 
+    //MENU PARA
+    //TIPO DE USUARIO Profesor
+  {
+    name:'Nuevo Enunciado',
+    url: '/enunciadosPro/nuevo',
+     tipoUsuario: '3',//coordinador
+  },
+  {
+    name:'Lista de Enunciados',
+    url: '/enunciadosPro',
+     tipoUsuario: '3',//coordinador
+  },
+
+    //MENU PARA
+    //TIPO DE USUARIO Profesor
+  {
+    name:'Nuevo Enunciado',
+    url: '/enunciadosPro/nuevo',
+     tipoUsuario: '2',//Profesor
+  },
+  {
+    name:'Lista de Enunciados',
+    url: '/enunciadosPro',
+     tipoUsuario: '2',//Profesor
+  },
+   
+
+    //MENU PARA
+    //TIPO DE USUARIO ALUMNO
+    {
+      name:'Enunciados',
+      url: '/enunciados',
+      tipoUsuario: '1',//ALUMNO
     },
     {
       name:'Consola Libre',
       url: '/consola',
+      tipoUsuario: '1',//ALUMNO 
       children:[
         {
           name:'Python',
-          url: '/consola/python'
+          url: '/consola/python',
+
         },
         {
           name:'C',
-          url: '/consola/c_cpp'
+          url: '/consola/c_cpp',
+
         },
         {
-          name:"Java",
-          url:'/consola/java'
+          name:'Java',
+          url:'/consola/java',
+
         }
       ]
     },
@@ -77,6 +97,7 @@ export default {
       name: 'Base',
       url: '/base',
       icon: 'icon-puzzle',
+      tipoUsuario: 'aaa',//extra
       children: [
         {
           name: 'Breadcrumbs',
@@ -164,6 +185,7 @@ export default {
       name: 'Buttons',
       url: '/buttons',
       icon: 'icon-cursor',
+      tipoUsuario: 'aaa',//extra
       children: [
         {
           name: 'Buttons',
@@ -191,11 +213,13 @@ export default {
       name: 'Charts',
       url: '/charts',
       icon: 'icon-pie-chart',
+      tipoUsuario: 'aaa',//extra
     },
     {
       name: 'Icons',
       url: '/icons',
       icon: 'icon-star',
+      tipoUsuario: 'aaa',//extra
       children: [
         {
           name: 'CoreUI Icons',
@@ -231,6 +255,7 @@ export default {
       name: 'Notifications',
       url: '/notifications',
       icon: 'icon-bell',
+      tipoUsuario: 'aaa',//extra
       children: [
         {
           name: 'Alerts',
@@ -253,22 +278,24 @@ export default {
       name: 'Widgets',
       url: '/widgets',
       icon: 'icon-calculator',
+      tipoUsuario: 'aaa',//extra
       badge: {
         variant: 'info',
         text: 'NEW',
       },
     },
-    {
-      divider: true,
+    /*{
+     divider: true,
     },
     {
       title: true,
       name: 'Extras',
-    },
+    },*/
     {
       name: 'Pages',
       url: '/pages',
       icon: 'icon-star',
+      tipoUsuario: 'aaa',//extra
       children: [
         {
           name: 'Login',

@@ -46,5 +46,15 @@ public class ExerciseTest {
         assertEquals("Title of an excercise", exercise.getExerciseTitle());
 
 
+        exercise.setExerciseDifficulty(1);
+        assertTrue(1==exercise.getExerciseDifficulty());
+
+        exercise.setExerciseDays(10);
+        assertTrue(10 == exercise.getExerciseDays());
+
+        exercise.setExerciseTopic("Ciclos");
+        assertEquals("Ciclos",exercise.getExerciseTopic());
+
+
     }
 }

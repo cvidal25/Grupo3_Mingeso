@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Entity
@@ -138,9 +137,6 @@ public class Exercise implements Serializable {
     public void setExerciseDays(int exerciseDays) {
         this.exerciseDays = exerciseDays;
     }
-    @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = false)
-    private Topic topic;
 
     public String getExerciseTopic() { return exerciseTopic; }
 
@@ -158,17 +154,5 @@ public class Exercise implements Serializable {
     public void setUserExercise(Set<UserExercise> userExercise) {
         this.userExercise = userExercise;
     }
-
-    /*@ManyToOne
-    @JoinColumn(name = "topic_id", nullable = false)
-    private Topic topic;
-
-    public Topic getTopic() {
-        return this.topic;
-    }
-
-    public void setTopic(Topic topic) {
-        this.topic = topic;
-    }*/
 
 }
