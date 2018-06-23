@@ -52,7 +52,7 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(email,startDate,endDate);
 
-        return countExercise(completeList,year,month,lastDay);
+        return countBy(completeList,year,month,lastDay,true);
     }
 
     //Cantidad de ejercicios resueltos diariamente por Carrera (Nombre)
@@ -67,7 +67,7 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(career,startDate,endDate);
 
-        return countExercise(completeList,year,month,lastDay);
+        return countBy(completeList,year,month,lastDay,true);
     }
 
     //Cantidad de ejercicios resueltos diariamente por Coordinación
@@ -82,7 +82,7 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCoordinationAndUserDateResolutionBetweenOrderByUserDateResolution(coordination,startDate,endDate);
 
-        return countExercise(completeList,year,month,lastDay);
+        return countBy(completeList,year,month,lastDay,true);
     }
 
     //Tiempo invertido diariamente por Alumno (Correo)
@@ -98,7 +98,7 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(email,startDate,endDate);
 
-        return countTime(completeList,year,month,lastDay);
+        return countBy(completeList,year,month,lastDay,false);
 
     }
 
@@ -115,7 +115,7 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(career,startDate,endDate);
 
-        return countTime(completeList,year,month,lastDay);
+        return countBy(completeList,year,month,lastDay,false);
     }
 
     //Tiempo invertido diariamente por Coordinación
@@ -131,61 +131,12 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCoordinationAndUserDateResolutionBetweenOrderByUserDateResolution(coordination,startDate,endDate);
 
-        return countTime(completeList,year,month,lastDay);
+        return countBy(completeList,year,month,lastDay,false);
     }
 
-    public Map<Integer,int[]> countTime(List<UserExercise> completeList, int year, int month, int lastDay){
-        List<UserExercise> easy = new ArrayList<>();
-        List<UserExercise> medium = new ArrayList<>();
-        List<UserExercise> hard = new ArrayList<>();
-
-        for(int i = 0; i < completeList.size(); i++){
-            if(completeList.get(i).getExercise().getExerciseDifficulty() == 1) {
-                easy.add(completeList.get(i));
-            }else if(completeList.get(i).getExercise().getExerciseDifficulty() == 2) {
-                medium.add(completeList.get(i));
-            }else if(completeList.get(i).getExercise().getExerciseDifficulty() == 3){
-                hard.add(completeList.get(i));
-            }
-        }
-
-        //Para la lista Fácil:
-        int[] easyCounter = counterTime(easy,lastDay,year,month);
-
-        //Para la lista Medio:
-        int[] mediumCounter = counterTime(medium,lastDay,year,month);
-
-        //Para la lista Díficil:
-        int[] hardCounter = counterTime(hard,lastDay,year,month);
-
-        Map<Integer,int[]> exercisesPerDay= new HashMap<>();
-        exercisesPerDay.put(1,easyCounter);
-        exercisesPerDay.put(2,mediumCounter);
-        exercisesPerDay.put(3,hardCounter);
-
-        return exercisesPerDay;
-    }
-
-    public int[] counterTime( List<UserExercise> lista,int lastDay, int year, int month){
-        int[] counter = new int[lastDay];
-
-        for(UserExercise data : lista){
-            Date solvedDate = new Date(data.getUserDateResolution().getTime());
-            for(int i = 1; i <= lastDay; i++){
-                Date comparingStartDate = new GregorianCalendar(year,month-1,i).getTime();
-                Date comparingEndDate = new GregorianCalendar(year,month-1,i,23,59,59).getTime();
-                if(solvedDate.after(comparingStartDate) && solvedDate.before(comparingEndDate)){
-                    counter[i-1] = counter[i-1] + data.getUserSolvingTime();
-                    i = lastDay +1;
-                }
-            }
-        }
-
-        return counter;
-    }
 
     //Realiza el proceso completo del sumado, separando los ejercicios por el grado de dificultad.
-    public Map<Integer, int[]> countExercise(List<UserExercise> completeList, int year, int month, int lastDay){
+    public Map<Integer, int[]> countBy(List<UserExercise> completeList, int year, int month, int lastDay, boolean isExercise){
 
         List<UserExercise> easy = new ArrayList<>();
         List<UserExercise> medium = new ArrayList<>();
@@ -202,13 +153,13 @@ public class UserExerciseService {
         }
 
         //Para la lista Fácil:
-        int[] easyCounter = counterList(easy,lastDay,year,month);
+        int[] easyCounter = counterList(easy,lastDay,year,month,isExercise);
 
         //Para la lista Medio:
-        int[] mediumCounter = counterList(medium,lastDay,year,month);
+        int[] mediumCounter = counterList(medium,lastDay,year,month,isExercise);
 
         //Para la lista Díficil:
-        int[] hardCounter = counterList(hard,lastDay,year,month);
+        int[] hardCounter = counterList(hard,lastDay,year,month,isExercise);
 
         Map<Integer,int[]> exercisesPerDay= new HashMap<>();
         exercisesPerDay.put(1,easyCounter);
@@ -219,7 +170,7 @@ public class UserExerciseService {
     }
 
     //Obtiene la fecha en la que se resueve el ejercicio y suma una unidad en la posición de la fecha en el arreglo.
-    public int[] counterList(List<UserExercise> lista, int lastDay, int year, int month){
+    public int[] counterList(List<UserExercise> lista, int lastDay, int year, int month, boolean isExercise){
         int[] counter = new int[lastDay];
 
         for(UserExercise data : lista){
@@ -228,7 +179,11 @@ public class UserExerciseService {
                 Date comparingStartDate = new GregorianCalendar(year,month-1,i).getTime();
                 Date comparingEndDate = new GregorianCalendar(year,month-1,i,23,59,59).getTime();
                 if(solvedDate.after(comparingStartDate) && solvedDate.before(comparingEndDate)){
-                    counter[i-1]++;
+                    if(isExercise){
+                        counter[i-1]++;
+                    }else{
+                        counter[i-1] = counter[i-1] + data.getUserSolvingTime();
+                    }
                     i = lastDay +1;
                 }
             }
