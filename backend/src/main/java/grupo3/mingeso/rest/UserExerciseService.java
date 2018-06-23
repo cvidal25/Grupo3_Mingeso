@@ -105,8 +105,17 @@ public class UserExerciseService {
     //Tiempo invertido diariamente por Carrera (Nombre)
     @RequestMapping(value = "/time/career/{career}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public void countTimeByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<Integer, int[]> countTimeByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
 
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(career,startDate,endDate);
+
+        return countTime(completeList,year,month,lastDay);
     }
 
     //Tiempo invertido diariamente por Coordinación
