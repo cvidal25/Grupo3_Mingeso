@@ -44,7 +44,7 @@ public class UserExerciseService {
     //Cantidad de ejercicios resueltos diariamente por Alumno (Correo)
     @RequestMapping(value = "/student/{email}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public void countByUserStudent(@PathVariable("email") String email,@PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<Integer,int[]> countByUserStudent(@PathVariable("email") String email,@PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysCounter(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -77,18 +77,12 @@ public class UserExerciseService {
         //Para la lista Díficil:
         int[] hardCounter = counterList(hard,lastDay,year,month);
 
-        //Sólo para ver el contenido de los arreglos.
-        for(int i = 0; i < lastDay; i++){
-            System.out.print(easyCounter[i] + ", ");
-        }
-        System.out.println();
-        for(int i = 0; i < lastDay; i++){
-            System.out.print(mediumCounter[i] + ", ");
-        }
-        System.out.println();
-        for(int i = 0; i < lastDay; i++){
-            System.out.print(hardCounter[i] + ", ");
-        }
+        Map<Integer,int[]> exercisesPerDay= new HashMap<>();
+        exercisesPerDay.put(1,easyCounter);
+        exercisesPerDay.put(2,mediumCounter);
+        exercisesPerDay.put(3,hardCounter);
+
+        return exercisesPerDay;
     }
 
     public int[] counterList(List<UserExercise> lista, int lastDay, int year, int month){
@@ -100,15 +94,8 @@ public class UserExerciseService {
                 Date comparingStartDate = new GregorianCalendar(year,month-1,i).getTime();
                 Date comparingEndDate = new GregorianCalendar(year,month-1,i,23,59,59).getTime();
                 if(solvedDate.after(comparingStartDate) && solvedDate.before(comparingEndDate)){
-                    System.out.println("true");
-                    System.out.println(comparingStartDate);
-                    System.out.println(solvedDate);
-                    System.out.println(comparingEndDate);
-                    System.out.println();
                     counter[i-1]++;
                     i = lastDay +1;
-                }else{
-                    System.out.println("false");
                 }
             }
         }
