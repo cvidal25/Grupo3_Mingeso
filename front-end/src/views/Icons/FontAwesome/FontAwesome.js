@@ -2205,7 +2205,7 @@ class FontAwesome extends Component {
               </Col>
 
               <Col xs="6" sm="4" md="3" lg="2">
-                <i className="fa fa-spinner fa-lg mt-4"></i><br />spinner
+                <i className="fa fa-spinner fa-spin fa-lg mt-4"></i><br />spinner
               </Col>
 
             </Row>

@@ -37,31 +37,37 @@ export default {
       },
     },*/
 
+    //MENU PARA
+    //TIPO DE USUARIO Profesor
+  {
+    name:'Nuevo Enunciado',
+    url: '/enunciadosPro/nuevo',
+     tipoUsuario: '3',//coordinador
+  },
+  {
+    name:'Lista de Enunciados',
+    url: '/enunciadosPro',
+     tipoUsuario: '3',//coordinador
+  },
 
     //MENU PARA
     //TIPO DE USUARIO Profesor
-    {
-      name:'Enunciados-Profesor',
-      url: '/enunciadosPro',
-      tipoUsuario: '2',//Profesor
-      children:[
-        {
-          name:'Lista de Enunciados',
-          url: '/enunciadosPro',
-           tipoUsuario: '2',//Profesor
-        },
-        {
-          name:'Nuevo Enunciado',
-          url: '/enunciadosPro/nuevo',
-           tipoUsuario: '2',//Profesor
-        }
-      ]
-    },
+  {
+    name:'Nuevo Enunciado',
+    url: '/enunciadosPro/nuevo',
+     tipoUsuario: '2',//Profesor
+  },
+  {
+    name:'Lista de Enunciados',
+    url: '/enunciadosPro',
+     tipoUsuario: '2',//Profesor
+  },
+   
 
     //MENU PARA
     //TIPO DE USUARIO ALUMNO
     {
-      name:'Enunciados-Alumno',
+      name:'Enunciados',
       url: '/enunciados',
       tipoUsuario: '1',//ALUMNO
     },
