@@ -1,13 +1,11 @@
 package grupo3.mingeso.rest;
 
-import grupo3.mingeso.entities.User;
 import grupo3.mingeso.entities.UserExercise;
 import grupo3.mingeso.repository.UserExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.DateTimeException;
 import java.util.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -58,7 +56,7 @@ public class UserExerciseService {
     }
 
     //Cantidad de ejercicios resueltos diariamente por Carrera (Nombre)
-    @RequestMapping(value = "/{career}/{year}-{month}",method = RequestMethod.GET)
+    @RequestMapping(value = "/career/{career}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public Map<Integer, int[]> countByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
@@ -68,6 +66,21 @@ public class UserExerciseService {
         Timestamp endDate = timestampConverter(end);
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(career,startDate,endDate);
+
+        return countBy(completeList,year,month,lastDay);
+    }
+
+    //Cantidad de ejercicios resueltos diariamente por Coordinación
+    @RequestMapping(value = "/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<Integer,int[]> countByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCoordinationAndUserDateResolutionBetweenOrderByUserDateResolution(coordination,startDate,endDate);
 
         return countBy(completeList,year,month,lastDay);
     }
@@ -154,49 +167,3 @@ public class UserExerciseService {
 
 
 }
-
-    /*
-
-    //Cantidad de ejercicios resueltos diariamente por Coordinación
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public int countByCoordination(){
-
-    }*/
-
-    //número de problemas resueltos por alumno y dia
-    /*@GetMapping(value = "/userTasks", params = {"email", "date"})
-    @ResponseBody
-    public int countAllByEmailAndDate(@RequestParam("email") String email,
-                                      @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
-        return userTaskRepository.countAllByUserEmailAndDate(email, date);
-
-
-    } */
-
-    /*private Map<Date, Integer> getSumInvestedTimeByUser(String email, Date from, Date to) {
-
-        List<UserTask> metrics = userTaskRepository.findByUserEmailAndDateBetweenOrderByIdDesc(email, from, to);
-
-        Map<Date, Integer> statistic = new HashMap<>();
-
-        int aux = 0;
-
-        for (UserTask data : metrics) {
-
-            if (statistic.containsKey(data.getDate())) {
-
-                aux += statistic.get(data.getDate());
-
-                statistic.put(data.getDate(), data.getInvestedTime() + aux);
-
-            } else
-
-                statistic.put(data.getDate(), data.getInvestedTime());
-
-        }
-
-        return statistic;
-
-    }
-    * */

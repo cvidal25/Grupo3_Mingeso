@@ -12,4 +12,5 @@ public interface UserExerciseRepository extends CrudRepository<UserExercise, Int
     UserExercise findByExerciseAndUser(Exercise ex, User us);
     List<UserExercise> findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(String mail, Timestamp start, Timestamp end);
     List<UserExercise> findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(String career, Timestamp start, Timestamp end);
+    List<UserExercise> findAllByUserUserCoordinationAndUserDateResolutionBetweenOrderByUserDateResolution(String coordination, Timestamp start, Timestamp end);
 }
