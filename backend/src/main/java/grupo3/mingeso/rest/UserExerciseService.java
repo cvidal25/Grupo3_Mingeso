@@ -121,8 +121,17 @@ public class UserExerciseService {
     //Tiempo invertido diariamente por Coordinación
     @RequestMapping(value = "/time/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public void countTimeByCoordination(@PathVariable("coordination") String coodination, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<Integer,int[]> countTimeByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
 
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCoordinationAndUserDateResolutionBetweenOrderByUserDateResolution(coordination,startDate,endDate);
+
+        return countTime(completeList,year,month,lastDay);
     }
 
     public Map<Integer,int[]> countTime(List<UserExercise> completeList, int year, int month, int lastDay){
