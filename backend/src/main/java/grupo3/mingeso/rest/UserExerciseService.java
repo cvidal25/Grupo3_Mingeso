@@ -40,7 +40,7 @@ public class UserExerciseService {
     }
 
     //Cantidad de ejercicios resueltos diariamente por Alumno (Correo)
-    @RequestMapping(value = "/student/{email}/{year}-{month}",method = RequestMethod.GET)
+    @RequestMapping(value = "/exercise/student/{email}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public Map<Integer,int[]> countByUserStudent(@PathVariable("email") String email,@PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
@@ -52,11 +52,11 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(email,startDate,endDate);
 
-        return countBy(completeList,year,month,lastDay);
+        return countExercise(completeList,year,month,lastDay);
     }
 
     //Cantidad de ejercicios resueltos diariamente por Carrera (Nombre)
-    @RequestMapping(value = "/career/{career}/{year}-{month}",method = RequestMethod.GET)
+    @RequestMapping(value = "/exercise/career/{career}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public Map<Integer, int[]> countByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
@@ -67,11 +67,11 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(career,startDate,endDate);
 
-        return countBy(completeList,year,month,lastDay);
+        return countExercise(completeList,year,month,lastDay);
     }
 
     //Cantidad de ejercicios resueltos diariamente por Coordinación
-    @RequestMapping(value = "/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
+    @RequestMapping(value = "/exercise/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public Map<Integer,int[]> countByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
@@ -82,11 +82,92 @@ public class UserExerciseService {
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCoordinationAndUserDateResolutionBetweenOrderByUserDateResolution(coordination,startDate,endDate);
 
-        return countBy(completeList,year,month,lastDay);
+        return countExercise(completeList,year,month,lastDay);
+    }
+
+    //Tiempo invertido diariamente por Alumno (Correo)
+    @RequestMapping(value = "/time/student/{email}/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<Integer, int[]> countTimeByStudent(@PathVariable("email") String email, @PathVariable("year") int year, @PathVariable("month") int month){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
+
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        List<UserExercise> completeList = userExerciseRepository.findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(email,startDate,endDate);
+
+        return countTime(completeList,year,month,lastDay);
+
+    }
+
+    //Tiempo invertido diariamente por Carrera (Nombre)
+    @RequestMapping(value = "/time/career/{career}/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public void countTimeByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
+
+    }
+
+    //Tiempo invertido diariamente por Coordinación
+    @RequestMapping(value = "/time/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public void countTimeByCoordination(@PathVariable("coordination") String coodination, @PathVariable("year") int year, @PathVariable("month") int month){
+
+    }
+
+    public Map<Integer,int[]> countTime(List<UserExercise> completeList, int year, int month, int lastDay){
+        List<UserExercise> easy = new ArrayList<>();
+        List<UserExercise> medium = new ArrayList<>();
+        List<UserExercise> hard = new ArrayList<>();
+
+        for(int i = 0; i < completeList.size(); i++){
+            if(completeList.get(i).getExercise().getExerciseDifficulty() == 1) {
+                easy.add(completeList.get(i));
+            }else if(completeList.get(i).getExercise().getExerciseDifficulty() == 2) {
+                medium.add(completeList.get(i));
+            }else if(completeList.get(i).getExercise().getExerciseDifficulty() == 3){
+                hard.add(completeList.get(i));
+            }
+        }
+
+        //Para la lista Fácil:
+        int[] easyCounter = counterTime(easy,lastDay,year,month);
+
+        //Para la lista Medio:
+        int[] mediumCounter = counterTime(medium,lastDay,year,month);
+
+        //Para la lista Díficil:
+        int[] hardCounter = counterTime(hard,lastDay,year,month);
+
+        Map<Integer,int[]> exercisesPerDay= new HashMap<>();
+        exercisesPerDay.put(1,easyCounter);
+        exercisesPerDay.put(2,mediumCounter);
+        exercisesPerDay.put(3,hardCounter);
+
+        return exercisesPerDay;
+    }
+
+    public int[] counterTime( List<UserExercise> lista,int lastDay, int year, int month){
+        int[] counter = new int[lastDay];
+
+        for(UserExercise data : lista){
+            Date solvedDate = new Date(data.getUserDateResolution().getTime());
+            for(int i = 1; i <= lastDay; i++){
+                Date comparingStartDate = new GregorianCalendar(year,month-1,i).getTime();
+                Date comparingEndDate = new GregorianCalendar(year,month-1,i,23,59,59).getTime();
+                if(solvedDate.after(comparingStartDate) && solvedDate.before(comparingEndDate)){
+                    counter[i-1] = counter[i-1] + data.getUserSolvingTime();
+                    i = lastDay +1;
+                }
+            }
+        }
+
+        return counter;
     }
 
     //Realiza el proceso completo del sumado, separando los ejercicios por el grado de dificultad.
-    public Map<Integer, int[]> countBy(List<UserExercise> completeList, int year, int month, int lastDay){
+    public Map<Integer, int[]> countExercise(List<UserExercise> completeList, int year, int month, int lastDay){
 
         List<UserExercise> easy = new ArrayList<>();
         List<UserExercise> medium = new ArrayList<>();
