@@ -46,13 +46,34 @@ public class UserExerciseService {
     @ResponseBody
     public Map<Integer,int[]> countByUserStudent(@PathVariable("email") String email,@PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
-        int lastDay = daysCounter(month,year);
+        int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
 
         Timestamp startDate = timestampConverter(start);
         Timestamp endDate = timestampConverter(end);
 
         List<UserExercise> completeList = userExerciseRepository.findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(email,startDate,endDate);
+
+        return countBy(completeList,year,month,lastDay);
+    }
+
+    //Cantidad de ejercicios resueltos diariamente por Carrera (Nombre)
+    @RequestMapping(value = "/{career}/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<Integer, int[]> countByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        List<UserExercise> completeList = userExerciseRepository.findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(career,startDate,endDate);
+
+        return countBy(completeList,year,month,lastDay);
+    }
+
+    //Realiza el proceso completo del sumado, separando los ejercicios por el grado de dificultad.
+    public Map<Integer, int[]> countBy(List<UserExercise> completeList, int year, int month, int lastDay){
 
         List<UserExercise> easy = new ArrayList<>();
         List<UserExercise> medium = new ArrayList<>();
@@ -85,6 +106,7 @@ public class UserExerciseService {
         return exercisesPerDay;
     }
 
+    //Obtiene la fecha en la que se resueve el ejercicio y suma una unidad en la posición de la fecha en el arreglo.
     public int[] counterList(List<UserExercise> lista, int lastDay, int year, int month){
         int[] counter = new int[lastDay];
 
@@ -103,7 +125,8 @@ public class UserExerciseService {
         return counter;
     }
 
-    public int daysCounter(int month, int year){
+    //Calcula la cantidad de días que tiene un mes y del año.
+    public int daysOfTheMonth(int month, int year){
         if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
             return 31;
         else if(month == 4 || month == 6 || month == 9 || month == 11)
@@ -117,6 +140,7 @@ public class UserExerciseService {
             return 0;
     }
 
+    //Convierte de un String a Timestamp
     public Timestamp timestampConverter(String date){
         try{
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -131,12 +155,7 @@ public class UserExerciseService {
 
 }
 
-    /*//Cantidad de ejercicios resueltos diariamente por Carrera (Nombre)
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public int countByCareer(){
-
-    }
+    /*
 
     //Cantidad de ejercicios resueltos diariamente por Coordinación
     @RequestMapping(method = RequestMethod.GET)

@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface UserExerciseRepository extends CrudRepository<UserExercise, Integer>{
     UserExercise findByExerciseAndUser(Exercise ex, User us);
-    List<UserExercise> findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(String main, Timestamp start, Timestamp end);
+    List<UserExercise> findAllByUserUserMailAndUserDateResolutionBetweenOrderByUserDateResolution(String mail, Timestamp start, Timestamp end);
+    List<UserExercise> findAllByUserUserCareerAndUserDateResolutionBetweenOrderByUserDateResolution(String career, Timestamp start, Timestamp end);
 }
