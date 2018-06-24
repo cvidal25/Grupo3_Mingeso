@@ -7,6 +7,11 @@ import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { Provider } from 'react-redux';
 
+const persistedState 
+const store = createStore(
+	persistedState
+)
+
 ReactDOM.render(
 	<Provider store={store}>
 		<App />

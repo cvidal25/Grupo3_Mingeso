@@ -3,7 +3,7 @@ export default {
     {
       name: 'Dashboard',
       url: '/dashboard',
-      icon: 'icon-speedometer',
+      icon: 'icon-pie-chart',
      /// tipoUsuario: '3','1','2',//coordinador
      
     },
@@ -42,11 +42,13 @@ export default {
   {
     name:'Nuevo Enunciado',
     url: '/enunciadosPro/nuevo',
+    icon: 'icon-note',
      tipoUsuario: '3',//coordinador
   },
   {
     name:'Lista de Enunciados',
     url: '/enunciadosPro',
+    icon: 'icon-list',
      tipoUsuario: '3',//coordinador
   },
 
@@ -55,11 +57,13 @@ export default {
   {
     name:'Nuevo Enunciado',
     url: '/enunciadosPro/nuevo',
+    icon: 'icon-note',
      tipoUsuario: '2',//Profesor
   },
   {
     name:'Lista de Enunciados',
     url: '/enunciadosPro',
+    icon: 'icon-list ',
      tipoUsuario: '2',//Profesor
   },
    
@@ -69,17 +73,19 @@ export default {
     {
       name:'Enunciados',
       url: '/enunciados',
+      icon: 'icon-list',
       tipoUsuario: '1',//ALUMNO
     },
     {
       name:'Consola Libre',
       url: '/consola',
+      icon: 'icon-note ',
       tipoUsuario: '1',//ALUMNO 
       children:[
         {
           name:'Python',
           url: '/consola/python',
-
+          
         },
         {
           name:'C',
