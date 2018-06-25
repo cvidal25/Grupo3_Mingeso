@@ -435,21 +435,6 @@ const sparklineChartOpts = {
 };
 
 // Main Charts
-
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-var elements = 27;
-var data1 = [];
-var data2 = [];
-var data3 = [];
-
-for (var i = 0; i <= elements; i++) {
-  data1.push(random(50, 200));
-  data2.push(random(80, 100));
-  data3.push(65);
-}
 const daysLabel = ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
   , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
   , 'Día 11', 'Día 12', 'Día 13', 'Día 14', 'Día 15'
@@ -463,7 +448,7 @@ const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
   , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
   , 'Noviembre', 'Diciembre'];
 
-const enunChart = {
+var initData = {
   labels: daysLabel,
   datasets: [
     {
@@ -502,65 +487,8 @@ const enunChart = {
     },
   ],
 };
-const timeChart = {
-  labels: daysLabel,
-  datasets: [
-    {
-      label: 'Enunciados Totales',
-      backgroundColor: hexToRgba(brandInfo, 10),
-      borderColor: brandInfo,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: minutesPerDay,
-    },
-    {
-      label: 'Enunciados Faciles',
-      backgroundColor: 'transparent',
-      borderColor: brandSuccess,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: minutesPerFaciles,
-    },
-    {
-      label: 'Enunciados Intermedios',
-      backgroundColor: 'transparent',
-      borderColor: brandDanger,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      //borderDash: [8, 5],
-      data: minutesPerIntermedios,
-    },
-    {
-      label: 'Enunciados Dificiles',
-      backgroundColor: 'transparent',
-      borderColor: brandWarning,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      //borderDash: [8, 5],
-      data: minutesPerDificiles,
-    },
-  ],
-};
 //Chart de Torta
-const pieTime = {
-  labels: diffLabel,
-  datasets: [
-    {
-      data: [325, 720, 1540],
-      backgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-      hoverBackgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-    }],
-};
-//
-const pieEnun = {
+const pieInit = {
   labels: diffLabel,
   datasets: [
     {
@@ -578,7 +506,7 @@ const pieEnun = {
     }],
 };
 //CADA CUANTO SALTA, ESCALA DE LABEL
-const enunChartOpts = {
+const initOpts = {
   tooltips: {
     enabled: false,
     custom: CustomTooltips,
@@ -622,8 +550,135 @@ const enunChartOpts = {
     },
   },
 };
+//Variables utiles a usar
+var totalEnunciados;
+var totalFaciles;
+var totalIntermedios;
+var totalDificiles;
+var percentFaciles;
+var percentIntermedios;
+var percentDificiles;
+var totalMinutes;
+var minutesFaciles;
+var minutesIntermedios;
+var minutesDificiles;
+var percentTimeF;
+var percentTimeI;
+var percentTimeD;
 
-const timeChartOpt = {
+var pieDataEnum = {
+  labels: diffLabel,
+  datasets: [
+    {
+      data: [65, 72, 77],
+      backgroundColor: [
+        '#36A2EB',
+        '#FFCE56',
+        '#FF6384',
+      ],
+      hoverBackgroundColor: [
+        '#36A2EB',
+        '#FFCE56',
+        '#FF6384',
+      ],
+    }],
+};
+var pieDataTime = {
+  labels: diffLabel,
+  datasets: [
+    {
+      data: [325, 720, 1540],
+      backgroundColor: [
+        '#36A2EB',
+        '#FFCE56',
+        '#FF6384',
+      ],
+      hoverBackgroundColor: [
+        '#36A2EB',
+        '#FFCE56',
+        '#FF6384',
+      ],
+    }],
+};
+var enunLineChartData = {
+  labels: daysLabel,
+  datasets: [
+    {
+      label: 'Enunciados Totales',
+      backgroundColor: hexToRgba(brandInfo, 10),
+      borderColor: brandInfo,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      data: enunciadosPerDay,
+    },
+    {
+      label: 'Enunciados Faciles',
+      backgroundColor: 'transparent',
+      borderColor: brandSuccess,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      data: facilesPerDay,
+    },
+    {
+      label: 'Enunciados Intermedios',
+      backgroundColor: 'transparent',
+      borderColor: brandDanger,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      //borderDash: [8, 5],
+      data: intermediosPerDay,
+    },
+    {
+      label: 'Enunciados Dificiles',
+      backgroundColor: 'transparent',
+      borderColor: brandWarning,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      //borderDash: [8, 5],
+      data: dificilesPerDay,
+    },
+  ],
+};
+var timeLineChartData = {
+  labels: daysLabel,
+  datasets: [
+    {
+      label: 'Enunciados Totales',
+      backgroundColor: hexToRgba(brandInfo, 10),
+      borderColor: brandInfo,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      data: minutesPerDay,
+    },
+    {
+      label: 'Enunciados Faciles',
+      backgroundColor: 'transparent',
+      borderColor: brandSuccess,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      data: minutesPerFaciles,
+    },
+    {
+      label: 'Enunciados Intermedios',
+      backgroundColor: 'transparent',
+      borderColor: brandDanger,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      //borderDash: [8, 5],
+      data: minutesPerIntermedios,
+    },
+    {
+      label: 'Enunciados Dificiles',
+      backgroundColor: 'transparent',
+      borderColor: brandWarning,
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 2,
+      //borderDash: [8, 5],
+      data: minutesPerDificiles,
+    },
+  ],
+};
+var enunLineChartOpt = {
   tooltips: {
     enabled: false,
     custom: CustomTooltips,
@@ -668,21 +723,50 @@ const timeChartOpt = {
   },
 };
 
-//Variables utiles a usar
-var totalEnunciados;
-var totalFaciles;
-var totalIntermedios;
-var totalDificiles;
-var percentFaciles;
-var percentIntermedios;
-var percentDificiles;
-var totalMinutes;
-var minutesFaciles;
-var minutesIntermedios;
-var minutesDificiles;
-var percentTimeF;
-var percentTimeI;
-var percentTimeD;
+var timeLineChartOpt = {
+  tooltips: {
+    enabled: false,
+    custom: CustomTooltips,
+    intersect: true,
+    mode: 'index',
+    position: 'nearest',
+    callbacks: {
+      labelColor: function (tooltipItem, chart) {
+        return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
+      }
+    }
+  },
+  maintainAspectRatio: false,
+  legend: {
+    display: false,
+  },
+  //Scala de los axes
+  scales: {
+    xAxes: [
+      {
+        gridLines: {
+          drawOnChartArea: false,
+        },
+      }],
+    yAxes: [
+      {
+        ticks: {
+          beginAtZero: true,
+          maxTicksLimit: 5,
+          stepSize: Math.ceil(minutesPerDay.max / 5),
+          max: minutesPerDay.max,
+        },
+      }],
+  },
+  elements: {
+    point: {
+      radius: 0,
+      hitRadius: 10,
+      hoverRadius: 4,
+      hoverBorderWidth: 3,
+    },
+  },
+};
 
 class Dashboard extends Component {
   constructor() {
@@ -694,14 +778,14 @@ class Dashboard extends Component {
     this.state = {
 
       cardsButton: new Array(4).fill(false),
-      monthButtonOpen: false,
+      monthButtonOpen: new Array(3).fill(false),
       dropdownOpen: false,
-      radioSelected: 1,
+      radioSelected: new Array(2).fill(1),
       monthSelected: monthsLabel[5],
       //Chart States
-      dataLineChart: enunChart,
-      optLineChart: enunChartOpts,
-      dataPieChart: pieEnun
+      dataLineChart: initData,
+      optLineChart: initOpts,
+      dataPieChart: pieInit
     };
   }
   toggle(i) {
@@ -711,29 +795,52 @@ class Dashboard extends Component {
     });
   }
 
-  onRadioBtnClick(radioSelected) {
+  onMonthBtnClick(i) {
+    const newArray = this.state.monthButtonOpen.map((element, index) => { return (index === i ? !element : false); });
+    this.setState({
+      monthButtonOpen: newArray,
+    });
+  }
+  
+  onRadioBtnClick(i,radioSelected) {
+    console.log(this.state.radioSelected);
+    
+    var newArray = this.state.radioSelected;
+    newArray[i]=radioSelected;
+    
     if (radioSelected == 1) {
       this.setState({
-        dataPieChart: pieEnun,
-        radioSelected: radioSelected
+        dataLineChart: enunLineChartData,
+        optLineChart: enunLineChartOpt,
+        dataPieChart: pieDataEnum,
+        radioSelected: newArray
       });
     }
     else if (radioSelected == 2) {
       this.setState({
-        dataPieChart: pieTime,
-        radioSelected: radioSelected
+        dataLineChart: timeLineChartData,
+        optLineChart: timeLineChartOpt,
+        dataPieChart: pieDataTime,
+        radioSelected: newArray
       });
     }
-    else if (radioSelected == 3) {
+  }
+  /*Axios.get('http://localhost:8082/exercise',config)
+        .then(response=>{
+            var aux=[];
+            var enunciados=response.data;
+            let item;
+            for (item in enunciados){
+                aux.push(false);    
+            }
 
-    }
-  }
-  onMonthBtnClick(monthButton) {
-    this.setState({
-      monthButton: monthButton,
-    });
-  }
-  oNMonthItemSelected(i) {
+            this.setState({
+                items:enunciados,
+                openStates:[aux,aux,aux,aux],
+                espera:false
+            });
+        })*/
+  oNMonthItemSelected(i){
     console.log(i);
     this.setState({
       monthSelected: monthsLabel[i],
@@ -777,36 +884,35 @@ class Dashboard extends Component {
   }
 
   //Botones de selector de meses
-  buttonMonth(month) {
+  buttonMonth(i,month) {
     return (
-      <ButtonDropdown className="mr-1" isOpen={this.state.monthButtonOpen} toggle={() => { this.setState({ monthButtonOpen: !this.state.monthButtonOpen }); }}>
-        <DropdownToggle caret className="p-0" onClick={() => this.oNMonthItemSelected(  )}  color="primary">{month}</DropdownToggle>
-        <DropdownMenu left>
+      <ButtonDropdown  isOpen={this.state.monthButtonOpen[i]} toggle={() => { this.onMonthBtnClick(i); }}>
+        <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
+        <DropdownMenu down="true">
           <DropdownItem header>Mes</DropdownItem>
-          <DropdownItem >Marzo</DropdownItem>
-          <DropdownItem >Abril</DropdownItem>
-          <DropdownItem >Mayo</DropdownItem>
-          <DropdownItem >Junio</DropdownItem>
-          <DropdownItem >Julio</DropdownItem>
-          <DropdownItem >Agosto</DropdownItem>
-          <DropdownItem >Septiembre</DropdownItem>
-          <DropdownItem >Octubre</DropdownItem>
-          <DropdownItem >Noviembre</DropdownItem>
-          <DropdownItem >Diciembre</DropdownItem>
-          <DropdownItem divider />
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(2);}}>Marzo</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(3);}}>Abril</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(4);}}>Mayo</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(5);}}>Junio</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(6);}}>Julio</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(7);}}>Agosto</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(8);}}>Septiembre</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(9);}}>Octubre</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(10);}}>Noviembre</DropdownItem>
+          <DropdownItem onClick={()=>{this.oNMonthItemSelected(11);}}>Diciembre</DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>
     );
   }
   //Botones de filtro de cada grafo
-  filtro() {
+  filtro(i) {
     return (
-      <Col sm="7" className="d-none d-sm-inline-block">
+      <Col sm="6" //className="d-none d-sm-inline-block">
+      > 
         <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
           <ButtonGroup className="mr-3" aria-label="First group">
-            <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)} active={this.state.radioSelected === 1}>Enunciados</Button>
-            <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(2)} active={this.state.radioSelected === 2}>Horas</Button>
-            <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)} active={this.state.radioSelected === 3}>Rendimiento</Button>
+            <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(i,1)} active={this.state.radioSelected[i] === 1}>Enunciados</Button>
+            <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(i,2)} active={this.state.radioSelected[i] === 2}>Horas</Button>
           </ButtonGroup>
         </ButtonToolbar>
       </Col>
@@ -831,12 +937,9 @@ class Dashboard extends Component {
     )
   }
   //Titulo de los maincharts
-  chartTittle(titulo, mes) {
+  chartTittle(titulo) {
     return (
-      <Col sm="5">
-        <CardTitle className="mb-0">{titulo}</CardTitle>
-        {this.buttonMonth()}
-      </Col>
+      <CardTitle className="mb-0">{titulo}</CardTitle>
     )
   }
   //Footers Enun
@@ -900,14 +1003,18 @@ class Dashboard extends Component {
     )
   }
   //Make de graficos (acoplar header, botones, grfico y footer)
+
   makeEnunLineChart(dataIn, optIn, month) {
     //PEDIR ENUNCIADOS SEGUN MES
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Enunciados realizados por día", month)}
-            {this.filtro()}
+            <Col sm="4">
+              {this.chartTittle("Enunciados realizados por día")}
+            </Col>
+            {this.filtro(0)}
+            {this.buttonMonth(0,month)}
           </Row>
           {this.chartLine(dataIn,optIn)}
         </CardBody>
@@ -915,14 +1022,18 @@ class Dashboard extends Component {
       </Card>
     );
   }
+
   makeTimeLineChart(dataIn, optIn, month) {
     //PEDIR TIEMPO SEGUN MES
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Minutos utilizado por día", month)}
-            {this.filtro()}
+            <Col sm="4">
+              {this.chartTittle("Minutos utilizados por día")}
+            </Col>
+            {this.filtro(0)}
+            {this.buttonMonth(0,month)}
           </Row>
           {this.chartLine(dataIn,optIn)}
         </CardBody>
@@ -930,13 +1041,19 @@ class Dashboard extends Component {
       </Card>
     );
   }
+  //json Q,T, mes año, (carrera,alumno(email),coordinacion)
   makeEnunPieChart(dataIn, month) {
     return (
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Enunciados hechos por dificultad", month)}
-            {this.filtro()}
+            <Col sm="4">
+              {this.chartTittle("Enunciados realizados al mes")}
+            </Col>
+            {this.filtro(1)}
+            <Col sm="2">
+            {this.buttonMonth(1,month)}
+            </Col>
           </Row>
           {this.chartPie(dataIn, month)}
         </CardBody>
@@ -949,8 +1066,11 @@ class Dashboard extends Component {
       <Card>
         <CardBody>
           <Row>
-            {this.chartTittle("Horas gastadas en desarrollo", month)}
-            {this.filtro()}
+            <Col sm="5">
+              {this.chartTittle("Minutos utilizado al mes")}
+              {this.buttonMonth(1,month)}
+            </Col>
+            {this.filtro(1)}
           </Row>
           {this.chartPie(dataIn, month)}
         </CardBody>
@@ -960,23 +1080,21 @@ class Dashboard extends Component {
   }
   //Renders
   renderChartsByFilter(filter, month) {
-    if (filter == 1) {
+    if (filter[0] == 1) {
       return (
         <Col>
-          {this.makeEnunLineChart()}
+          {this.makeEnunLineChart(this.state.dataLineChart,this.state.optLineChart,month)}
           <CardColumns className="cols-2">
-            {this.makeEnunPieChart(this.state.dataPieChart,month)}
             {this.makeEnunPieChart(this.state.dataPieChart,month)}
           </CardColumns>
         </Col>
       );
     }
-    else if (filter == 2) {
+    else if (filter[0] == 2) {
       return (
         <Col>
-          {this.makeTimeLineChart()}
+          {this.makeTimeLineChart(this.state.dataLineChart,this.state.optLineChart,month)}
           <CardColumns className="cols-2">
-            {this.makeTimePieChart(this.state.dataPieChart, month)}
             {this.makeTimePieChart(this.state.dataPieChart, month)}
           </CardColumns>
         </Col>
@@ -988,6 +1106,7 @@ class Dashboard extends Component {
   }
   //Operaciones
   sumaDeArray(array, largo) {
+    var i;
     var suma = 0;
     for (i = 0; i < largo; i++) {
       suma = suma + array[i];
@@ -1057,9 +1176,6 @@ class Dashboard extends Component {
         <Row>
           {this.renderChartsByFilter(this.state.radioSelected,this.state.monthSelected)}
         </Row>
-        {
-          //RSS INFO
-        }
         {
           //Evaluacion
           //Profesor
