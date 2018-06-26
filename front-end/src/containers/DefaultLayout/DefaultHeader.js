@@ -8,7 +8,8 @@ import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
 import {connect} from 'react-redux'
 import salirCuenta from '../../actionCreators';
-import store from '../../store';
+//import store from '../../store';
+import store from '../../index';
 
 const propTypes = {
   children: PropTypes.node,
