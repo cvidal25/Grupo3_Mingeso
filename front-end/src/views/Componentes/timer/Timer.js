@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Card,CardBody} from 'reactstrap';
 
 class Timer extends Component{
     constructor(){
@@ -59,9 +58,9 @@ class Timer extends Component{
     }
     getTimeMin(time){ // 00:00:00 hora, min, seg
         var arrayTime=time.split(":");
-        var horasMin=parseInt(arrayTime[0]) *60;
-        var min=parseInt(arrayTime[1]);
-        var segMin= parseFloat((parseInt(arrayTime[2])/60).toFixed(2));
+        var horasMin=parseInt(arrayTime[0],10) *60;
+        var min=parseInt(arrayTime[1],10);
+        var segMin= parseFloat((parseInt(arrayTime[2])/60,10).toFixed(2));
         console.log("el tiempo es:" + (horasMin + min + segMin) )
         return horasMin + min;
     }

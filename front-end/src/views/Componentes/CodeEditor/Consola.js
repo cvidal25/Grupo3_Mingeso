@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
 //import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
-import brace, { Split } from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
 import { Card, CardBody, CardHeader, Col,CardFooter, 
 	 Row, Button,Input,Label,
 	Modal,ModalBody, ModalFooter,ModalHeader
 } from 'reactstrap';
-import  { Redirect } from 'react-router-dom';
 import Timer from "../timer/Timer";
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 
 import '../../../scss/spinner.css';
@@ -92,9 +89,8 @@ class CodeEditor extends Component{
 													existeEnunciado:true,
 													espera:false,
 													date: new Date(),
-													idExercise: parseInt(num),
+													idExercise: parseInt(num,10),
 											});
-											var aux;
 											if(response.data.exerciseLenguge!==lenguajeJson[this.state.modo]){
 												console.log('REDIRIGIR');
 												window.location.replace('/#/dashboard');
@@ -141,7 +137,7 @@ class CodeEditor extends Component{
 		}
 //se debe cambiar para realizar una actualizacion de los componentes
 	verificarURL(){
-			var lenguaje,url;
+			var url;
 			url=this.props.location.pathname;
 			//console.log(url);
 			url=url.split("/");

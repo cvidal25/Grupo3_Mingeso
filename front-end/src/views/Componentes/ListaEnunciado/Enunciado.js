@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardBody, CardHeader,CardFooter, Col, Collapse, Row, Table,Button } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
 import Axios from 'axios';
 import '../../../scss/spinner.css';
 import c_icon from '../../../assets/img/logos_lenguajes/c_logo.png';
 import python_icon from '../../../assets/img/logos_lenguajes/python_logo.png';
 import java_icon from '../../../assets/img/logos_lenguajes/java_logo.png';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 
 /*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
@@ -30,6 +29,7 @@ class Enunciado extends Component{
             iconos:[python_icon,java_icon,c_icon],
             collapse: false,
             accordion: [],
+            realizado:[],
             espera:false,
       };
     }
@@ -58,15 +58,18 @@ class Enunciado extends Component{
         .then(response=>{
             //console.log(response.data);
             var aux=[];
+            var hechos=[]
             var enunciados=response.data;
             let item;
             for (item in enunciados){
-                aux.push(false);    
+                aux.push(false); 
+                hechos.push(false);
             }
 
             this.setState({
                 items:enunciados,
                 accordion: aux,
+                realizado:hechos,
                 espera:false
             });
         })
@@ -117,7 +120,8 @@ class Enunciado extends Component{
                             {this.state.espera?
                             <div className="row">
                                 <div className ='col'>
-                                    <div className='defaultSpinner' ></div>
+                                    
+                                    <div className='defaultSpinner'></div>
                                 </div>
                             </div>
                             :
@@ -132,21 +136,28 @@ class Enunciado extends Component{
                             </tr>
                             </thead>
                             
-                            {listaEnunciados && listaEnunciados.map((enunciado, key) =>
-                            
-                                {(enunciado.exercisePublished)&&
+                            {listaEnunciados && listaEnunciados.map((enunciado, key) =>{
+
+                            return( (enunciado.exercisePublished)&&
                                 <tbody key={key}>
                                     <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
                                     <td>{enunciado.exerciseTitle}</td>
                                     <td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
-                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}}/></td>
+                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}} alt={enunciado.exerciseLenguge}/></td>
                                     <td>
-                                        <Link to={{
+                                        {(!this.state.realizado[key])?<Link to={{
                                             pathname:"/enunciados/"+this.state.lenguaje[enunciado.exerciseLenguge-1].toString()+"/consola/"+enunciado.exerciseID,
+                                        
+                                            }}>
+                                            <Button block color="success">GO</Button>
+                                        </Link>:<Link to={{
                                             
                                             }}>
-                                            <Button block color="primary">GO</Button>
+                                            <Button block color="info">Resultados</Button>
                                         </Link>
+
+                                        }
+                                        
                                     </td>
                                 </tr>
                                 <tr>
@@ -175,8 +186,12 @@ class Enunciado extends Component{
                                         </Collapse>
                                     </td>
                                 </tr>
-                            </tbody>
-                                }
+                            </tbody>);
+
+                            }
+                               
+                                
+                                
                                 
                             )}
                         
