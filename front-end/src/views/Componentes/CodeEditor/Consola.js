@@ -4,7 +4,7 @@ import AceEditor from 'react-ace';
 import brace, { Split } from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
-import { Card, CardBody, CardHeader, Col, Collapse,FormGroup, Row, Table,Button,Input,Label} from 'reactstrap';
+import { Card, CardBody, CardHeader, Col,CardFooter, Collapse,FormGroup, Row, Table,Button,Input,Label} from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
 import Timer from "../timer/Timer";
 import PropTypes from 'prop-types';
@@ -48,6 +48,7 @@ class CodeEditor extends Component{
 					bases:[basePython,baseJava,baseC_Cpp],
 					aceEditorValue:"",
 					espera:false,
+					esperaRun:false,
 					url:"",
 					stdin:"",
 					stdout:"",
@@ -155,6 +156,9 @@ class CodeEditor extends Component{
 	handletryCodigo=event=>{
 		console.log(Timer.prototype.getTime(this.state.date));
 		console.log(this.state.time);
+		this.setState({
+			esperaRun:true
+		})
 
 		var trial={
 		"language":lenguajeJson[this.state.modo],
@@ -175,6 +179,9 @@ class CodeEditor extends Component{
 					stdout:json["stdout"]
 				})
 				}
+				this.setState({
+					esperaRun:false
+				})
 
 				
 				console.log(response.data[0]);
@@ -183,6 +190,10 @@ class CodeEditor extends Component{
 			})
 			.catch(error=>{
 				console.log(error);
+				this.setState({
+					esperaRun:false
+				})
+
 			})
 
 
@@ -219,7 +230,6 @@ class CodeEditor extends Component{
 			}).catch(function(error){
 					console.log(error);
 			});
-			console.log(data, Timer.prototype.getTimeMin(this.state.time));   
 	}
 
 	render(){
@@ -241,10 +251,28 @@ class CodeEditor extends Component{
 								<Card>
 									<CardHeader>
 											{this.state.existeEnunciado?
-											<h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle}</h2>:
+											<Row style={{paddingRight:"20px"}}>
+												<Col md={1}>
+												</Col>
+												<Col md={10}>
+												<h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle + " "}</h2>
+												</Col>
+												<Col md={1}>
+													<Button color="success" onClick={this.handleSentCodigo} style={{right:"0px"}}>Enviar <i className="fa fa-send fa-lg"></i></Button>
+												</Col>
+												<Col md={1}>
+												</Col>
+											</Row>
+											 :
 											<h2 style={{textAlign: "center" }}>Consola de {this.state.lenguaje[num]}</h2>
 									}
 									</CardHeader>
+									<div className="progress">
+										<div className="progress-bar progress-bar-striped" role="progressbar" style={{width: "10%"}} aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									
+
+
 									<CardBody>
 											{this.state.espera ?
 														<div className="defaultSpinner"></div>
@@ -256,7 +284,17 @@ class CodeEditor extends Component{
 																</Col>
 														</Row>
 														<br/>
-														<Timer timeInit={this.state.date} handler={this.handleTime} click={this.state.click}/>
+														<Row>
+															<Col>
+																<Timer timeInit={this.state.date} handler={this.handleTime} click={this.state.click}/>
+															</Col>
+															<Col className="col-auto">
+																<div style={{paddingTop:"10px"}}>
+																<Button color="dark" onClick={this.handletryCodigo}>Correr <i className="fa fa-cogs fa-lg"></i></Button>
+																</div>
+															</Col>
+														</Row>
+														
 														<br/>
 														<Row >
 															<Col md={7}>
@@ -304,14 +342,20 @@ class CodeEditor extends Component{
 															</Col>
 														</Row>
 														<br/>
-														<Button color="info" onClick={this.handletryCodigo}>Probar</Button>
-														&emsp;
-														<Button color="success" onClick={this.handleSentCodigo}>Enviar</Button>
+														
+														
 													</div>
 											}
 												 
-											
 									</CardBody>
+									<CardFooter > 
+										<Row style={{paddingRight:"20px"}}>
+											<Col className="offset-md-11">
+												<Button color="success" onClick={this.handleSentCodigo} style={{right:"0px"}}>Enviar<i className="fab fa-empire"></i> <i className="fa fa-send fa-lg"></i></Button>
+											</Col>
+										</Row>
+										 
+									</CardFooter>
 
 									
 							</Card>

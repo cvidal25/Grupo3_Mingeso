@@ -244,7 +244,7 @@ class EnunciadoPro extends Component{
                                             <Col>
                                                 <Link to={'/enunciadosPro/'+enunciado.exerciseID +'/enunciado'}>
                                                     <Button block color="primary" id={"BotonEdit"+key.toString()} style={{ height:"38px" }}>                                                   
-                                                        <i className="cui-settings icons font-2xl d-block" ></i>
+                                                        <i className="fa fa-wrench icons font-2xl d-block" ></i>
                                                     </Button>
                                                     <Tooltip placement="top" isOpen={this.state.openStates[1][key]} target={"BotonEdit"+key.toString()} toggle={() => {this.toggleOpen(key,1);}}>
                                                        Editar 
