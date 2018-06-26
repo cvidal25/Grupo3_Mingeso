@@ -207,7 +207,7 @@ class CodeEditor extends Component{
 	handleSentCodigo=event=>{
 			
 			var num;
-			
+			this.toggleOpen();
 			for(num in this.state.lenguaje){
 					if(this.state.modo===this.state.lenguajeRA[num]){
 							console.log(num);
@@ -231,6 +231,7 @@ class CodeEditor extends Component{
 			.then(response=>{
 					console.log(response);
 					console.log(response.data);
+					
 			}).catch(function(error){
 					console.log(error);
 			});
@@ -255,7 +256,7 @@ class CodeEditor extends Component{
               </ModalBody>
 			  <ModalFooter>
 				<Button color="danger"  onClick={()=>{this.toggleOpen();}}>Cancelar</Button>{' '}
-				<Button color="success"  onClick={()=>{this.toggleOpen();}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
+				<Button color="success"  onClick={()=>{this.handleSentCodigo()}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
               </ModalFooter>
         </Modal>
 		);
