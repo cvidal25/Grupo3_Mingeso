@@ -4,7 +4,10 @@ import AceEditor from 'react-ace';
 import brace, { Split } from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
-import { Card, CardBody, CardHeader, Col,CardFooter, Collapse,FormGroup, Row, Table,Button,Input,Label} from 'reactstrap';
+import { Card, CardBody, CardHeader, Col,CardFooter, 
+	 Row, Button,Input,Label,
+	Modal,ModalBody, ModalFooter,ModalHeader
+} from 'reactstrap';
 import  { Redirect } from 'react-router-dom';
 import Timer from "../timer/Timer";
 import PropTypes from 'prop-types';
@@ -55,6 +58,7 @@ class CodeEditor extends Component{
 					date:"",
 					time:"",
 					click:false,
+					modalOpen:false,
 
 			}
 	};
@@ -232,6 +236,32 @@ class CodeEditor extends Component{
 			});
 	}
 
+	toggleOpen(){
+		this.setState({
+			modalOpen:!this.state.modalOpen
+		})
+	}
+
+	createModal(){
+
+		return (
+			<Modal isOpen={this.state.modalOpen} toggle={()=>{this.toggleOpen();}}
+                   className='modal-info'>
+              <ModalHeader toggle={()=>{this.toggleOpen();}}>Confirmar Envió</ModalHeader>
+              <ModalBody>
+			  	Estas seguro de enviar el código.
+				Este código solo podrá ser enviado una vez
+				y no se podrán hacer cambios posteriores.
+              </ModalBody>
+			  <ModalFooter>
+				<Button color="danger"  onClick={()=>{this.toggleOpen();}}>Cancelar</Button>{' '}
+				<Button color="success"  onClick={()=>{this.toggleOpen();}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
+              </ModalFooter>
+        </Modal>
+		);
+		
+	}
+
 	render(){
 
 			var num;
@@ -251,28 +281,22 @@ class CodeEditor extends Component{
 								<Card>
 									<CardHeader>
 											{this.state.existeEnunciado?
-											<Row style={{paddingRight:"20px"}}>
-												<Col md={1}>
+											<Row style={{paddingRight:"15px"}}>
+												<Col >
+													<h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle + " "}</h2>
 												</Col>
-												<Col md={10}>
-												<h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle + " "}</h2>
-												</Col>
-												<Col md={1}>
-													<Button color="success" onClick={this.handleSentCodigo} style={{right:"0px"}}>Enviar <i className="fa fa-send fa-lg"></i></Button>
-												</Col>
-												<Col md={1}>
-												</Col>
+												
+													<Button color="success" onClick={()=>{this.toggleOpen();}} style={{right:"0px"}}>Enviar <i className="fa fa-send fa-lg"></i></Button>
+													{this.createModal()}
+												
 											</Row>
+
+											
 											 :
 											<h2 style={{textAlign: "center" }}>Consola de {this.state.lenguaje[num]}</h2>
 									}
 									</CardHeader>
-									<div className="progress">
-										<div className="progress-bar progress-bar-striped" role="progressbar" style={{width: "10%"}} aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-									
-
-
+								
 									<CardBody>
 											{this.state.espera ?
 														<div className="defaultSpinner"></div>
@@ -348,12 +372,16 @@ class CodeEditor extends Component{
 											}
 												 
 									</CardBody>
-									<CardFooter > 
-										<Row style={{paddingRight:"20px"}}>
-											<Col className="offset-md-11">
-												<Button color="success" onClick={this.handleSentCodigo} style={{right:"0px"}}>Enviar<i className="fab fa-empire"></i> <i className="fa fa-send fa-lg"></i></Button>
+									<CardFooter >
+									{
+										this.state.existeEnunciado &&	
+										<Row >
+											<Col className="text-right">
+												<Button color="success" onClick={()=>{this.toggleOpen();}} style={{right:"0px"}}>Enviar<i className="fa fa-send fa-lg"></i></Button>
+												{this.createModal()}
 											</Col>
 										</Row>
+									}
 										 
 									</CardFooter>
 

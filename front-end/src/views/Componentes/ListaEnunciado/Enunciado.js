@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
+import { Card, CardBody, CardHeader,CardFooter, Col, Collapse, Row, Table,Button } from 'reactstrap';
 import Axios from 'axios';
-import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
 import c_icon from '../../../assets/img/logos_lenguajes/c_logo.png';
 import python_icon from '../../../assets/img/logos_lenguajes/python_logo.png';
@@ -134,8 +133,10 @@ class Enunciado extends Component{
                             </thead>
                             
                             {listaEnunciados && listaEnunciados.map((enunciado, key) =>
-                            <tbody key={key}>
-                                <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
+                            
+                                {(enunciado.exercisePublished)&&
+                                <tbody key={key}>
+                                    <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
                                     <td>{enunciado.exerciseTitle}</td>
                                     <td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
                                     <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}}/></td>
@@ -175,6 +176,8 @@ class Enunciado extends Component{
                                     </td>
                                 </tr>
                             </tbody>
+                                }
+                                
                             )}
                         
                         </Table> }
@@ -207,6 +210,7 @@ class Enunciado extends Component{
 
         return(
             <div>
+                
                 {this.listar(this.state.items)}
             </div>
         );
