@@ -215,7 +215,7 @@ const routes = [
   {path: '/enunciados/:lenguaje/consola/:num',exact: true, name: 'Consola', component: Consola},
   {path: '/consola/:lenguaje',exact: true, name: 'Consola', component: Consola},
   {path: '/enunciadosPro/:id/enunciado',exact: true, name: 'Editar', component: EditEnunciado},
-  {path: '/resultado',exact: true, name: 'Resultado', component: Resultado},
+  {path: '/resultado/:idUserExercise',exact: true, name: 'Resultado', component: Resultado},
   //
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', exact: true, name: 'Theme', component: Colors },

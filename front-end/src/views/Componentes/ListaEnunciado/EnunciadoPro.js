@@ -42,21 +42,7 @@ class EnunciadoPro extends Component{
             espera:true
         });
 
-        const config={
-            'onUploadProgress': (progressEvent) => {
-                console.log("PAZ----");
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-            'onDownloadProgress': (progressEvent) => {
-                console.log("PAZ");
-                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-        }
-
-        Axios.get('http://localhost:8082/exercise',config)
+        Axios.get('http://localhost:8082/exercise')
         .then(response=>{
             var aux=[];
             var enunciados=response.data;
@@ -110,7 +96,7 @@ class EnunciadoPro extends Component{
     }
   
     listarInOut(datos){
-
+        
         var datosArray=datos.split("/@");
 
         return (

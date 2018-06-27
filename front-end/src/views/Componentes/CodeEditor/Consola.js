@@ -211,13 +211,10 @@ class CodeEditor extends Component{
 					}
 			}
 			var data={
-					//tiempo de realizacion
-					//fecha de realizacion
-					
 					'language': lenguajeJson[this.state.modo],
 					'code':this.state.aceEditorValue,
 					'exercise_id':this.state.idExercise,
-					'user_id':this.props.infoUsuarios.userID, // temporal debe ser dinamico
+					'user_id':this.props.infoUsuarios.userID,
 					'resolving_time': Timer.prototype.getTimeMin(this.state.time),
 					'resolving_date':new Date()
 			}
