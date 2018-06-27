@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, CardBody, CardFooter, CardHeader,Button} from 'reactstrap';
+import {Card, CardBody, CardFooter, CardHeader,Button,Row,Col} from 'reactstrap';
 
 class Resultado extends Component {
     constructor(){
