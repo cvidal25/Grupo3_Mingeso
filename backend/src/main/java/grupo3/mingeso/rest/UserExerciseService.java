@@ -39,6 +39,11 @@ public class UserExerciseService {
         return userExerciseRepository.save(resource);
     }
 
+    //Get all by user id
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<UserExercise> getAllByUser(@PathVariable("id") Integer id){ return userExerciseRepository.findAllByUserUserID(id); }
+
     //Cantidad de ejercicios resueltos diariamente por Alumno (Correo)
     @RequestMapping(value = "/exercise/student/{email}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
