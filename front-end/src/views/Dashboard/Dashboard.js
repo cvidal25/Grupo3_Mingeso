@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
+import LineChart from './LineChart'
 import {
   Badge,
   Button,
@@ -275,31 +276,9 @@ var percentTimeD;
 class Dashboard extends Component {
   constructor() {
     super();
-    this.toggle = this.toggle.bind(this);
-    this.onMonthBtnClick = this.onMonthBtnClick.bind(this);
-    this.onLineFiltClick = this.onLineFiltClick.bind(this);
-    this.onPieFiltClick = this.onPieFiltClick.bind(this);
-    this.onMonthItemSelected = this.oNMonthItemSelected.bind(this);
+    this.lineConfig = new LineChart();
     this.state = {
-
-      cardsButton: new Array(4).fill(false),
-      monthButtonOpen: new Array(3).fill(false),
-      dropdownOpen: false,
-      lineSelected: 1,
-      pieSelected: 1,
-      radialSelected: 1,
-      monthSelected: monthsLabel[5],
-      //Chart States
-      dataLineChart: initData,
-      optLineChart: initOpts,
-      dataPieChart: pieInit
     };
-  }
-  toggle(i) {
-    const newArray = this.state.cardsButton.map((element, index) => { return (index === i ? !element : false); });
-    this.setState({
-      cardsButton: newArray,
-    });
   }
 
   onMonthBtnClick(i) {
@@ -308,36 +287,7 @@ class Dashboard extends Component {
       monthButtonOpen: newArray,
     });
   }
-  onPieFiltClick(selected) {
-    console.log(this.state.pieSelected)
-    if (selected == 1) {
-      this.setState({
-        dataPieChart: pieDataEnum,
-        pieSelected: selected
-      });
-    }
-    else if (selected == 2) {
-      this.setState({
-        dataPieChart: pieDataTime,
-        pieSelected: selected
-      });
-    }
-  }
-  onRadialFiltClick(selected) {
-    console.log(this.state.radialSelected)
-    if (selected == 1) {
-      this.setState({
-        dataLineChart: enunLineChartData,
-        radialSelected: selected
-      });
-    }
-    else if (selected == 2) {
-      this.setState({
-        dataLineChart: timeLineChartData,
-        radialSelected: selected
-      });
-    }
-  }
+
   /*Axios.get('http://localhost:8082/exercise',config)
         .then(response=>{
             var aux=[];
@@ -358,64 +308,8 @@ class Dashboard extends Component {
       monthSelected: monthsLabel[i],
     });
   }
-  //Grafo de minichart
-  miniChart(miniChartData, miniChartOps) {
-    return (
-      <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-        <Line data={miniChartData} options={miniChartOps} height={70} />
-      </div>
-    )
-  }
-  //Boton de los mini charts
-  buttonMiniChart(i) {
-    return (
-      <ButtonGroup className="float-right">
-        <ButtonDropdown isOpen={this.state.cardsButton[i]} toggle={() => { this.toggle(i); }}>
-          <DropdownToggle caret className="p-0" color="transparent">
-            <i className="icon-settings"></i>
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem>Action</DropdownItem>
-            <DropdownItem>Another action</DropdownItem>
-            <DropdownItem disabled>Disabled action</DropdownItem>
-            <DropdownItem>Something else here</DropdownItem>
-          </DropdownMenu>
-        </ButtonDropdown>
-      </ButtonGroup>
-    )
-  }
-  //Titulo de los minicharts
-  tittleMiniChart(titulo, idB) {
-    return (
-      <CardBody className="pb-0">
-        {this.buttonMiniChart(idB)}
-        <div className="text-value">9.823</div>
-        <div>{titulo}</div>
-      </CardBody>
-    )
-  }
-
   //Botones de selector de meses
-  buttonMonth(i, month) {
-    return (
-      <ButtonDropdown isOpen={this.state.monthButtonOpen[i]} toggle={() => { this.onMonthBtnClick(i); }}>
-        <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
-        <DropdownMenu down="true">
-          <DropdownItem header>Mes</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(2); }}>Marzo</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(3); }}>Abril</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(4); }}>Mayo</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(5); }}>Junio</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(6); }}>Julio</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(7); }}>Agosto</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(8); }}>Septiembre</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(9); }}>Octubre</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(10); }}>Noviembre</DropdownItem>
-          <DropdownItem onClick={() => { this.oNMonthItemSelected(11); }}>Diciembre</DropdownItem>
-        </DropdownMenu>
-      </ButtonDropdown>
-    );
-  }
+
   //Botones de filtro de cada grafo
   filterLine() {
     return (
@@ -429,19 +323,6 @@ class Dashboard extends Component {
         </ButtonToolbar>
       </Col>
     )
-  }
-  filterPie() {
-    return (
-      <Col sm="6" //className="d-none d-sm-inline-block">
-      >
-        <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
-          <ButtonGroup className="mr-3" aria-label="First group">
-            <Button color="outline-secondary" onClick={() => this.onPieFiltClick(1)} active={this.state.pieSelected === 1}>Enunciados</Button>
-            <Button color="outline-secondary" onClick={() => this.onPieFiltClick(2)} active={this.state.pieSelected === 2}>Horas</Button>
-          </ButtonGroup>
-        </ButtonToolbar>
-      </Col>
-    );
   }
   filterRadial() {
     return (
@@ -465,280 +346,22 @@ class Dashboard extends Component {
     )
   }
   //Chart de torta
-  chartPie(dataIn) {
-    return (
-      <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-        <Pie data={dataIn} height={200} />
-      </div>
-    )
-  }
   //Titulo de los maincharts
-  chartTittle(titulo) {
-    return (
-      <CardHeader>
-        <i className="fa fa-align-justify"></i> {titulo}
-      </CardHeader>
-    )
-  }
-  //Footers Enun
-  chartFooter(filtro) {
-    //this.calculoDeEstadisticas();
-    if (filtro == 1) {
-      return (
-        <CardFooter>
-          <Row className="text-center">
-            <Col sm={12} md className="mb-sm-2 mb-0">
-              <div className="text-muted">Enunciados Realizados</div>
-              <strong>{totalEnunciados} Enunciados</strong>
-              <Progress className="progress-xs mt-2" color="info" value="100" />
-            </Col>
-            <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-              <div className="text-muted">Faciles Realizados</div>
-              <strong>{totalFaciles} Enunciados ({percentFaciles}%)</strong>
-              <Progress className="progress-xs mt-2" color="succes" value={String(percentFaciles)} />
-            </Col>
-            <Col sm={12} md className="mb-sm-2 mb-0">
-              <div className="text-muted">Intermedios Realizados</div>
-              <strong>{totalIntermedios} Enunciados ({percentIntermedios}%)</strong>
-              <Progress className="progress-xs mt-2" color="warning" value={String(percentIntermedios)} />
-            </Col>
-            <Col sm={12} md className="mb-sm-2 mb-0">
-              <div className="text-muted">Difíciles Realizados</div>
-              <strong>{totalDificiles} Enunciados ({percentDificiles}%)</strong>
-              <Progress className="progress-xs mt-2" color="danger" value={String(percentDificiles)} />
-            </Col>
-          </Row>
-        </CardFooter>
-      );
-    }
-    else if (filtro == 2) {
-      return (
-        <CardFooter>
-          <Row className="text-center">
-            <Col sm={12} md className="mb-sm-2 mb-0">
-              <div className="text-muted">Tiempo Utilizado</div>
-              <strong>{totalMinutes} Minutos Totales </strong>
-              <Progress className="progress-xs mt-2" color="info" value="100" />
-            </Col>
-            <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-              <div className="text-muted">Minutos en Faciles</div>
-              <strong>{minutesFaciles} Minutos ({percentTimeF}%)</strong>
-              <Progress className="progress-xs mt-2" color="succes" value={String(percentTimeF)} />
-            </Col>
-            <Col sm={12} md className="mb-sm-2 mb-0">
-              <div className="text-muted">Minutos en Intermedios</div>
-              <strong>{minutesIntermedios} Minutos ({percentTimeI}%)</strong>
-              <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeI)} />
-            </Col>
-            <Col sm={12} md className="mb-sm-2 mb-0">
-              <div className="text-muted">Minutos por Difíciles</div>
-              <strong>{minutesDificiles} Minutos ({percentTimeD}%)</strong>
-              <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeD)} />
-            </Col>
-          </Row>
-        </CardFooter>
-      );
-    }
-  }
-  //Make de graficos (acoplar header, botones, grfico y footer)
-
-  makeEnunLineChart(dataIn, optIn, month, filtro) {
-    //PEDIR ENUNCIADOS SEGUN MES
-    return (
-      <Card>
-        {this.chartTittle("Enunciados realizados por día")}
-        <CardBody>
-          <Row>
-            {this.filterLine()}
-            {this.buttonMonth(0, month)}
-          </Row>
-          {this.chartLine(dataIn, optIn)}
-        </CardBody>
-        {this.chartFooter(filtro)}
-      </Card>
-    );
-  }
-
-  makeTimeLineChart(dataIn, optIn, month, filtro) {
-    //PEDIR TIEMPO SEGUN MES
-    return (
-      <Card>
-        {this.chartTittle("Tiempo utilizado por día")}
-        <CardBody>
-          <Row>
-            {this.filterLine()}
-            {this.buttonMonth(0, month)}
-          </Row>
-          {this.chartLine(dataIn, optIn)}
-        </CardBody>
-        {this.chartFooter(filtro)}
-      </Card>
-    );
-  }
-  //json Q,T, mes año, (carrera,alumno(email),coordinacion)
-  makeEnunPieChart(dataIn, month, filtro) {
-    return (
-      <Card>
-        {this.chartTittle("Enunciados realizados al mes")}
-        <CardBody>
-          <Row>
-            {this.filterPie()}
-            {this.buttonMonth(1, month)}
-          </Row>
-          {this.chartPie(dataIn, month)}
-        </CardBody>
-        {this.chartFooter(filtro)}
-      </Card>
-    );
-  }
-  makeTimePieChart(dataIn, month, filtro) {
-    return (
-      <Card>
-        {this.chartTittle("Minutos utilizado al mes")}
-        <CardBody>
-          <Row>
-            {this.filterPie()}
-            {this.buttonMonth(1, month)}
-          </Row>
-          {this.chartPie(dataIn, month)}
-        </CardBody>
-        {this.chartFooter(filtro)}
-      </Card>
-    );
-  }
-  //Renders
-  renderLine(filter, month) {
-    if (filter == 1) {
-      return (
-        <Col>
-          {this.makeEnunLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
-        </Col>
-      );
-    }
-    else if (filter == 2) {
-      return (
-        <Col>
-          {this.makeTimeLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
-        </Col>
-      );
-    }
-  }
-  renderPie(filter, month) {
-    if (filter == 1) {
-      return (
-        <CardColumns className="cols-2">
-          {this.makeEnunPieChart(this.state.dataPieChart, month, filter)}
-        </CardColumns>
-      )
-    }
-    else if (filter == 2) {
-      return (
-        <CardColumns className="cols-2">
-          {this.makeTimePieChart(this.state.dataPieChart, month, filter)}
-        </CardColumns>
-      )
-    }
-  }
-  renderChartsByFilter(filter, month) {
-    if (filter[0] == 1) {
-      return (
-        <Col>
-          {this.makeEnunLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
-          <CardColumns className="cols-2">
-            {this.makeEnunPieChart(this.state.dataPieChart, month, filter)}
-          </CardColumns>
-        </Col>
-      );
-    }
-    else if (filter[0] == 2) {
-      return (
-        <Col>
-          {this.makeTimeLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
-          <CardColumns className="cols-2">
-            {this.makeTimePieChart(this.state.dataPieChart, month, filter)}
-          </CardColumns>
-        </Col>
-      );
-    }
-  }
-
+  
   //Operaciones
-  sumaDeArray(array, largo) {
-    var i;
-    var suma = 0;
-    for (i = 0; i < largo; i++) {
-      suma = suma + array[i];
-    }
-    return suma;
-  }
-  calculoPorcentaje(total, cantidad) {
-    var porcentaje = (cantidad * 100) / total;
-    return porcentaje;
-  }
-  //Calculo de values importantes
-  calculoDeEstadisticas() {
-    totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
-    totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
-    totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
-    totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
-    percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
-    percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
-    percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-
-    totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
-    minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
-    minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
-    minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
-    percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
-    percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
-    percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
-  }
-
   render() {
     return (
       //Minicharts
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-info">
-              {this.tittleMiniChart("Enunciados", 1)}
-              {this.miniChart(cardChartData1, cardChartOpts1)}
-            </Card>
-          </Col>
-
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-primary">
-              {this.tittleMiniChart("Logro", 2)}
-              {this.miniChart(cardChartData2, cardChartOpts2)}
-            </Card>
-          </Col>
-
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-warning">
-              {this.tittleMiniChart("Minutos", 3)}
-              {this.miniChart(cardChartData3, cardChartOpts3)}
-            </Card>
-          </Col>
-
-          <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-danger">
-              {this.tittleMiniChart("Conectados", 4)}
-              {this.miniChart(cardChartData4, cardChartOpts4)}
-            </Card>
-          </Col>
         </Row>
         {
           //MAINCHART
         }
         <Row>
-          {this.renderLine(this.state.lineSelected, this.state.monthSelected)}
+          {this.lineConfig.render()}
           {//this.renderChartsByFilter(this.state.radioSelected, this.state.monthSelected)
           }
-        </Row>
-        <Row>
-          <Col>
-            {this.renderPie(this.state.pieSelected, this.state.monthSelected)}
-          </Col>
         </Row>
         {
           //Evaluacion

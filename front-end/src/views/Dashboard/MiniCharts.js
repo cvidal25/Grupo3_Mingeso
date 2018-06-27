@@ -229,3 +229,44 @@ const cardChartData1 = {
         }],
     },
   };
+  /*toggle(i) {
+    const newArray = this.state.cardsButton.map((element, index) => { return (index === i ? !element : false); });
+    this.setState({
+      cardsButton: newArray,
+    });
+  }
+  miniChart(miniChartData, miniChartOps) {
+    return (
+      <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
+        <Line data={miniChartData} options={miniChartOps} height={70} />
+      </div>
+    )
+  }
+  //Boton de los mini charts
+  buttonMiniChart(i) {
+    return (
+      <ButtonGroup className="float-right">
+        <ButtonDropdown isOpen={this.state.cardsButton[i]} toggle={() => { this.toggle(i); }}>
+          <DropdownToggle caret className="p-0" color="transparent">
+            <i className="icon-settings"></i>
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem>Action</DropdownItem>
+            <DropdownItem>Another action</DropdownItem>
+            <DropdownItem disabled>Disabled action</DropdownItem>
+            <DropdownItem>Something else here</DropdownItem>
+          </DropdownMenu>
+        </ButtonDropdown>
+      </ButtonGroup>
+    )
+  }
+  //Titulo de los minicharts
+  tittleMiniChart(titulo, idB) {
+    return (
+      <CardBody className="pb-0">
+        {this.buttonMiniChart(idB)}
+        <div className="text-value">9.823</div>
+        <div>{titulo}</div>
+      </CardBody>
+    )
+  }*/

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
+import ChartComponent, {Line} from 'react-chartjs-2';
 import {
     Badge,
     Button,
@@ -19,11 +19,15 @@ import {
     Progress,
     Row,
     Table,
-    CardColumns,
 } from 'reactstrap';
-import Widget03 from '../../views/Widgets/Widget03'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
+
+const brandPrimary = getStyle('--primary')
+const brandSuccess = getStyle('--success')
+const brandInfo = getStyle('--info')
+const brandWarning = getStyle('--warning')
+const brandDanger = getStyle('--danger')
 
 const daysLabel = ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
     , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
@@ -343,8 +347,25 @@ const initOpts = {
         },
     },
 };
+var totalEnunciados;
+var totalFaciles;
+var totalIntermedios;
+var totalDificiles;
+var percentFaciles;
+var percentIntermedios;
+var percentDificiles;
+var totalMinutes;
+var minutesFaciles;
+var minutesIntermedios;
+var minutesDificiles;
+var percentTimeF;
+var percentTimeI;
+var percentTimeD;
+
+
 class LineChart extends Component {
     constructor() {
+        super();
         this.state = {
             monthButtonOpen: false,
             dropdownOpen: false,
@@ -356,16 +377,17 @@ class LineChart extends Component {
           };
 
     }
+
     onLineFiltClick(selected) {
         console.log(this.state.lineSelected)
-        if (selected == 1) {
+        if (selected === 1) {
             this.setState({
                 dataLineChart: enunLineChartData,
                 optLineChart: enunLineChartOpt,
                 lineSelected: selected
             });
         }
-        else if (selected == 2) {
+        else if (selected === 2) {
             this.setState({
                 dataLineChart: timeLineChartData,
                 optLineChart: timeLineChartOpt,
@@ -373,13 +395,20 @@ class LineChart extends Component {
             });
         }
     }
+
+    onMonthItemSelected(i) {
+        this.setState({
+          monthSelected: monthsLabel[i],
+        });
+    }
+
     onMonthBtnClick(i) {
         const newArray = this.state.monthButtonOpen.map((element, index) => { return (index === i ? !element : false); });
         this.setState({
             monthButtonOpen: newArray,
         });
     }
-    buttonMonth(i, month) {
+    buttonMonth(month) {
         return (
           <ButtonDropdown isOpen={this.state.monthButtonOpen} toggle={() => { this.onMonthBtnClick(); }}>
             <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
@@ -420,9 +449,46 @@ class LineChart extends Component {
           </div>
         )
       }
+      chartTittle(titulo) {
+        return (
+          <CardHeader>
+            <i className="fa fa-align-justify"></i> {titulo}
+          </CardHeader>
+        )
+      }
+      sumaDeArray(array, largo) {
+        var i;
+        var suma = 0;
+        for (i = 0; i < largo; i++) {
+          suma = suma + array[i];
+        }
+        return suma;
+      }
+      calculoPorcentaje(total, cantidad) {
+        var porcentaje = (cantidad * 100) / total;
+        return porcentaje;
+      }
+      //Calculo de values importantes
+      calculoDeEstadisticas() {
+        totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
+        totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
+        totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
+        totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
+        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
+        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
+        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
+    
+        totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
+        minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
+        minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
+        minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
+        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
+        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
+        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
+      }
       chartFooter(filtro) {
         //this.calculoDeEstadisticas();
-        if (filtro == 1) {
+        if (filtro === 1) {
           return (
             <CardFooter>
               <Row className="text-center">
@@ -450,7 +516,7 @@ class LineChart extends Component {
             </CardFooter>
           );
         }
-        else if (filtro == 2) {
+        else if (filtro === 2) {
           return (
             <CardFooter>
               <Row className="text-center">
@@ -487,7 +553,7 @@ class LineChart extends Component {
             <CardBody>
               <Row>
                 {this.filterLine()}
-                {this.buttonMonth(0, month)}
+                {this.buttonMonth(month)}
               </Row>
               {this.chartLine(dataIn, optIn)}
             </CardBody>
@@ -504,7 +570,7 @@ class LineChart extends Component {
             <CardBody>
               <Row>
                 {this.filterLine()}
-                {this.buttonMonth(0, month)}
+                {this.buttonMonth(month)}
               </Row>
               {this.chartLine(dataIn, optIn)}
             </CardBody>
@@ -513,14 +579,14 @@ class LineChart extends Component {
         );
       }
       renderLine(filter, month) {
-        if (filter == 1) {
+        if (filter === 1) {
           return (
             <Col>
               {this.makeEnunLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
             </Col>
           );
         }
-        else if (filter == 2) {
+        else if (filter === 2) {
           return (
             <Col>
               {this.makeTimeLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
@@ -532,7 +598,7 @@ class LineChart extends Component {
       render(){
         return (
             <Row>
-                {this.renderLine(this.state.lineSelected, this.state.monthSelected)}
+             {this.renderLine(this.state.lineSelected, this.state.monthSelected)}
             </Row>
         );
       }

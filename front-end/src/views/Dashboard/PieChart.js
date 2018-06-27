@@ -90,3 +90,84 @@ var pieDataEnum = {
         ],
       }],
   };
+  class PieChart extends Component{
+    constructor() {
+      super();
+      this.state = {
+          monthButtonOpen: false,
+          dropdownOpen: false,
+          pieSelected: 1,
+          monthSelected: monthsLabel[5],
+          //Chart States
+          dataPieChart: pieInit,
+        };
+    }
+
+    filterPie() {
+      return (
+        <Col sm="6" //className="d-none d-sm-inline-block">
+        >
+          <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
+            <ButtonGroup className="mr-3" aria-label="First group">
+              <Button color="outline-secondary" onClick={() => this.onPieFiltClick(1)} active={this.state.pieSelected === 1}>Enunciados</Button>
+              <Button color="outline-secondary" onClick={() => this.onPieFiltClick(2)} active={this.state.pieSelected === 2}>Horas</Button>
+            </ButtonGroup>
+          </ButtonToolbar>
+        </Col>
+      );
+    }
+    chartPie(dataIn) {
+      return (
+        <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
+          <Pie data={dataIn} height={200} />
+        </div>
+      )
+    }
+    //json Q,T, mes año, (carrera,alumno(email),coordinacion)
+    makeEnunPieChart(dataIn, month, filtro) {
+      return (
+        <Card>
+          {this.chartTittle("Enunciados realizados al mes")}
+          <CardBody>
+            <Row>
+              {this.filterPie()}
+              {this.buttonMonth(1, month)}
+            </Row>
+            {this.chartPie(dataIn, month)}
+          </CardBody>
+          {this.chartFooter(filtro)}
+        </Card>
+      );
+    }
+    makeTimePieChart(dataIn, month, filtro) {
+      return (
+        <Card>
+          {this.chartTittle("Minutos utilizado al mes")}
+          <CardBody>
+            <Row>
+              {this.filterPie()}
+              {this.buttonMonth(1, month)}
+            </Row>
+            {this.chartPie(dataIn, month)}
+          </CardBody>
+          {this.chartFooter(filtro)}
+        </Card>
+      );
+    }
+    renderPie(filter, month) {
+      if (filter == 1) {
+        return (
+          <CardColumns className="cols-2">
+            {this.makeEnunPieChart(this.state.dataPieChart, month, filter)}
+          </CardColumns>
+        )
+      }
+      else if (filter == 2) {
+        return (
+          <CardColumns className="cols-2">
+            {this.makeTimePieChart(this.state.dataPieChart, month, filter)}
+          </CardColumns>
+        )
+      }
+    }
+  }
