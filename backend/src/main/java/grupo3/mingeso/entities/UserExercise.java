@@ -21,7 +21,7 @@ public class UserExercise implements Serializable {
     private Timestamp userDateResolution;
 
     @Column(name = "solving_time",nullable = false)
-    private int userSolvingTime; //in minutes
+    private int userSolvingTime; //in seconds
 
     @Column(name = "user_output",nullable = false, length = 2048)
     private String userOutput;
