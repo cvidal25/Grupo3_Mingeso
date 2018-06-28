@@ -1,35 +1,21 @@
 /*
-export const agre = (infoUsuario) =>({
-    type:'LOG_ING',
-    console.log("bbbbbbbbbbbbbbb");
+ const agregarUsuario = infoUsuario =>{
+    console.log("aaaa");
     return{
-        ...state,
+		type:'LOG_ING',
         infoUsuarios:action.infoUsuario,
     }
 
 });
-export const ingresar = (state) => {
-   
-};
+
+export const salirCuenta =  (infoUsuario) =>({
+    type:'lOG_OUT',
+    console.log("bbbb");
+    return{
+       infoUsuario:{"userID":'',"userName":'',"userType":'',"userMail":'',"userCareer":'',"userCoordination":''},
+    }
+
+});
 
 
-const reducer = (state,action)=>{
-	if(action.type ==="LOG_IN"){
-			console.log("bbbbbbbbbbbbbbb");
-		return{
-			...state,
-			infoUsuarios:action.infoUsuario,
-		}
-			
-	}
-	else if(action.type==="lOG_OUT"){
-		console.log("lalalalalalalalalal");
-		return{
-			
-			infoUsuario:{"userID":'',"userName":'',"userType":'',"userMail":'',"userCareer":'',"userCoordination":''},
-
-		}
-	}
-	return state;
-};
 */

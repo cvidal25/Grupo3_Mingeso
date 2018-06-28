@@ -7,7 +7,8 @@ import Axios from 'axios';
 import fondo from '../../../assets/img/imgI3.jpg'; 
 import connect from 'react-redux'
 //import store from '../../../store';
-import store from '../../../index'
+//import store from '../../../index'
+import 
 import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
 

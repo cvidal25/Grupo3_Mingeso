@@ -11,12 +11,13 @@ import { loadState, saveState } from './LocalStorage';
 
  
 const persistedState = loadState();
-export default store = createStore(
+export const store = createStore(
 	persistedState, 
 	reducer,
 	{infoUsuarios:""}
 );
-store.subscribe(()=>{
+
+ store.subscribe(()=>{
 	saveState({
 		login: store.getState().login
 	});
