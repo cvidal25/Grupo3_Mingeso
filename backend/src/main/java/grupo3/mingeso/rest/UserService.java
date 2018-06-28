@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -58,4 +59,27 @@ public class UserService {
     @RequestMapping(value = "/email/{email}",method = RequestMethod.GET)
     @ResponseBody
     public User findMail(@PathVariable("email") String email){ return userRepository.findByUserMail(email); }
+
+    //Get Users by Coordination
+    @RequestMapping(value = "/coordination/{coordination}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> getAllUsersCoordination(@PathVariable("coordination") String coordination){ return userRepository.findByUserCoordination(coordination); }
+
+    //Get Users by Career
+    //número de problemas resueltos por carrera
+    @GetMapping(value = "/career", params = {"career"})
+    @ResponseBody
+    public List<User> countAllByCareer(@RequestParam("career") String career) {
+        return userRepository.findByUserCareer(career);
+    }
+
+    //Get Coordination
+    @GetMapping(value = "/coordination/mail", params = {"mail"})
+    @ResponseBody
+    public String getCoordination(@RequestParam("mail") String email) {
+        User user = userRepository.findByUserMail(email);
+        return user.getUserCoordination();
+    }
+
+
 }
