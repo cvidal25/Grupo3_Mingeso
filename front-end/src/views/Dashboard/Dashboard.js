@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
-import LineChart from './LineChart'
+import LineChart from './LineChart';
+import PieChart from './PieChart';
+import DoughnutChart from './DoughnutChart';
 import {
   Badge,
   Button,
@@ -28,143 +30,11 @@ import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-/*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
-ejempplo: this.props.infoUsuario.userID,
-{"userID":7,"userName":"Barbara Sarmiento",
-"userType":1,
-"userMail":"barbara.sarmiento@usach.cl",
-"userCareer":"Ingeniería de Ejecución en Informática",
-"userCoordination":"B-3"}
-*/
-
 const brandPrimary = getStyle('--primary')
 const brandSuccess = getStyle('--success')
 const brandInfo = getStyle('--info')
 const brandWarning = getStyle('--warning')
 const brandDanger = getStyle('--danger')
-
-
-const facilesPerDay = [2, 2, 10, 1, 2, 0
-  , 2, 0, 0, 0, 1, 0
-  , 8, 3, 6, 0, 0, 0
-  , 0, 2, 8, 0, 0, 1
-  , 4, 0, 3, 4, 6, 0
-  , 0];
-
-const intermediosPerDay = [2, 6, 6, 1, 3, 2
-  , 2, 1, 0, 0, 1, 0
-  , 10, 1, 6, 3, 0, 0
-  , 1, 1, 8, 0, 0, 3
-  , 3, 0, 3, 4, 5, 0
-  , 0];
-
-const dificilesPerDay = [2, 4, 7, 2, 0, 0
-  , 4, 3, 0, 0, 0, 0
-  , 10, 1, 1, 3, 17, 0
-  , 0, 1, 5, 2, 0, 1
-  , 0, 0, 3, 4, 5, 0
-  , 2];
-
-const enunciadosPerDay = [6, 12, 23, 4, 5, 2
-  , 8, 4, 0, 0, 2, 0
-  , 28, 5, 13, 6, 17, 0
-  , 1, 4, 21, 2, 0, 5
-  , 7, 0, 9, 12, 16, 0
-  , 2];
-
-const enunGFacilPerDay = [6, 12, 23, 4, 5, 2
-  , 8, 4, 0, 0, 2, 0
-  , 28, 5, 13, 6, 17, 0
-  , 1, 4, 21, 2, 0, 5
-  , 7, 0, 9, 12, 16, 0
-  , 2];
-
-const enunGIntermediosPerDay = [6, 12, 23, 4, 5, 2
-  , 8, 4, 0, 0, 2, 0
-  , 28, 5, 13, 6, 17, 0
-  , 1, 4, 21, 2, 0, 5
-  , 7, 0, 9, 12, 16, 0
-  , 2];
-
-const enunGDificilesPerDay = [6, 12, 23, 4, 5, 2
-  , 8, 4, 0, 0, 2, 0
-  , 28, 5, 13, 6, 17, 0
-  , 1, 4, 21, 2, 0, 5
-  , 7, 0, 9, 12, 16, 0
-  , 2];
-
-const enunGPerDay = [6, 12, 23, 4, 5, 2
-  , 8, 4, 0, 0, 2, 0
-  , 28, 5, 13, 6, 17, 0
-  , 1, 4, 21, 2, 0, 5
-  , 7, 0, 9, 12, 16, 0
-  , 2];
-
-const minutesPerFaciles = [10, 10, 50, 5, 10, 0
-  , 10, 0, 0, 0, 5, 0
-  , 40, 15, 30, 0, 0, 0
-  , 0, 10, 40, 0, 0, 5
-  , 20, 0, 15, 20, 30, 0
-  , 0];
-
-const minutesPerIntermedios = [20, 60, 60, 10, 30, 20
-  , 20, 10, 0, 0, 10, 0
-  , 100, 10, 60, 30, 0, 0
-  , 10, 10, 80, 0, 0, 30
-  , 30, 0, 30, 40, 50, 0
-  , 0];
-
-const minutesPerDificiles = [40, 80, 140, 40, 0, 0
-  , 80, 60, 0, 0, 0, 0
-  , 200, 20, 20, 60, 340, 0
-  , 0, 20, 100, 40, 0, 20
-  , 0, 0, 60, 80, 100, 0
-  , 40];
-
-const minutesPerDay = [70, 150, 250, 55, 40, 20
-  , 110, 70, 0, 0, 15, 0
-  , 340, 45, 110, 90, 340, 0
-  , 10, 40, 220, 40, 0, 55
-  , 50, 0, 105, 140, 180, 0
-  , 40];
-
-const usersPerDay = [70, 150, 250, 55, 40, 20
-  , 110, 70, 0, 0, 15, 0
-  , 340, 45, 110, 90, 340, 0
-  , 10, 40, 220, 40, 0, 55
-  , 50, 0, 105, 140, 180, 0
-  , 40];
-
-const userPerDayInformatica = [140, 75, 125, 110, 20, 40
-  , 55, 140, 32, 0, 15, 10
-  , 340, 90, 55, 945, 170, 1
-  , 20, 80, 110, 80, 0, 55
-  , 100, 0, 215, 70, 180, 0
-  , 120];
-
-const userPerDayElectrica = [70, 150, 250, 55, 40, 20
-  , 110, 70, 0, 0, 15, 0
-  , 340, 45, 110, 90, 340, 0
-  , 10, 40, 220, 40, 0, 55
-  , 50, 0, 105, 140, 180, 0
-  , 40];
-
-const alu_facilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-const alu_intermedioPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-const alu_dificilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-
-const alu_enunPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-
-const car_facilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-const car_intermedioPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-const car_dificilesPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-
-const car_enunPerMonth = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-
-const usersPerMonthInformatica = [0, 0, 0, 1432, 890, 345, 123, 654, 1024, 1591, 1278, 343];
-const usersPerMonthElectrica = [0, 0, 0, 716, 1620, 157, 246, 327, 2012, 740, 890, 543];
-
-
 
 // sparkline charts
 const sparkLineChartData = [
@@ -244,40 +114,16 @@ const sparklineChartOpts = {
 };
 
 // Main Charts
-const daysLabel = ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
-  , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
-  , 'Día 11', 'Día 12', 'Día 13', 'Día 14', 'Día 15'
-  , 'Día 16', 'Día 17', 'Día 18', 'Día 19', 'Día 20'
-  , 'Día 21', 'Día 22', 'Día 23', 'Día 24', 'Día 25'
-  , 'Día 26', 'Día 27', 'Día 28', 'Día 29', 'Día 30'
-  , 'Día 31'];
-const diffLabel = ['Fácil', 'Intermedio', 'Difícil'];
 
 const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
   , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
   , 'Noviembre', 'Diciembre'];
 
-//Variables utiles a usar
-var totalEnunciados;
-var totalFaciles;
-var totalIntermedios;
-var totalDificiles;
-var percentFaciles;
-var percentIntermedios;
-var percentDificiles;
-var totalMinutes;
-var minutesFaciles;
-var minutesIntermedios;
-var minutesDificiles;
-var percentTimeF;
-var percentTimeI;
-var percentTimeD;
-
 class Dashboard extends Component {
   constructor() {
     super();
-    this.lineConfig = new LineChart();
     this.state = {
+      coord: false,
     };
   }
 
@@ -287,7 +133,7 @@ class Dashboard extends Component {
       monthButtonOpen: newArray,
     });
   }
-
+  
   /*Axios.get('http://localhost:8082/exercise',config)
         .then(response=>{
             var aux=[];
@@ -350,18 +196,21 @@ class Dashboard extends Component {
   
   //Operaciones
   render() {
+    console.log(this.props.infoUsuarios.userType);
     return (
       //Minicharts
       <div className="animated fadeIn">
-        <Row>
-        </Row>
         {
           //MAINCHART
         }
         <Row>
-          {this.lineConfig.render()}
-          {//this.renderChartsByFilter(this.state.radioSelected, this.state.monthSelected)
-          }
+          <LineChart/>
+        </Row>
+        <Row>
+          <CardColumns className='cols-2'>
+            <PieChart/>
+            <DoughnutChart/>
+          </CardColumns>
         </Row>
         {
           //Evaluacion

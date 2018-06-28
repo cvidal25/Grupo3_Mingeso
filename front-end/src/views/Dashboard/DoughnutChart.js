@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
+import ChartComponent, { Bar, Line, Doughnut } from 'react-chartjs-2';
 import {
   Badge,
   Button,
@@ -38,59 +38,72 @@ const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
   , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
   , 'Noviembre', 'Diciembre'];
 
-const pieInit = {
-    labels: diffLabel,
+  
+  const doughInit = {
+    labels: [
+      'Red',
+      'Green',
+      'Yellow',
+    ],
     datasets: [
       {
-        data: [65, 72, 77],
+        data: [300, 50, 100],
         backgroundColor: [
+          '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#FF6384',
         ],
         hoverBackgroundColor: [
+          '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#FF6384',
         ],
       }],
   };
 
-var pieDataEnum = {
-    labels: diffLabel,
+  const enunDoughData = {
+    labels: [
+      'Red',
+      'Green',
+      'Yellow',
+    ],
     datasets: [
       {
-        data: [65, 72, 77],
+        data: [300, 50, 100],
         backgroundColor: [
+          '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#FF6384',
         ],
         hoverBackgroundColor: [
+          '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#FF6384',
         ],
       }],
   };
-  var pieDataTime = {
-    labels: diffLabel,
+  const timeDougData = {
+    labels: [
+      'Red',
+      'Green',
+      'Yellow',
+    ],
     datasets: [
       {
-        data: [325, 720, 1540],
+        data: [400, 560, 150],
         backgroundColor: [
+          '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#FF6384',
         ],
         hoverBackgroundColor: [
+          '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#FF6384',
         ],
       }],
   };
-const minutesPerFaciles = [10, 10, 50, 5, 10, 0
+  const minutesPerFaciles = [10, 10, 50, 5, 10, 0
     , 10, 0, 0, 0, 5, 0
     , 40, 15, 30, 0, 0, 0
     , 0, 10, 40, 0, 0, 5
@@ -159,106 +172,106 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
   var percentTimeF;
   var percentTimeI;
   var percentTimeD;
-  class PieChart extends Component{
+
+  class DoughnutChart extends Component{
     constructor() {
       super();
       this.state = {
-          monthPieButtonOpen: false,
-          pieSelected: 1,
+          monthDoughButtonOpen: false,
+          doughSelected: 1,
           monthSelected: monthsLabel[5],
           //Chart States
-          dataPieChart: pieInit,
-          profesor: true,
+          dataDoughChart: doughInit,
+          profesor: true
         };
     }
-  onPieFiltClick(selected) {
-    console.log(selected);
-    console.log(this.state.pieSelected);
-    if (selected === 1) {
-        this.setState({
-            dataPieChart: pieDataEnum,
-            pieSelected: selected,
-        });
+    onDoughFiltClick(selected) {
+      console.log(selected);
+      console.log(this.state.DoughSelected);
+      if (selected === 1) {
+          this.setState({
+              dataDoughChart: enunDoughData,
+              doughSelected: selected,
+          });
+      }
+      else if (selected === 2) {
+          this.setState({
+              dataDoughChart: timeDougData,
+              doughSelected: selected,
+          });
+      }
     }
-    else if (selected === 2) {
-        this.setState({
-            dataPieChart: pieDataTime,
-            pieSelected: selected,
-        });
-    }
-  }
-  onPieButtonMonthToggle() {
-    this.setState({
-      monthPieButtonOpen: !this.state.monthPieButtonOpen,
-    });
-  }
-  onPieMonthItemSelected(i) {
+    onDoughButtonMonthToggle() {
       this.setState({
-        monthSelected: monthsLabel[i],
+        monthDoughButtonOpen: !this.state.monthDoughButtonOpen,
       });
-  }
-
-  buttonPieMonth(month) {
-      return (
-        <ButtonDropdown size="sm" isOpen={this.state.monthPieButtonOpen} toggle={() => {this.onPieButtonMonthToggle()}}>
-          <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
-          <DropdownMenu down="true">
-            <DropdownItem header>Mes</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(2); }}>Marzo</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(3); }}>Abril</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(4); }}>Mayo</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(5); }}>Junio</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(6); }}>Julio</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(7); }}>Agosto</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(8); }}>Septiembre</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(9); }}>Octubre</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(10); }}>Noviembre</DropdownItem>
-            <DropdownItem onClick={() => { this.onPieMonthItemSelected(11); }}>Diciembre</DropdownItem>
-          </DropdownMenu>
-        </ButtonDropdown>
-      );
     }
-    filterGroupPie(){
+    onDoughMonthItemSelected(i) {
+        this.setState({
+          monthSelected: monthsLabel[i],
+        });
+    }
+  
+    buttonDoughMonth(month) {
+        return (
+          <ButtonDropdown size="sm" isOpen={this.state.monthDoughButtonOpen} toggle={() => {this.onDoughButtonMonthToggle()}}>
+            <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
+            <DropdownMenu down="true">
+              <DropdownItem header>Mes</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(2); }}>Marzo</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(3); }}>Abril</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(4); }}>Mayo</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(5); }}>Junio</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(6); }}>Julio</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(7); }}>Agosto</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(8); }}>Septiembre</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(9); }}>Octubre</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(10); }}>Noviembre</DropdownItem>
+              <DropdownItem onClick={() => { this.onDoughMonthItemSelected(11); }}>Diciembre</DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
+        );
+      }
+  filterGroupDough(){
+    return (
+      <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
+          <ButtonGroup horizontal>
+            <ButtonDropdown size="sm" id='carre' isOpen={this.state.carre} toggle={() => { this.setState({carre: !this.state.carre }); }}>
+              <DropdownToggle caret>
+                Carrera
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem>Informatica</DropdownItem>
+                <DropdownItem>Electrica</DropdownItem>
+              </DropdownMenu>
+            </ButtonDropdown>
+            <ButtonDropdown size="sm" id='coord' isOpen={this.state.coord} toggle={() => { this.setState({coord: !this.state.coord }); }}>
+              <DropdownToggle caret>
+                Coordinación
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem>A-1</DropdownItem>
+                <DropdownItem>B-2</DropdownItem>
+              </DropdownMenu>
+            </ButtonDropdown>
+          </ButtonGroup>
+      </ButtonToolbar>
+    )
+  }
+    filterDough() {
       return (
-        <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
-            <ButtonGroup horizontal>
-              <ButtonDropdown size="sm" id='carre' isOpen={this.state.carre} toggle={() => { this.setState({carre: !this.state.carre }); }}>
-                <DropdownToggle caret>
-                  Carrera
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>Informatica</DropdownItem>
-                  <DropdownItem>Electrica</DropdownItem>
-                </DropdownMenu>
-              </ButtonDropdown>
-              <ButtonDropdown size="sm" id='coord' isOpen={this.state.coord} toggle={() => { this.setState({coord: !this.state.coord }); }}>
-                <DropdownToggle caret>
-                  Coordinación
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>A-1</DropdownItem>
-                  <DropdownItem>B-2</DropdownItem>
-                </DropdownMenu>
-              </ButtonDropdown>
-            </ButtonGroup>
-        </ButtonToolbar>
-      )
-
-}
-    filterPie() {
-      return (
-        <ButtonToolbar style={{weigth:'20%'}} className="float-right" aria-label="Toolbar with button groups">
+        <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
           <ButtonGroup className="mr-3" aria-label="First group">
-            <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(1)} active={this.state.pieSelected === 1}>Enunciados</Button>
-            <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(2)} active={this.state.pieSelected === 2}>Horas</Button>
+            <Button color="outline-secondary" size="sm" onClick={() => this.onDoughFiltClick(1)} active={this.state.doughSelected === 1}>Enunciados</Button>
+            <Button color="outline-secondary" size="sm" onClick={() => this.onDoughFiltClick(2)} active={this.state.doughSelected === 2}>Horas</Button>
           </ButtonGroup>
         </ButtonToolbar>
       );
     }
-    chartPie(dataIn) {
+    chartDough(dataIn) {
       return (
         <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-          <Pie data={dataIn} height={200} />
+          <Doughnut data={dataIn} height={200} />
         </div>
       )
     }
@@ -270,26 +283,26 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
         )
       }
     //json Q,T, mes año, (carrera,alumno(email),coordinacion)
-    makePieChart(dataIn, month, filtro) {
+    makeDoughChart(dataIn, month, filtro) {
       var titulo;
-      if (filtro===1){
-          titulo= "Enunciados realizados al año";
+      if(filtro===1){
+        titulo="Enunciados realizados al mes"
       }
       else if(filtro===2){
-          titulo="Tiempo utilizado al año";
+        titulo="Minutos utilizado al mes";
       }
       return (
         <Card>
-          {this.chartTittle(titulo)}
+          {this.chartTittle("Enunciados realizados al mes")}
           <CardBody>
             <Row>
               <Col>
-                {this.filterPie()}
+                {this.filterDough()}
               </Col>
               
               {this.state.profesor? 
               <Col className='text-center'>
-                {this.filterGroupPie()}
+                {this.filterGroupDough()}
               </Col>
               :
               <Col>
@@ -298,10 +311,10 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
               }
 
               <Col className='text-right'>
-                {this.buttonPieMonth(month)}
+                {this.buttonDoughMonth(month)}
               </Col>
             </Row>
-            {this.chartPie(dataIn, month)}
+            {this.chartDough(dataIn, month)}
           </CardBody>
           {this.chartFooter(filtro)}
         </Card>
@@ -327,7 +340,7 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
       percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
       percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
       percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-  
+
       totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
       minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
       minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
@@ -398,9 +411,9 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
     render(){
       return (
         <Col>
-          {this.makePieChart(this.state.dataPieChart,this.state.monthSelected,this.state.pieSelected)}
+          {this.makeDoughChart(this.state.dataDoughChart,this.state.monthSelected,this.state.doughSelected)}
         </Col>
       )
     }
   }
-  export default PieChart;
+  export default DoughnutChart;

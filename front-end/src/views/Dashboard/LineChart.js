@@ -366,80 +366,153 @@ var percentTimeD;
 class LineChart extends Component {
     constructor() {
         super();
+        
         this.state = {
-            monthButtonOpen: false,
-            dropdownOpen: false,
+            monthLineButtonOpen: false,
             lineSelected: 1,
-            monthSelected: monthsLabel[5],
+            monthLineSelected: monthsLabel[5],
             //Chart States
             dataLineChart: initData,
             optLineChart: initOpts,
-          };
-
+            espera: false,
+            profesor: true,
+        };
+        this.onLineFiltClick=this.onLineFiltClick.bind(this);
+        this.onLineMonthItemSelected=this.onLineMonthItemSelected.bind(this);
+        this.buttonLineMonth=this.buttonLineMonth.bind(this);
+        this.onLineButtonMonthToggle=this.onLineButtonMonthToggle.bind(this)
+        this.filterLine=this.filterLine.bind(this);
     }
+    componentDidMount(){
+        this.setState({
+            profesor:this.props.infoUsers.userType;
+        });
+      }
+    /*componentDidMount(){
 
+        this.setState({
+            espera:true
+        });
+
+        const config={
+            'onUploadProgress': (progressEvent) => {
+                console.log("PAZ----");
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
+            },
+            'onDownloadProgress': (progressEvent) => {
+                console.log("PAZ");
+                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
+            },
+        }
+
+        Axios.get('http://localhost:8082/exercise',config)
+        .then(response=>{
+            var aux=[];
+            var enunciados=response.data;
+            let item;
+            for (item in enunciados){
+                aux.push(false);    
+            }
+
+            this.setState({
+                items:enunciados,
+                openStates:[aux,aux,aux,aux],
+                espera:false
+            });
+        })
+        .catch(function(error){
+            console.log(error);
+        })
+    };*/
     onLineFiltClick(selected) {
-        console.log(this.state.lineSelected)
+        console.log(this.state.monthLineSelected);
+        console.log(this.state.lineSelected);
         if (selected === 1) {
             this.setState({
                 dataLineChart: enunLineChartData,
                 optLineChart: enunLineChartOpt,
-                lineSelected: selected
+                lineSelected: selected,
             });
         }
         else if (selected === 2) {
             this.setState({
                 dataLineChart: timeLineChartData,
                 optLineChart: timeLineChartOpt,
-                lineSelected: selected
+                lineSelected: selected,
             });
         }
     }
 
-    onMonthItemSelected(i) {
+    onLineMonthItemSelected(i) {
         this.setState({
           monthSelected: monthsLabel[i],
         });
     }
-
-    onMonthBtnClick(i) {
-        const newArray = this.state.monthButtonOpen.map((element, index) => { return (index === i ? !element : false); });
+    onLineButtonMonthToggle() {
         this.setState({
-            monthButtonOpen: newArray,
+          monthLineButtonOpen: !this.state.monthLineButtonOpen,
         });
-    }
-    buttonMonth(month) {
+      }
+    buttonLineMonth(month) {
         return (
-          <ButtonDropdown isOpen={this.state.monthButtonOpen} toggle={() => { this.onMonthBtnClick(); }}>
-            <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
-            <DropdownMenu down="true">
-              <DropdownItem header>Mes</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(2); }}>Marzo</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(3); }}>Abril</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(4); }}>Mayo</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(5); }}>Junio</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(6); }}>Julio</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(7); }}>Agosto</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(8); }}>Septiembre</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(9); }}>Octubre</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(10); }}>Noviembre</DropdownItem>
-              <DropdownItem onClick={() => { this.onMonthItemSelected(11); }}>Diciembre</DropdownItem>
-            </DropdownMenu>
-          </ButtonDropdown>
+
+            <ButtonDropdown isOpen={this.state.monthLineButtonOpen} toggle={() => { this.onLineButtonMonthToggle() }}>
+                <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
+                <DropdownMenu down="true">
+                <DropdownItem header>Mes</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(2); }}>Marzo</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(3); }}>Abril</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(4); }}>Mayo</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(5); }}>Junio</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(6); }}>Julio</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(7); }}>Agosto</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(8); }}>Septiembre</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(9); }}>Octubre</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(10); }}>Noviembre</DropdownItem>
+                <DropdownItem onClick={() => { this.onLineMonthItemSelected(11); }}>Diciembre</DropdownItem>
+                </DropdownMenu>
+            </ButtonDropdown>
         );
       }
+      filterGroupLine(){
+          return (
+            <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
+                <ButtonGroup horizontal>
+                  <ButtonDropdown id='carre' isOpen={this.state.carre} toggle={() => { this.setState({carre: !this.state.carre }); }}>
+                    <DropdownToggle caret>
+                      Carrera
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Informatica</DropdownItem>
+                      <DropdownItem>Electrica</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                  <ButtonDropdown id='coord' isOpen={this.state.coord} toggle={() => { this.setState({coord: !this.state.coord }); }}>
+                    <DropdownToggle caret>
+                      Coordinación
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>A-1</DropdownItem>
+                      <DropdownItem>B-2</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                </ButtonGroup>
+            </ButtonToolbar>
+          )
+
+    }
       //Botones de filtro de cada grafo
       filterLine() {
         return (
-          <Col sm="6" //className="d-none d-sm-inline-block">
-          >
-            <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
-              <ButtonGroup className="mr-3" aria-label="First group">
+            <ButtonToolbar className="float-left" aria-label="Toolbar with button groups">
+                <ButtonGroup className="mr-3" aria-label="First group">
                 <Button color="outline-secondary" onClick={() => this.onLineFiltClick(1)} active={this.state.lineSelected === 1}>Enunciados</Button>
                 <Button color="outline-secondary" onClick={() => this.onLineFiltClick(2)} active={this.state.lineSelected === 2}>Horas</Button>
-              </ButtonGroup>
+                </ButtonGroup>
             </ButtonToolbar>
-          </Col>
         )
       }
       chartLine(dataIn, optIn) {
@@ -456,38 +529,8 @@ class LineChart extends Component {
           </CardHeader>
         )
       }
-      sumaDeArray(array, largo) {
-        var i;
-        var suma = 0;
-        for (i = 0; i < largo; i++) {
-          suma = suma + array[i];
-        }
-        return suma;
-      }
-      calculoPorcentaje(total, cantidad) {
-        var porcentaje = (cantidad * 100) / total;
-        return porcentaje;
-      }
-      //Calculo de values importantes
-      calculoDeEstadisticas() {
-        totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
-        totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
-        totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
-        totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
-        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
-        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
-        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-    
-        totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
-        minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
-        minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
-        minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
-        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
-        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
-        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
-      }
       chartFooter(filtro) {
-        //this.calculoDeEstadisticas();
+        this.calculoDeEstadisticas();
         if (filtro === 1) {
           return (
             <CardFooter>
@@ -545,15 +588,35 @@ class LineChart extends Component {
           );
         }
       }
-      makeEnunLineChart(dataIn, optIn, month, filtro) {
+      makeLineChart(dataIn, optIn, month, filtro) {
         //PEDIR ENUNCIADOS SEGUN MES
+        var titulo;
+        if (filtro===1){
+            titulo= "Enunciados realizados por día";
+        }
+        else if(filtro===2){
+            titulo="Tiempo utilizado por día";
+        }
         return (
           <Card>
-            {this.chartTittle("Enunciados realizados por día")}
+            {this.chartTittle(titulo)}
             <CardBody>
               <Row>
+                <Col xs='3'>
                 {this.filterLine()}
-                {this.buttonMonth(month)}
+                </Col>
+                {this.state.profesor? 
+                <Col className='text-center' xs='6'>
+                    {this.filterGroupLine()}
+                </Col>
+                :
+                <Col xs='6'>
+
+                </Col>
+                }
+                <Col className='text-right'xs='3'>
+                    {this.buttonLineMonth(month)}
+                </Col>
               </Row>
               {this.chartLine(dataIn, optIn)}
             </CardBody>
@@ -561,45 +624,43 @@ class LineChart extends Component {
           </Card>
         );
       }
+
+      sumaDeArray(array, largo) {
+        var i;
+        var suma = 0;
+        for (i = 0; i < largo; i++) {
+          suma = suma + array[i];
+        }
+        return suma;
+      }
+      calculoPorcentaje(total, cantidad) {
+        var porcentaje = (cantidad * 100) / total;
+        return porcentaje;
+      }
+      //Calculo de values importantes
+      calculoDeEstadisticas() {
+        totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
+        totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
+        totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
+        totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
+        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
+        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
+        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
     
-      makeTimeLineChart(dataIn, optIn, month, filtro) {
-        //PEDIR TIEMPO SEGUN MES
-        return (
-          <Card>
-            {this.chartTittle("Tiempo utilizado por día")}
-            <CardBody>
-              <Row>
-                {this.filterLine()}
-                {this.buttonMonth(month)}
-              </Row>
-              {this.chartLine(dataIn, optIn)}
-            </CardBody>
-            {this.chartFooter(filtro)}
-          </Card>
-        );
-      }
-      renderLine(filter, month) {
-        if (filter === 1) {
-          return (
-            <Col>
-              {this.makeEnunLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
-            </Col>
-          );
-        }
-        else if (filter === 2) {
-          return (
-            <Col>
-              {this.makeTimeLineChart(this.state.dataLineChart, this.state.optLineChart, month, filter)}
-            </Col>
-          );
-        }
+        totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
+        minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
+        minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
+        minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
+        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
+        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
+        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
       }
 
       render(){
         return (
-            <Row>
-             {this.renderLine(this.state.lineSelected, this.state.monthSelected)}
-            </Row>
+            <Col>
+                {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected,this.state.lineSelected)}
+            </Col>
         );
       }
     
