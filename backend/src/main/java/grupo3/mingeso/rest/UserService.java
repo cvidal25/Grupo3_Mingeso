@@ -69,7 +69,7 @@ public class UserService {
     //número de problemas resueltos por carrera
     @GetMapping(value = "/career", params = {"career"})
     @ResponseBody
-    public List<User> countAllByCareer(@RequestParam("career") String career) {
+    public List<User> getAllUsersCareer(@RequestParam("career") String career) {
         return userRepository.findByUserCareer(career);
     }
 
