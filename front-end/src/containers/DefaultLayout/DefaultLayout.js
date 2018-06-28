@@ -33,12 +33,12 @@ class DefaultLayout extends Component {
     super();
     this.state = {
       links: navigation,
-
+      usuario:'',
     };
+    this.setUsuario=this.setUsuario.bind(this);
   }
 
   componentDidMount(){
-
    this.filtrarLinks(this.props.infoUsuarios.userType);
   }
   
@@ -62,11 +62,19 @@ class DefaultLayout extends Component {
     });
   }
 
+  setUsuario(usuario){
+    this.setState({
+      usuario:usuario
+    });
+    this.filtrarLinks(usuario.userType);
+  }
+
   render() {
+    
     return (
       <div className="app">
         <AppHeader fixed >
-          <DefaultHeader/>
+          <DefaultHeader setUsuario={this.setUsuario}/>
         </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
