@@ -3,7 +3,7 @@ export default {
     {
       name: 'Dashboard',
       url: '/dashboard',
-      icon: 'icon-speedometer',
+      icon: 'icon-pie-chart',
      /// tipoUsuario: '3','1','2',//coordinador
      
     },
@@ -43,10 +43,12 @@ export default {
     name:'Nuevo Enunciado',
     url: '/enunciadosPro/nuevo',
      tipoUsuario: '3',//coordinador
+     icon: 'icon-note',
   },
   {
     name:'Lista de Enunciados',
     url: '/enunciadosPro',
+    icon: 'icon-list',
      tipoUsuario: '3',//coordinador
   },
 
@@ -55,11 +57,13 @@ export default {
   {
     name:'Nuevo Enunciado',
     url: '/enunciadosPro/nuevo',
+    icon: 'icon-note',
      tipoUsuario: '2',//Profesor
   },
   {
     name:'Lista de Enunciados',
     url: '/enunciadosPro',
+    icon: 'icon-list',
      tipoUsuario: '2',//Profesor
   },
    
@@ -69,26 +73,31 @@ export default {
     {
       name:'Enunciados',
       url: '/enunciados',
+      icon: 'icon-list',
       tipoUsuario: '1',//ALUMNO
     },
     {
       name:'Consola Libre',
       url: '/consola',
+      icon: 'icon-note',
       tipoUsuario: '1',//ALUMNO 
       children:[
         {
           name:'Python',
           url: '/consola/python',
+          icon: 'icon-doc',
 
         },
         {
           name:'C',
           url: '/consola/c_cpp',
+          icon: 'icon-doc',
 
         },
         {
           name:'Java',
           url:'/consola/java',
+          icon: 'icon-doc',
 
         }
       ]

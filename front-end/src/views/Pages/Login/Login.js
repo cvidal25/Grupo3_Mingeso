@@ -28,12 +28,13 @@ class Login extends Component {
         token:"",
         mail:"",//
         nombreUsuario:"", 
-        infoUsuario:{"userID":3,"userName":"Jorge Paredes","userType":2,"userMail":"jorge.paredes@usach.cl","userCareer":"Ingeniería Ejecución en Informática","userCoordination":"A-1"},
+        infoUsuario:"",
         correo:"",
         espera:false,
         info: false,
         warning: false,
         tipoUsuario: 1,
+        input:"",
       };
     this.responseGoogle = this.responseGoogle.bind(this);
     this.getMail= this.getMail.bind(this);
@@ -43,6 +44,9 @@ class Login extends Component {
     this.comprobarMail = this.comprobarMail.bind(this);
     this.agregarUsuario = this.agregarUsuario.bind(this);
     this.redirigir = this.redirigir.bind(this);
+    this.guardarDatos = this.guardarDatos.bind(this);
+    this.obtener = this.obtener.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
   componentDidMount(){
     this.setState({
@@ -50,6 +54,15 @@ class Login extends Component {
     });
   }
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
 
   toggleInfo() {
     this.setState({
@@ -61,6 +74,17 @@ class Login extends Component {
       warning: !this.state.warning,
     });
   }
+  guardarDatos(){
+    console.log("guarde");
+    console.log(this.state.infoUsuario);
+    sessionStorage.setItem("Alumno", this.state.infoUsuario);
+  };
+
+  obtener(){
+    console.log("obtener");
+    console.log(sessionStorage.getItem("Alumno"));
+  };
+
 
   getMail(){  
     Axios.get('https://www.googleapis.com/gmail/v1/users/'+this.state.token+'/profile')
@@ -149,8 +173,12 @@ class Login extends Component {
             this.setState({
               infoUsuario:respuesta,
               espera:false,
+              
             });
-            //this.agregarUsuario(this.state.infoUsuario);
+            this.guardarDatos();
+            this.agregarUsuario(this.state.infoUsuario);
+            this.obtener();
+            
             //this.redirigir();
           }
         })

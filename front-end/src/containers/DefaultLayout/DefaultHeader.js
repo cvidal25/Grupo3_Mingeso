@@ -24,16 +24,48 @@ class DefaultHeader extends Component {
      constructor () {
     super();
     this.state = {
-    //  tipoUsuario: ''
+    infoUsuario: "",
+    obtenerUsuario:"",
 
     };
     this.notUser=this.notUser.bind(this);
     this.showName = this.showName.bind(this);
+    this.obtener=this.obtener.bind(this);
+    this.agregarUsuario = this.agregarUsuario.bind(this);
+    this.comprobarUsuario = this.comprobarUsuario.bind(this);
+    this.guardarDatos = this.guardarDatos.bind(this);
+    this.respaldo = this.respaldo.bind(this);
   }
 
   componentDidMount(){
-    this.notUser(this.props.infoUsuarios);
+    this.comprobarUsuario(this.props.infoUsuarios);
+    this.respaldo();
   }
+  respaldo(){
+    if(this.props.infoUsuarios.userName !== null || this.props.infoUsuarios.userName !== '' ){
+      this.guardarDatos();
+    }
+  };
+  guardarDatos(){
+    console.log("guarde");
+    console.log(this.props.infoUsuarios);
+    sessionStorage.setItem("AlumnoRespaldo", this.props.infoUsuarios);
+    this.obtener();
+  };
+
+  comprobarUsuario(tipoUsuario){
+    if((tipoUsuario==='') || (tipoUsuario=== null )){
+      this.agregarUsuario(this.obtener());
+      console.log("antes");
+      console.log(this.state.infoUsuarios);
+      console.log(this.props.infoUsuarios.userName);
+      console.log("dsp");
+
+     /* if((tipoUsuario==='') || (tipoUsuario=== null )){
+        this.notUser(this.props.infoUsuarios);
+      }*/
+    }
+  };
 
   notUser(tipoUsuario){
     if((tipoUsuario==='') || (tipoUsuario=== null )){
@@ -44,7 +76,21 @@ class DefaultHeader extends Component {
         window.location.replace('/Login');
       }
     }
-  }
+  };
+  obtener(){
+    console.log("obtener");
+   // console.log(sessionStorage.getItem("Alumno"));
+    console.log(sessionStorage.getItem("AlumnoRespaldo"));
+    this.setState({
+      obtenerUsuario:sessionStorage.getItem("AlumnoRespaldo"),
+    });
+    console.log(this.state.obtenerUsuario);
+  };
+
+
+
+
+
 
   showName(props){
     if(props.infoUsuarios==null){
@@ -119,6 +165,13 @@ class DefaultHeader extends Component {
               </Nav>
       </React.Fragment>
     );
+  }
+  agregarUsuario(infoUsuario){
+    //console.log(infoUsuario);
+      store.dispatch({
+      type:"LOG_IN",
+      infoUsuario: infoUsuario,
+  });
   }
 }
 
