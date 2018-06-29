@@ -26,6 +26,18 @@ public class UserExercise implements Serializable {
     @Column(name = "user_output",nullable = false, length = 2048)
     private String userOutput;
 
+    @Column(name = "code", nullable = false, length = 16384)
+    private String code;
+
+    @Column(name = "commentAnalysis", nullable = false)
+    private boolean commentAnalysis;
+
+    @Column(name = "mainBodyAnalysis", nullable = false)
+    private boolean mainBodyAnalysis;
+
+    @Column(name = "invalidVariables", nullable = false, length = 2048)
+    private String invalidVariables;
+
     @ManyToOne
     @JoinColumn(name = "exercise_id", nullable = false)
     private Exercise exercise;
@@ -91,4 +103,20 @@ public class UserExercise implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public String getCode() { return code; }
+
+    public void setCode(String code) { this.code = code; }
+
+    public boolean isCommentAnalysis() { return commentAnalysis; }
+
+    public void setCommentAnalysis(boolean commentAnalysis) { this.commentAnalysis = commentAnalysis; }
+
+    public boolean isMainBodyAnalysis() { return mainBodyAnalysis; }
+
+    public void setMainBodyAnalysis(boolean mainBodyAnalysis) { this.mainBodyAnalysis = mainBodyAnalysis; }
+
+    public String getInvalidVariables() { return invalidVariables; }
+
+    public void setInvalidVariables(String invalidVariables) { this.invalidVariables = invalidVariables; }
 }
