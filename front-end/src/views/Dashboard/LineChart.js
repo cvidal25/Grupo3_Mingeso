@@ -385,7 +385,7 @@ class LineChart extends Component {
     }
     componentDidMount(){
         this.setState({
-            profesor:this.props.infoUsers.userType;
+        
         });
       }
     /*componentDidMount(){
