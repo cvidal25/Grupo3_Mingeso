@@ -79,12 +79,36 @@ public class AnswerService {
         String outputs = "";
         for(int i = 0; i < arrayJson.length-1; i++){
             if(i != 0){
-                outputs = outputs.concat(", ");
+                outputs = outputs.concat("/@");
             }
             outputs = outputs.concat(separateOutput(arrayJson[i]));
         }
 
         userExercise.setUserOutput(outputs);
+
+        userExercise.setCode(factory.getCode());
+
+        for ( Map.Entry<String, String> entry : list.entrySet()) {
+            String title = entry.getKey();
+            String value = entry.getValue();
+            boolean answer = false;
+            if(value.equals("Fallido")){
+                answer = false;
+            }else if(value.equals("Exitoso")){
+                answer = true;
+            }
+
+            if(title.equals("Analisis de Comentario")){
+                userExercise.setCommentAnalysis(answer);
+            }else if(title.equals("Analisis del Cuerpo Principal")){
+                userExercise.setMainBodyAnalysis(answer);
+            }else if(title.equals("Analisis de Identación")){
+                userExercise.setIdentationAnalysis(answer);
+            }else if(title.equals("Variables Invalidas")){
+                userExercise.setInvalidVariables(value);
+            }
+        }
+
         //Almacenamiento de los datos en la tabla UsuarioEjercicio
         userExerciseRepository.save(userExercise);
 
@@ -92,7 +116,7 @@ public class AnswerService {
         int i;
         for(i = 0; i < arrayJson.length; i++){
             if(i == arrayJson.length-1)
-                list.put("score",arrayJson[i]); //verificar si al front le sirve como string o int
+                list.put("score",arrayJson[i]);
             else
                 list.put("codeExecution".concat(Integer.toString(i)),arrayJson[i]);
         }
@@ -108,4 +132,6 @@ public class AnswerService {
         }
         return output;
     }
+    
+
 }

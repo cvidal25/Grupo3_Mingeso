@@ -35,6 +35,9 @@ public class UserExercise implements Serializable {
     @Column(name = "mainBodyAnalysis", nullable = false)
     private boolean mainBodyAnalysis;
 
+    @Column(name = "indentationAnalysis", nullable = false)
+    private boolean identationAnalysis;
+
     @Column(name = "invalidVariables", nullable = false, length = 2048)
     private String invalidVariables;
 
@@ -119,4 +122,8 @@ public class UserExercise implements Serializable {
     public String getInvalidVariables() { return invalidVariables; }
 
     public void setInvalidVariables(String invalidVariables) { this.invalidVariables = invalidVariables; }
+
+    public boolean isIdentationAnalysis() { return identationAnalysis; }
+
+    public void setIdentationAnalysis(boolean identationAnalysis) { this.identationAnalysis = identationAnalysis; }
 }
