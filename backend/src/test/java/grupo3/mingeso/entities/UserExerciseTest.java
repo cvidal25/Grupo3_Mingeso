@@ -26,5 +26,21 @@ public class UserExerciseTest {
 
         userExercise.setUserOutput("aloh");
         assertEquals("aloh",userExercise.getUserOutput());
+
+        userExercise.setCode("print(\"Hola Mundo!\")");
+        assertEquals("print(\"Hola Mundo!\")",userExercise.getCode());
+
+        userExercise.setCommentAnalysis(false);
+        assertFalse(userExercise.isCommentAnalysis());
+
+        userExercise.setMainBodyAnalysis(true);
+        assertTrue(userExercise.isMainBodyAnalysis());
+
+        userExercise.setInvalidVariables("[a, b, c]");
+        assertEquals("[a, b, c]",userExercise.getInvalidVariables());
+
+        userExercise.setIdentationAnalysis(true);
+        assertTrue(userExercise.isIdentationAnalysis());
+
     }
 }
