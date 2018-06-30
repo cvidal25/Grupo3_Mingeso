@@ -47,7 +47,7 @@ class Enunciado extends Component{
         );
         //probar con 8
         Consultas.push(
-            Axios.get("http://localhost:8082/userExercise/user/"+this.props.infoUsuarios.userID)
+            Axios.get("http://localhost:8082/userExercise/user/"+8)//this.props.infoUsuarios.userID)
            
         );
         Promise.all(Consultas).then(response=>{
