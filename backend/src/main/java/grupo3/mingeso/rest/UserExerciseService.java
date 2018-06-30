@@ -47,7 +47,7 @@ public class UserExerciseService {
     //Cantidad de ejercicios resueltos diariamente por Alumno (Correo)
     @RequestMapping(value = "/exercise/student/{email}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer,int[]> countByUserStudent(@PathVariable("email") String email,@PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<String,int[]> countByUserStudent(@PathVariable("email") String email,@PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -63,7 +63,7 @@ public class UserExerciseService {
     //Cantidad de ejercicios resueltos diariamente por Carrera (Nombre)
     @RequestMapping(value = "/exercise/career/{career}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer, int[]> countByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<String, int[]> countByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -78,7 +78,7 @@ public class UserExerciseService {
     //Cantidad de ejercicios resueltos diariamente por Coordinación
     @RequestMapping(value = "/exercise/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer,int[]> countByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<String,int[]> countByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -93,7 +93,7 @@ public class UserExerciseService {
     //Tiempo invertido diariamente por Alumno (Correo)
     @RequestMapping(value = "/time/student/{email}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer, int[]> countTimeByStudent(@PathVariable("email") String email, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<String, int[]> countTimeByStudent(@PathVariable("email") String email, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -110,7 +110,7 @@ public class UserExerciseService {
     //Tiempo invertido diariamente por Carrera (Nombre)
     @RequestMapping(value = "/time/career/{career}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer, int[]> countTimeByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<String, int[]> countTimeByCareer(@PathVariable("career") String career, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -126,7 +126,7 @@ public class UserExerciseService {
     //Tiempo invertido diariamente por Coordinación
     @RequestMapping(value = "/time/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer,int[]> countTimeByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
+    public Map<String,int[]> countTimeByCoordination(@PathVariable("coordination") String coordination, @PathVariable("year") int year, @PathVariable("month") int month){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -141,7 +141,7 @@ public class UserExerciseService {
 
 
     //Realiza el proceso completo del sumado, separando los ejercicios por el grado de dificultad.
-    public Map<Integer, int[]> countBy(List<UserExercise> completeList, int year, int month, int lastDay, boolean isExercise){
+    public Map<String, int[]> countBy(List<UserExercise> completeList, int year, int month, int lastDay, boolean isExercise){
 
         List<UserExercise> easy = new ArrayList<>();
         List<UserExercise> medium = new ArrayList<>();
@@ -166,10 +166,10 @@ public class UserExerciseService {
         //Para la lista Díficil:
         int[] hardCounter = counterList(hard,lastDay,year,month,isExercise);
 
-        Map<Integer,int[]> exercisesPerDay= new HashMap<>();
-        exercisesPerDay.put(1,easyCounter);
-        exercisesPerDay.put(2,mediumCounter);
-        exercisesPerDay.put(3,hardCounter);
+        Map<String,int[]> exercisesPerDay= new HashMap<>();
+        exercisesPerDay.put("Facil",easyCounter);
+        exercisesPerDay.put("Intermedio",mediumCounter);
+        exercisesPerDay.put("Dificil",hardCounter);
 
         return exercisesPerDay;
     }
