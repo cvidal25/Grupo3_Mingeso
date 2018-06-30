@@ -20,6 +20,8 @@ import {
     Row,
     Table,
 } from 'reactstrap';
+import Axios from 'axios';
+import { connect } from 'react-redux';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 
@@ -42,56 +44,56 @@ const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
     , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
     , 'Noviembre', 'Diciembre'];
 
-const minutesPerFaciles = [10, 10, 50, 5, 10, 0
+var minutesPerFaciles = [10, 10, 50, 5, 10, 0
     , 10, 0, 0, 0, 5, 0
     , 40, 15, 30, 0, 0, 0
     , 0, 10, 40, 0, 0, 5
     , 20, 0, 15, 20, 30, 0
     , 0];
 
-const minutesPerIntermedios = [20, 60, 60, 10, 30, 20
+var minutesPerIntermedios = [20, 60, 60, 10, 30, 20
     , 20, 10, 0, 0, 10, 0
     , 100, 10, 60, 30, 0, 0
     , 10, 10, 80, 0, 0, 30
     , 30, 0, 30, 40, 50, 0
     , 0];
 
-const minutesPerDificiles = [40, 80, 140, 40, 0, 0
+var minutesPerDificiles = [40, 80, 140, 40, 0, 0
     , 80, 60, 0, 0, 0, 0
     , 200, 20, 20, 60, 340, 0
     , 0, 20, 100, 40, 0, 20
     , 0, 0, 60, 80, 100, 0
     , 40];
 
-const minutesPerDay = [70, 150, 250, 55, 40, 20
+var minutesPerDay = [70, 150, 250, 55, 40, 20
     , 110, 70, 0, 0, 15, 0
     , 340, 45, 110, 90, 340, 0
     , 10, 40, 220, 40, 0, 55
     , 50, 0, 105, 140, 180, 0
     , 40];
 
-const facilesPerDay = [2, 2, 10, 1, 2, 0
+var facilesPerDay = [2, 2, 10, 1, 2, 0
     , 2, 0, 0, 0, 1, 0
     , 8, 3, 6, 0, 0, 0
     , 0, 2, 8, 0, 0, 1
     , 4, 0, 3, 4, 6, 0
     , 0];
 
-const intermediosPerDay = [2, 6, 6, 1, 3, 2
+var intermediosPerDay = [2, 6, 6, 1, 3, 2
     , 2, 1, 0, 0, 1, 0
     , 10, 1, 6, 3, 0, 0
     , 1, 1, 8, 0, 0, 3
     , 3, 0, 3, 4, 5, 0
     , 0];
 
-const dificilesPerDay = [2, 4, 7, 2, 0, 0
+var dificilesPerDay = [2, 4, 7, 2, 0, 0
     , 4, 3, 0, 0, 0, 0
     , 10, 1, 1, 3, 17, 0
     , 0, 1, 5, 2, 0, 1
     , 0, 0, 3, 4, 5, 0
     , 2];
 
-const enunciadosPerDay = [6, 12, 23, 4, 5, 2
+var enunciadosPerDay = [6, 12, 23, 4, 5, 2
     , 8, 4, 0, 0, 2, 0
     , 28, 5, 13, 6, 17, 0
     , 1, 4, 21, 2, 0, 5
@@ -383,50 +385,6 @@ class LineChart extends Component {
         this.onLineButtonMonthToggle=this.onLineButtonMonthToggle.bind(this)
         this.filterLine=this.filterLine.bind(this);
     }
-    componentDidMount(){
-        this.setState({
-        
-        });
-      }
-    /*componentDidMount(){
-
-        this.setState({
-            espera:true
-        });
-
-        const config={
-            'onUploadProgress': (progressEvent) => {
-                console.log("PAZ----");
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-            'onDownloadProgress': (progressEvent) => {
-                console.log("PAZ");
-                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-        }
-
-        Axios.get('http://localhost:8082/exercise',config)
-        .then(response=>{
-            var aux=[];
-            var enunciados=response.data;
-            let item;
-            for (item in enunciados){
-                aux.push(false);    
-            }
-
-            this.setState({
-                items:enunciados,
-                openStates:[aux,aux,aux,aux],
-                espera:false
-            });
-        })
-        .catch(function(error){
-            console.log(error);
-        })
-    };*/
     onLineFiltClick(selected) {
         console.log(this.state.monthLineSelected);
         console.log(this.state.lineSelected);
@@ -665,4 +623,10 @@ class LineChart extends Component {
       }
     
 }
-export default LineChart;
+const mapStateToProps = state => {
+    return {
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
+  export default connect(mapStateToProps)(LineChart);

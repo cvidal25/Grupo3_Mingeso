@@ -21,6 +21,7 @@ import {
   Table,
   CardColumns,
 } from 'reactstrap';
+import { connect } from 'react-redux';
 import Widget03 from '../../views/Widgets/Widget03'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
@@ -184,6 +185,9 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
           dataDoughChart: doughInit,
           profesor: true
         };
+    }
+    componentDidMount(){
+      console.log("Dona");
     }
     onDoughFiltClick(selected) {
       console.log(selected);
@@ -416,4 +420,10 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
       )
     }
   }
-  export default DoughnutChart;
+  const mapStateToProps = state => {
+    return {
+      infoUsuarios: state.infoUsuarios,
+    };
+  };
+  
+  export default connect(mapStateToProps)(DoughnutChart);

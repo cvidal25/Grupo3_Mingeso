@@ -133,7 +133,9 @@ class Dashboard extends Component {
       monthButtonOpen: newArray,
     });
   }
-  
+  componentDidMount(){
+    console.log("Dash");
+  }
   /*Axios.get('http://localhost:8082/exercise',config)
         .then(response=>{
             var aux=[];
@@ -196,7 +198,7 @@ class Dashboard extends Component {
   
   //Operaciones
   render() {
-    console.log(this.props.infoUsuarios.userType);
+    console.log("CTM");
     return (
       //Minicharts
       <div className="animated fadeIn">
