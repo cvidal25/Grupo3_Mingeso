@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
+import '../../scss/spinner.css';
 
 import {
   AppAside,
@@ -23,6 +24,7 @@ import routes from '../../routes';
 import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
+import jwt from 'jsonwebtoken';
 
 
 
@@ -34,32 +36,83 @@ class DefaultLayout extends Component {
     this.state = {
       links: navigation,
       usuario:'',
+      espera:false,
+      obtenerUsuario:'',
     };
     this.setUsuario=this.setUsuario.bind(this);
+    this.changeState=this.changeState.bind(this);
   }
 
+  componentWillMount(){
+    this.filtrarLinks(this.props.infoUsuarios.userType);
+  /*  this.setState({
+      espera:true,
+    });*/
+  }
   componentDidMount(){
+   
    this.filtrarLinks(this.props.infoUsuarios.userType);
   }
   
+  changeState(){
+    if(this.props.infoUsuarios.userType === 1 ||this.props.infoUsuarios.userType === 2 || this.props.infoUsuarios.userType === 3 ){
+      this.setState({
+        espera:false,
+      });
+    };
+  };
+  obtener(){
+    return(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")));
+  };
+  guardarDatos(){
+   var token=jwt.sign(this.props.infoUsuarios,'secret');
+    sessionStorage.setItem("AlumnoRespaldo",token);
+    //this.obtener();
+  };
 
   // Al ejecutar esta funcion desaparecer y aparecen links que
   // el usuario indicado puede acceder.
   filtrarLinks(tipoUsuario){
-    let items = navigation.items.filter(function(link){
+    console.log(tipoUsuario,"1");
+    var aux=this.obtener();
+      this.setState({
+          obtenerUsuario:aux
+      });
+    if(tipoUsuario){
+      console.log(tipoUsuario,"2");
+      let items = navigation.items.filter(function(link){
 
 
-      if(!link.hasOwnProperty("tipoUsuario")) return true;
+        if(!link.hasOwnProperty("tipoUsuario")) return true;
 
-      if(link["tipoUsuario"] == tipoUsuario) return true;
+        if(link["tipoUsuario"] == tipoUsuario) return true;
 
-      return false;
+        return false;
 
-    });
+      });
 
-    this.setState({
-      links: { items: items }
-    });
+      this.setState({
+        links: { items: items }
+      });
+      
+    }
+   /* else{
+      console.log(this.state.obtenerUsuario,"datos");  
+      let items = navigation.items.filter(function(link){
+
+        if(!link.hasOwnProperty("tipoUsuario")) return true;
+        
+        if(link["tipoUsuario"] == this.state.obtenerUsuario.userType) return true;
+
+        return false;
+
+      });
+
+      this.setState({
+        links: { items: items }
+      });
+      
+    }*/
   }
 
   setUsuario(usuario){
@@ -70,9 +123,10 @@ class DefaultLayout extends Component {
   }
 
   render() {
-    
+    let {hola} = this.props.infoUsuarios;
     return (
-      <div className="app">
+      (hola)?<div  className='defaultSpinner'></div>
+      :<div className="app">
         <AppHeader fixed >
           <DefaultHeader setUsuario={this.setUsuario}/>
         </AppHeader>
@@ -115,8 +169,9 @@ class DefaultLayout extends Component {
 }
 const mapStateToProps = state =>{
   return{
-    infoUsuarios: state.infoUsuarios
+    infoUsuarios: state.infoUsuarios,
   };
 };
+
 
 export default connect(mapStateToProps)(DefaultLayout);

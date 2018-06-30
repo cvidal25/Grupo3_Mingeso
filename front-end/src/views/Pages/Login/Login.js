@@ -107,25 +107,25 @@ class Login extends Component {
     });
   }
   guardarDatos(){
-    console.log("guarde");
-    console.log(this.state.infoUsuario);
+    //console.log("guarde");
+    //console.log(this.state.infoUsuario);
     var token=jwt.sign(this.state.infoUsuario,'secret');
-    console.log('token',token);
-    console.log('decode',jwt.decode(token));
-    console.log('verify',jwt.verify(token,'secret'));
+    //console.log('token',token);
+    //console.log('decode',jwt.decode(token));
+    //console.log('verify',jwt.verify(token,'secret'));
     document.cookie=token;
     sessionStorage.setItem("Alumno", token);
   };
 
   obtener(){
-    console.log("obtener");
-    console.log("ass",sessionStorage.getItem("Alumno"));
-    console.log(document.cookie);
-    console.log(decodeURIComponent(document.cookie));
+    //console.log("obtener");
+    //console.log("ass",sessionStorage.getItem("Alumno"));
+    //console.log(document.cookie);
+    //console.log(decodeURIComponent(document.cookie));
     this.setState({
       obtenerUsuario: jwt.decode(sessionStorage.getItem("Alumno")),
     });
-    console.log(this.state.obtenerUsuario);
+    //console.log(this.state.obtenerUsuario);
 
   };
 
@@ -134,10 +134,10 @@ class Login extends Component {
     Axios.get('https://www.googleapis.com/gmail/v1/users/'+this.state.token+'/profile')
         .then(Response =>{
           //console.log("lala");
-            console.log(Response);
+           // console.log(Response);
         }
         ).catch(function(error){
-            console.log(error);
+           // console.log(error);
         });
   };
 
@@ -228,11 +228,11 @@ class Login extends Component {
   };
   redirigir(){
     if(this.state.infoUsuario.userName !== null){
-      console.log("yu")
-      console.log(this.state.infoUsuario);
-      console.log("ya");
+    //  console.log("yu")
+    //  console.log(this.state.infoUsuario);
+    //  console.log("ya");
       //window.location.replace('/Dashboard');
-      console.log("redirigir")
+     // console.log("redirigir")
      }
   };
 

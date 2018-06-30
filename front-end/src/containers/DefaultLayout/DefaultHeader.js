@@ -45,6 +45,9 @@ class DefaultHeader extends Component {
   componentWillMount(){
     this.comprobarUsuario(this.props.infoUsuarios);
     this.respaldo();
+    this.setState({ 
+      espera:false,
+    })
   }
   respaldo(){
     if(this.props.infoUsuarios !== null || this.props.infoUsuarios !== '' ){
@@ -57,8 +60,8 @@ class DefaultHeader extends Component {
     }
   };
   guardarDatos(){
-    console.log("guarde");
-    console.log(this.props.infoUsuarios,"INF");
+    //console.log("guarde");
+    //console.log(this.props.infoUsuarios,"INF");
     var token=jwt.sign(this.props.infoUsuarios,'secret');
     sessionStorage.setItem("AlumnoRespaldo",token);
     //this.obtener();
@@ -76,6 +79,9 @@ class DefaultHeader extends Component {
       }
     }
     else{
+      this.setState({ 
+        espera:false,
+      })
       this.guardarDatos();
     }
 
@@ -92,8 +98,8 @@ class DefaultHeader extends Component {
     }
   };
   obtener(){
-    console.log("obtener");
-    console.log(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")),"buenaaaa");
+    //console.log("obtener");
+    //console.log(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")),"buenaaaa");
     return(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")));
   };
 
@@ -184,7 +190,9 @@ class DefaultHeader extends Component {
       infoUsuario: infoUsuario,
   });  
     
-    console.log(false.toString(),"otras");
+  this.setState({ 
+    espera:false,
+  })
   
     
   }
