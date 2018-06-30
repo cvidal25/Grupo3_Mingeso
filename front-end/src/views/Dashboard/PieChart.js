@@ -44,7 +44,7 @@ var pieInit = {
   labels: diffLabel,
   datasets: [
     {
-      data: [65, 72, 77],
+      data: [543, 40, 230],
       backgroundColor: [
         '#36A2EB',
         '#FFCE56',
@@ -92,7 +92,7 @@ var pieDataTime = {
       ],
     }],
 };
-var fecha= new Date();
+var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
 var totalIntermedios;
@@ -114,38 +114,37 @@ class PieChart extends Component {
       userExercises: [],
       monthPieButtonOpen: false,
       pieSelected: 1,
-      monthSelected:fecha.getMonth(),
+      monthSelected: fecha.getMonth(),
       //Chart States
       dataPieChart: pieInit,
       profesor: true,
       coord: 'B-1',
-      carre: 'Informatica'
+      career: 'Informatica',
+      group: true
     };
   }
-
-  componentDidMount() {
+  componentWillMount() {
     this.setState({
       espera: true
     });
     if (this.props.infoUsuarios.userType === 1) {
-      this.obtenerDataAlumno(fecha.getMonth);
+      this.obtenerData(fecha.getMonth(), 1, false);
       this.setState({
         profesor: false,
-        dataPieChart: pieDataEnum
+        dataPieChart: pieDataEnum,
+        group: false
       });
     }
     else {
-      url=
+      this.obtenerData(fecha.getMonth(), 2, true)
       this.setState({
-        profesor: false
+        profesor: true,
+        dataPieChart: pieDataEnum,
+        group: true
       });
     }
-    this.obtenerDataAlumno(fecha.getMonth());
-  };
-  
+  }
   onPieFiltClick(selected) {
-    console.log(selected);
-    console.log(this.state.pieSelected);
     if (selected === 1) {
       this.setState({
         dataPieChart: pieDataEnum,
@@ -154,10 +153,24 @@ class PieChart extends Component {
     }
     else if (selected === 2) {
       this.setState({
-        dataPieChart: pieDataTime,
+        dataPieChart: pieInit,
         pieSelected: selected,
       });
     }
+  }
+  onPieCareerItemSelected(sel) {
+    this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
+    this.setState({
+      career: sel,
+      group: true
+    });
+  }
+  onPieCoordItemSelected(sel) {
+    this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
+    this.setState({
+      coord: sel,
+      group: false
+    });
   }
   onPieButtonMonthToggle() {
     this.setState({
@@ -165,53 +178,50 @@ class PieChart extends Component {
     });
   }
   onPieMonthItemSelected(i) {
+    this.obtenerData(i, this.props.infoUsuarios.userType, this.state.group)
     this.setState({
-      monthSelected: monthsLabel[i],
+      monthSelected: i,
     });
   }
-  setDataEnun(dataCatch){
-    console.log(dataCatch);                             
-    totalFaciles = this.sumaDeArray(dataCatch.faciles);
-    totalIntermedios = this.sumaDeArray(dataCatch.intermedios);
-    totalDificiles = this.sumaDeArray(dataCatch.dificiles);
-    totalEnunciados=totalDificiles+totalFaciles+totalIntermedios;
+  setDataEnun(dataCatch) {
+    totalFaciles = this.sumaDeArray(dataCatch.Facil);
+    totalIntermedios = this.sumaDeArray(dataCatch.Intermedio);
+    totalDificiles = this.sumaDeArray(dataCatch.Dificil);
+    totalEnunciados = totalDificiles + totalFaciles + totalIntermedios;
     percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
     percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
     percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-    pieDataEnum.datasets[0].data=[totalFaciles,totalIntermedios,totalDificiles];     
+    pieDataEnum.datasets[0].data = [totalFaciles, totalIntermedios, totalDificiles];
+    //  console.log(pieDataEnum);   
   }
-  setDataTime(dataCatch){
-    minutesFaciles = this.sumaDeArray(dataCatch.faciles);
-    minutesIntermedios = this.sumaDeArray(dataCatch.intermedios);
-    minutesDificiles = this.sumaDeArray(dataCatch.dificiles);
-    totalMinutes = minutesDificiles+minutesFaciles+minutesIntermedios;
+  setDataTime(dataCatch) {
+    minutesFaciles = this.sumaDeArray(dataCatch.Facil);
+    minutesIntermedios = this.sumaDeArray(dataCatch.Intermedio);
+    minutesDificiles = this.sumaDeArray(dataCatch.Dificil);
+    totalMinutes = minutesDificiles + minutesFaciles + minutesIntermedios;
     percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
     percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
     percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
-    pieDataTime.datasets[0].data=[minutesFaciles,minutesIntermedios,minutesDificiles];
+    pieDataTime.datasets[0].data = [minutesFaciles, minutesIntermedios, minutesDificiles];
+    //    console.log(pieDataTime);
   }
-  /*calculoDeEstadisticas(dataCatch) {
-    totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
-    totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
-    totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
-    totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
-    percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
-    percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
-    percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-
-    totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
-    minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
-    minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
-    minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
-    percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
-    percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
-    percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
-  }*/
-
-  obtenerDataAlumno(mes){
-    var fix=mes+1;
-    var url='http://localhost:8082/userExercise/exercise/student/'+this.props.infoUsuarios.userMail+'/'+fecha.getFullYear()+'-'+fix;
-    var url2='http://localhost:8082/userExercise/time/student/'+this.props.infoUsuarios.userMail+'/'+fecha.getFullYear()+'-'+fix;
+  obtenerData(mes, tipo, group) {
+    var url, url2;
+    var fix = mes + 1;
+    if (tipo === 1) {
+      url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+      url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+    }
+    else if (tipo === 2) {
+      if (group === true) {
+        url = 'http://localhost:8082/userExercise/exercise/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
+        url2 = 'http://localhost:8082/userExercise/time/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
+      }
+      else {
+        url = 'http://localhost:8082/userExercise/exercise/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
+        url2 = 'http://localhost:8082/userExercise/time/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
+      }
+    }
     console.log(url);
     console.log(url2);
     Axios.get(url)
@@ -224,13 +234,13 @@ class PieChart extends Component {
       });
 
     Axios.get(url2)
-    .then(response => {
-      var dataCatch = response.data;
-      this.setDataTime(dataCatch);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataTime(dataCatch);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
   buttonPieMonth(month) {
     return (
@@ -261,8 +271,9 @@ class PieChart extends Component {
               Carrera
                 </DropdownToggle>
             <DropdownMenu>
-              <DropdownItem>Informatica</DropdownItem>
-              <DropdownItem>Electrica</DropdownItem>
+              <DropdownItem onClick={() => { this.onPieCareerItemSelected('Informatica') }}>Informatica</DropdownItem>
+              <DropdownItem onClick={() => { this.onPieCareerItemSelected('Informatica') }}>Electrica</DropdownItem>
+              <DropdownItem onClick={() => { this.onPieCareerItemSelected('Mecanica') }}>Mecánica</DropdownItem>
             </DropdownMenu>
           </ButtonDropdown>
           <ButtonDropdown size="sm" id='coord' isOpen={this.state.coord} toggle={() => { this.setState({ coord: !this.state.coord }); }}>
@@ -270,8 +281,8 @@ class PieChart extends Component {
               Coordinación
                 </DropdownToggle>
             <DropdownMenu>
-              <DropdownItem>A-1</DropdownItem>
-              <DropdownItem>B-2</DropdownItem>
+              <DropdownItem onClick={() => { this.onPieCoordItemSelected('A-1') }}>A-1</DropdownItem>
+              <DropdownItem onClick={() => { this.onPieCoordItemSelected('B-3') }}>B-3</DropdownItem>
             </DropdownMenu>
           </ButtonDropdown>
         </ButtonGroup>
@@ -307,10 +318,10 @@ class PieChart extends Component {
   makePieChart(dataIn, month, filtro) {
     var titulo;
     if (filtro === 1) {
-      titulo = "Enunciados realizados al año";
+      titulo = "Enunciados realizados al mes";
     }
     else if (filtro === 2) {
-      titulo = "Tiempo utilizado al año";
+      titulo = "Tiempo utilizado al mes";
     }
     return (
       <Card>
@@ -353,7 +364,7 @@ class PieChart extends Component {
     var porcentaje = (cantidad * 100) / total;
     return porcentaje;
   }
-  
+
   chartFooter(filtro) {
     //this.calculoDeEstadisticas();
     if (filtro === 1) {

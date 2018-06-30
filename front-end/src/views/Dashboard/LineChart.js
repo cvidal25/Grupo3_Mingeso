@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ChartComponent, {Line} from 'react-chartjs-2';
+import ChartComponent, { Line } from 'react-chartjs-2';
 import {
     Badge,
     Button,
@@ -44,26 +44,6 @@ const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
     , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
     , 'Noviembre', 'Diciembre'];
 
-var minutesPerFaciles = [10, 10, 50, 5, 10, 0
-    , 10, 0, 0, 0, 5, 0
-    , 40, 15, 30, 0, 0, 0
-    , 0, 10, 40, 0, 0, 5
-    , 20, 0, 15, 20, 30, 0
-    , 0];
-
-var minutesPerIntermedios = [20, 60, 60, 10, 30, 20
-    , 20, 10, 0, 0, 10, 0
-    , 100, 10, 60, 30, 0, 0
-    , 10, 10, 80, 0, 0, 30
-    , 30, 0, 30, 40, 50, 0
-    , 0];
-
-var minutesPerDificiles = [40, 80, 140, 40, 0, 0
-    , 80, 60, 0, 0, 0, 0
-    , 200, 20, 20, 60, 340, 0
-    , 0, 20, 100, 40, 0, 20
-    , 0, 0, 60, 80, 100, 0
-    , 40];
 
 var minutesPerDay = [70, 150, 250, 55, 40, 20
     , 110, 70, 0, 0, 15, 0
@@ -71,27 +51,6 @@ var minutesPerDay = [70, 150, 250, 55, 40, 20
     , 10, 40, 220, 40, 0, 55
     , 50, 0, 105, 140, 180, 0
     , 40];
-
-var facilesPerDay = [2, 2, 10, 1, 2, 0
-    , 2, 0, 0, 0, 1, 0
-    , 8, 3, 6, 0, 0, 0
-    , 0, 2, 8, 0, 0, 1
-    , 4, 0, 3, 4, 6, 0
-    , 0];
-
-var intermediosPerDay = [2, 6, 6, 1, 3, 2
-    , 2, 1, 0, 0, 1, 0
-    , 10, 1, 6, 3, 0, 0
-    , 1, 1, 8, 0, 0, 3
-    , 3, 0, 3, 4, 5, 0
-    , 0];
-
-var dificilesPerDay = [2, 4, 7, 2, 0, 0
-    , 4, 3, 0, 0, 0, 0
-    , 10, 1, 1, 3, 17, 0
-    , 0, 1, 5, 2, 0, 1
-    , 0, 0, 3, 4, 5, 0
-    , 2];
 
 var enunciadosPerDay = [6, 12, 23, 4, 5, 2
     , 8, 4, 0, 0, 2, 0
@@ -108,7 +67,7 @@ var enunLineChartData = {
             borderColor: brandInfo,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: enunciadosPerDay,
+            data: null,
         },
         {
             label: 'Enunciados Faciles',
@@ -116,7 +75,7 @@ var enunLineChartData = {
             borderColor: brandSuccess,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: facilesPerDay,
+            data: null,
         },
         {
             label: 'Enunciados Intermedios',
@@ -125,7 +84,7 @@ var enunLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: intermediosPerDay,
+            data: null,
         },
         {
             label: 'Enunciados Dificiles',
@@ -134,7 +93,7 @@ var enunLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: dificilesPerDay,
+            data: null,
         },
     ],
 };
@@ -147,7 +106,7 @@ var timeLineChartData = {
             borderColor: brandInfo,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: minutesPerDay,
+            data: null,
         },
         {
             label: 'Enunciados Faciles',
@@ -155,7 +114,7 @@ var timeLineChartData = {
             borderColor: brandSuccess,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: minutesPerFaciles,
+            data: null,
         },
         {
             label: 'Enunciados Intermedios',
@@ -164,7 +123,7 @@ var timeLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: minutesPerIntermedios,
+            data: null,
         },
         {
             label: 'Enunciados Dificiles',
@@ -173,7 +132,7 @@ var timeLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: minutesPerDificiles,
+            data: null,
         },
     ],
 };
@@ -266,45 +225,7 @@ var timeLineChartOpt = {
         },
     },
 };
-var initData = {
-    labels: daysLabel,
-    datasets: [
-        {
-            label: 'Enunciados Totales',
-            backgroundColor: hexToRgba(brandInfo, 10),
-            borderColor: brandInfo,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: enunciadosPerDay,
-        },
-        {
-            label: 'Enunciados Faciles',
-            backgroundColor: 'transparent',
-            borderColor: brandSuccess,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: facilesPerDay,
-        },
-        {
-            label: 'Enunciados Intermedios',
-            backgroundColor: 'transparent',
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            //borderDash: [8, 5],
-            data: intermediosPerDay,
-        },
-        {
-            label: 'Enunciados Dificiles',
-            backgroundColor: 'transparent',
-            borderColor: brandWarning,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            //borderDash: [8, 5],
-            data: dificilesPerDay,
-        },
-    ],
-};
+
 const initOpts = {
     tooltips: {
         enabled: false,
@@ -349,6 +270,7 @@ const initOpts = {
         },
     },
 };
+var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
 var totalIntermedios;
@@ -368,22 +290,48 @@ var percentTimeD;
 class LineChart extends Component {
     constructor() {
         super();
-        
+
         this.state = {
             monthLineButtonOpen: false,
             lineSelected: 1,
-            monthLineSelected: monthsLabel[5],
+            monthLineSelected: fecha.getMonth(),
             //Chart States
-            dataLineChart: initData,
-            optLineChart: initOpts,
+            dataLineChart: null,
+            optLineChart: null,
             espera: false,
             profesor: true,
+            coord: 'B-1',
+            career: 'Informatica',
+            group: true
         };
-        this.onLineFiltClick=this.onLineFiltClick.bind(this);
-        this.onLineMonthItemSelected=this.onLineMonthItemSelected.bind(this);
-        this.buttonLineMonth=this.buttonLineMonth.bind(this);
-        this.onLineButtonMonthToggle=this.onLineButtonMonthToggle.bind(this)
-        this.filterLine=this.filterLine.bind(this);
+        this.onLineFiltClick = this.onLineFiltClick.bind(this);
+        this.onLineMonthItemSelected = this.onLineMonthItemSelected.bind(this);
+        this.buttonLineMonth = this.buttonLineMonth.bind(this);
+        this.onLineButtonMonthToggle = this.onLineButtonMonthToggle.bind(this)
+        this.filterLine = this.filterLine.bind(this);
+    }
+    componentWillMount() {
+        this.setState({
+            espera: true
+        });
+        if (this.props.infoUsuarios.userType === 1) {
+            this.obtenerData(fecha.getMonth(), 1, false);
+            this.setState({
+                profesor: false,
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+                group: false
+            });
+        }
+        else {
+            this.obtenerData(fecha.getMonth(), 2, true)
+            this.setState({
+                profesor: true,
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+                group: true
+            });
+        }
     }
     onLineFiltClick(selected) {
         console.log(this.state.monthLineSelected);
@@ -403,230 +351,339 @@ class LineChart extends Component {
             });
         }
     }
-
-    onLineMonthItemSelected(i) {
+    onLineCareerItemSelect(sel) {
         this.setState({
-          monthSelected: monthsLabel[i],
+            career: sel,
+            group: true
         });
+        this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
+        if (this.state.lineSelected === 1) {
+            this.setState({
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt
+            });
+        }
+        else if (this.state.lineSelected === 2) {
+            this.setState({
+                dataLineChart: timeLineChartData,
+                optLineChart: timeLineChartOpt
+            });
+        }
+    }
+    onLineCoordItemSelect(sel) {
+        this.setState({
+            career: sel,
+            group: false
+        });
+        this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
+        if (this.state.lineSelected === 1) {
+            this.setState({
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+            });
+        }
+        else if (this.state.lineSelected === 2) {
+            this.setState({
+                dataLineChart: timeLineChartData,
+                optLineChart: timeLineChartOpt,
+            });
+        }
+    }
+    onLineMonthItemSelected(i) {
+        this.obtenerData(i, this.props.infoUsuarios.userType, this.state.group);
+        this.setState({
+            monthSelected: i,
+        });
+        if (this.state.lineSelected === 1) {
+            this.setState({
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+            });
+        }
+        else if (this.state.lineSelected === 2) {
+            this.setState({
+                dataLineChart: timeLineChartData,
+                optLineChart: timeLineChartOpt
+            });
+        }
     }
     onLineButtonMonthToggle() {
         this.setState({
-          monthLineButtonOpen: !this.state.monthLineButtonOpen,
+            monthLineButtonOpen: !this.state.monthLineButtonOpen,
         });
-      }
+    }
+    setDataEnun(dataCatch) {
+        let i;
+        var enunDay = new Array(30);
+        for (i = 0; i < dataCatch.Facil.length; i++) {
+            enunDay[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
+        }
+        console.log(enunDay);
+        totalFaciles = this.sumaDeArray(dataCatch.Facil);
+        totalIntermedios = this.sumaDeArray(dataCatch.Intermedio);
+        totalDificiles = this.sumaDeArray(dataCatch.Dificil);
+        totalEnunciados = totalDificiles + totalFaciles + totalIntermedios;
+        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
+        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
+        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
+        enunLineChartData.datasets[0].data = enunDay;
+        enunLineChartData.datasets[1].data = dataCatch.Facil;
+        enunLineChartData.datasets[2].data = dataCatch.Intermedio;
+        enunLineChartData.datasets[3].data = dataCatch.Dificil;
+        console.log(enunLineChartData);
+    }
+    setDataTime(dataCatch) {
+        let i;
+        var enunDay = new Array(30);
+        for (i = 0; i < dataCatch.Facil.length; i++) {
+            enunDay[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
+        }
+        console.log(enunDay);
+        minutesFaciles = this.sumaDeArray(dataCatch.Facil);
+        minutesIntermedios = this.sumaDeArray(dataCatch.Intermedio);
+        minutesDificiles = this.sumaDeArray(dataCatch.Dificil);
+        totalMinutes = minutesDificiles + minutesFaciles + minutesIntermedios;
+        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
+        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
+        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
+        timeLineChartData.datasets[0].data = enunDay;
+        timeLineChartData.datasets[1].data = dataCatch.Facil;
+        timeLineChartData.datasets[2].data = dataCatch.Intermedio;
+        timeLineChartData.datasets[3].data = dataCatch.Dificil;
+        console.log(timeLineChartData);
+    }
+
+    obtenerData(mes, tipo, group) {
+        var url, url2;
+        var fix = mes + 1;
+        if (tipo === 1) {
+            url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+            url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+        }
+        else if (tipo === 2) {
+            if (group === true) {
+                url = 'http://localhost:8082/userExercise/exercise/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
+                url2 = 'http://localhost:8082/userExercise/time/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
+            }
+            else {
+                url = 'http://localhost:8082/userExercise/exercise/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
+                url2 = 'http://localhost:8082/userExercise/time/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
+            }
+        }
+        console.log(url);
+        console.log(url2);
+        Axios.get(url)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setDataEnun(dataCatch);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        Axios.get(url2)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setDataTime(dataCatch);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
     buttonLineMonth(month) {
         return (
 
             <ButtonDropdown isOpen={this.state.monthLineButtonOpen} toggle={() => { this.onLineButtonMonthToggle() }}>
-                <DropdownToggle caret className="pb-1" color="primary">{month}</DropdownToggle>
+                <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
                 <DropdownMenu down="true">
-                <DropdownItem header>Mes</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(2); }}>Marzo</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(3); }}>Abril</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(4); }}>Mayo</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(5); }}>Junio</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(6); }}>Julio</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(7); }}>Agosto</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(8); }}>Septiembre</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(9); }}>Octubre</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(10); }}>Noviembre</DropdownItem>
-                <DropdownItem onClick={() => { this.onLineMonthItemSelected(11); }}>Diciembre</DropdownItem>
+                    <DropdownItem header>Mes</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(2); }}>Marzo</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(3); }}>Abril</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(4); }}>Mayo</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(5); }}>Junio</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(6); }}>Julio</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(7); }}>Agosto</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(8); }}>Septiembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(9); }}>Octubre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(10); }}>Noviembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(11); }}>Diciembre</DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
         );
-      }
-      filterGroupLine(){
-          return (
+    }
+    filterGroupLine() {
+        return (
             <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
                 <ButtonGroup horizontal>
-                  <ButtonDropdown id='carre' isOpen={this.state.carre} toggle={() => { this.setState({carre: !this.state.carre }); }}>
-                    <DropdownToggle caret>
-                      Carrera
+                    <ButtonDropdown id='carre' isOpen={this.state.carre} toggle={() => { this.setState({ carre: !this.state.carre }); }}>
+                        <DropdownToggle caret>
+                            Carrera
                     </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Informatica</DropdownItem>
-                      <DropdownItem>Electrica</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                  <ButtonDropdown id='coord' isOpen={this.state.coord} toggle={() => { this.setState({coord: !this.state.coord }); }}>
-                    <DropdownToggle caret>
-                      Coordinación
+                        <DropdownMenu>
+                            <DropdownItem>Informatica</DropdownItem>
+                            <DropdownItem>Electrica</DropdownItem>
+                        </DropdownMenu>
+                    </ButtonDropdown>
+                    <ButtonDropdown id='coord' isOpen={this.state.coord} toggle={() => { this.setState({ coord: !this.state.coord }); }}>
+                        <DropdownToggle caret>
+                            Coordinación
                     </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>A-1</DropdownItem>
-                      <DropdownItem>B-2</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
+                        <DropdownMenu>
+                            <DropdownItem>A-1</DropdownItem>
+                            <DropdownItem>B-2</DropdownItem>
+                        </DropdownMenu>
+                    </ButtonDropdown>
                 </ButtonGroup>
             </ButtonToolbar>
-          )
+        )
 
     }
-      //Botones de filtro de cada grafo
-      filterLine() {
+    //Botones de filtro de cada grafo
+    filterLine() {
         return (
             <ButtonToolbar className="float-left" aria-label="Toolbar with button groups">
                 <ButtonGroup className="mr-3" aria-label="First group">
-                <Button color="outline-secondary" onClick={() => this.onLineFiltClick(1)} active={this.state.lineSelected === 1}>Enunciados</Button>
-                <Button color="outline-secondary" onClick={() => this.onLineFiltClick(2)} active={this.state.lineSelected === 2}>Horas</Button>
+                    <Button color="outline-secondary" onClick={() => this.onLineFiltClick(1)} active={this.state.lineSelected === 1}>Enunciados</Button>
+                    <Button color="outline-secondary" onClick={() => this.onLineFiltClick(2)} active={this.state.lineSelected === 2}>Horas</Button>
                 </ButtonGroup>
             </ButtonToolbar>
         )
-      }
-      chartLine(dataIn, optIn) {
+    }
+    chartLine(dataIn, optIn) {
         return (
-          <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-            <Line data={dataIn} options={optIn} height={70} />
-          </div>
+            <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
+                <Line data={dataIn} options={optIn} height={70} />
+            </div>
         )
-      }
-      chartTittle(titulo) {
+    }
+    chartTittle(titulo) {
         return (
-          <CardHeader>
-            <i className="fa fa-align-justify"></i> {titulo}
-          </CardHeader>
+            <CardHeader>
+                <i className="fa fa-align-justify"></i> {titulo}
+            </CardHeader>
         )
-      }
-      chartFooter(filtro) {
-        this.calculoDeEstadisticas();
+    }
+    chartFooter(filtro) {
         if (filtro === 1) {
-          return (
-            <CardFooter>
-              <Row className="text-center">
-                <Col sm={12} md className="mb-sm-2 mb-0">
-                  <div className="text-muted">Enunciados Realizados</div>
-                  <strong>{totalEnunciados} Enunciados</strong>
-                  <Progress className="progress-xs mt-2" color="info" value="100" />
-                </Col>
-                <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                  <div className="text-muted">Faciles Realizados</div>
-                  <strong>{totalFaciles} Enunciados ({percentFaciles}%)</strong>
-                  <Progress className="progress-xs mt-2" color="succes" value={String(percentFaciles)} />
-                </Col>
-                <Col sm={12} md className="mb-sm-2 mb-0">
-                  <div className="text-muted">Intermedios Realizados</div>
-                  <strong>{totalIntermedios} Enunciados ({percentIntermedios}%)</strong>
-                  <Progress className="progress-xs mt-2" color="warning" value={String(percentIntermedios)} />
-                </Col>
-                <Col sm={12} md className="mb-sm-2 mb-0">
-                  <div className="text-muted">Difíciles Realizados</div>
-                  <strong>{totalDificiles} Enunciados ({percentDificiles}%)</strong>
-                  <Progress className="progress-xs mt-2" color="danger" value={String(percentDificiles)} />
-                </Col>
-              </Row>
-            </CardFooter>
-          );
+            return (
+                <CardFooter>
+                    <Row className="text-center">
+                        <Col sm={12} md className="mb-sm-2 mb-0">
+                            <div className="text-muted">Enunciados Realizados</div>
+                            <strong>{totalEnunciados} Enunciados</strong>
+                            <Progress className="progress-xs mt-2" color="info" value="100" />
+                        </Col>
+                        <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+                            <div className="text-muted">Faciles Realizados</div>
+                            <strong>{totalFaciles} Enunciados ({percentFaciles}%)</strong>
+                            <Progress className="progress-xs mt-2" color="succes" value={String(percentFaciles)} />
+                        </Col>
+                        <Col sm={12} md className="mb-sm-2 mb-0">
+                            <div className="text-muted">Intermedios Realizados</div>
+                            <strong>{totalIntermedios} Enunciados ({percentIntermedios}%)</strong>
+                            <Progress className="progress-xs mt-2" color="warning" value={String(percentIntermedios)} />
+                        </Col>
+                        <Col sm={12} md className="mb-sm-2 mb-0">
+                            <div className="text-muted">Difíciles Realizados</div>
+                            <strong>{totalDificiles} Enunciados ({percentDificiles}%)</strong>
+                            <Progress className="progress-xs mt-2" color="danger" value={String(percentDificiles)} />
+                        </Col>
+                    </Row>
+                </CardFooter>
+            );
         }
         else if (filtro === 2) {
-          return (
-            <CardFooter>
-              <Row className="text-center">
-                <Col sm={12} md className="mb-sm-2 mb-0">
-                  <div className="text-muted">Tiempo Utilizado</div>
-                  <strong>{totalMinutes} Minutos Totales </strong>
-                  <Progress className="progress-xs mt-2" color="info" value="100" />
-                </Col>
-                <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                  <div className="text-muted">Minutos en Faciles</div>
-                  <strong>{minutesFaciles} Minutos ({percentTimeF}%)</strong>
-                  <Progress className="progress-xs mt-2" color="succes" value={String(percentTimeF)} />
-                </Col>
-                <Col sm={12} md className="mb-sm-2 mb-0">
-                  <div className="text-muted">Minutos en Intermedios</div>
-                  <strong>{minutesIntermedios} Minutos ({percentTimeI}%)</strong>
-                  <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeI)} />
-                </Col>
-                <Col sm={12} md className="mb-sm-2 mb-0">
-                  <div className="text-muted">Minutos por Difíciles</div>
-                  <strong>{minutesDificiles} Minutos ({percentTimeD}%)</strong>
-                  <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeD)} />
-                </Col>
-              </Row>
-            </CardFooter>
-          );
+            return (
+                <CardFooter>
+                    <Row className="text-center">
+                        <Col sm={12} md className="mb-sm-2 mb-0">
+                            <div className="text-muted">Tiempo Utilizado</div>
+                            <strong>{totalMinutes} Minutos Totales </strong>
+                            <Progress className="progress-xs mt-2" color="info" value="100" />
+                        </Col>
+                        <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
+                            <div className="text-muted">Minutos en Faciles</div>
+                            <strong>{minutesFaciles} Minutos ({percentTimeF}%)</strong>
+                            <Progress className="progress-xs mt-2" color="succes" value={String(percentTimeF)} />
+                        </Col>
+                        <Col sm={12} md className="mb-sm-2 mb-0">
+                            <div className="text-muted">Minutos en Intermedios</div>
+                            <strong>{minutesIntermedios} Minutos ({percentTimeI}%)</strong>
+                            <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeI)} />
+                        </Col>
+                        <Col sm={12} md className="mb-sm-2 mb-0">
+                            <div className="text-muted">Minutos por Difíciles</div>
+                            <strong>{minutesDificiles} Minutos ({percentTimeD}%)</strong>
+                            <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeD)} />
+                        </Col>
+                    </Row>
+                </CardFooter>
+            );
         }
-      }
-      makeLineChart(dataIn, optIn, month, filtro) {
+    }
+    makeLineChart(dataIn, optIn, month, filtro) {
         //PEDIR ENUNCIADOS SEGUN MES
         var titulo;
-        if (filtro===1){
-            titulo= "Enunciados realizados por día";
+        if (filtro === 1) {
+            titulo = "Enunciados realizados por día";
         }
-        else if(filtro===2){
-            titulo="Tiempo utilizado por día";
+        else if (filtro === 2) {
+            titulo = "Tiempo utilizado por día";
         }
         return (
-          <Card>
-            {this.chartTittle(titulo)}
-            <CardBody>
-              <Row>
-                <Col xs='3'>
-                {this.filterLine()}
-                </Col>
-                {this.state.profesor? 
-                <Col className='text-center' xs='6'>
-                    {this.filterGroupLine()}
-                </Col>
-                :
-                <Col xs='6'>
+            <Card>
+                {this.chartTittle(titulo)}
+                <CardBody>
+                    <Row>
+                        <Col xs='3'>
+                            {this.filterLine()}
+                        </Col>
+                        {this.state.profesor ?
+                            <Col className='text-center' xs='6'>
+                                {this.filterGroupLine()}
+                            </Col>
+                            :
+                            <Col xs='6'>
 
-                </Col>
-                }
-                <Col className='text-right'xs='3'>
-                    {this.buttonLineMonth(month)}
-                </Col>
-              </Row>
-              {this.chartLine(dataIn, optIn)}
-            </CardBody>
-            {this.chartFooter(filtro)}
-          </Card>
+                            </Col>
+                        }
+                        <Col className='text-right' xs='3'>
+                            {this.buttonLineMonth(month)}
+                        </Col>
+                    </Row>
+                    {this.chartLine(dataIn, optIn)}
+                </CardBody>
+                {this.chartFooter(filtro)}
+            </Card>
         );
-      }
+    }
 
-      sumaDeArray(array, largo) {
+    sumaDeArray(array, largo) {
         var i;
         var suma = 0;
         for (i = 0; i < largo; i++) {
-          suma = suma + array[i];
+            suma = suma + array[i];
         }
         return suma;
-      }
-      calculoPorcentaje(total, cantidad) {
+    }
+    calculoPorcentaje(total, cantidad) {
         var porcentaje = (cantidad * 100) / total;
         return porcentaje;
-      }
-      //Calculo de values importantes
-      calculoDeEstadisticas() {
-        totalEnunciados = this.sumaDeArray(enunciadosPerDay, enunciadosPerDay.length);
-        totalFaciles = this.sumaDeArray(facilesPerDay, facilesPerDay.length);
-        totalIntermedios = this.sumaDeArray(intermediosPerDay, intermediosPerDay.length);
-        totalDificiles = this.sumaDeArray(dificilesPerDay, dificilesPerDay.length);
-        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
-        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
-        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-    
-        totalMinutes = this.sumaDeArray(minutesPerDay, minutesPerDay.length);
-        minutesFaciles = this.sumaDeArray(minutesPerFaciles, minutesPerFaciles.length);
-        minutesIntermedios = this.sumaDeArray(minutesPerIntermedios, minutesPerIntermedios.length);
-        minutesDificiles = this.sumaDeArray(minutesPerDificiles, minutesPerDificiles.length);
-        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
-        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
-        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
-      }
-
-      render(){
+    }
+    //Calculo de values importantes
+    render() {
         return (
             <Col>
-                {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected,this.state.lineSelected)}
+                {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
             </Col>
         );
-      }
-    
+    }
+
 }
 const mapStateToProps = state => {
     return {
-      infoUsuarios: state.infoUsuarios,
+        infoUsuarios: state.infoUsuarios,
     };
-  };
-  
-  export default connect(mapStateToProps)(LineChart);
+};
+
+export default connect(mapStateToProps)(LineChart);
