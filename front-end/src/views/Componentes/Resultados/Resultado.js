@@ -38,7 +38,7 @@ class Resultado extends Component {
         );
         //probar con 8
         Consultas.push(
-            Axios.get(urlBase+"/userExercise/user/"+8)//this.props.infoUsuarios.userID) 
+            Axios.get(urlBase+"/userExercise/user/"+this.props.infoUsuarios.userID) 
         );
 
         Promise.all(Consultas).then(Response=>{

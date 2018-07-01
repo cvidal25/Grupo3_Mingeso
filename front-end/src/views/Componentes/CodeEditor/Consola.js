@@ -9,6 +9,7 @@ import { Card, CardBody, CardHeader, Col,CardFooter,
 } from 'reactstrap';
 import Timer from "../timer/Timer";
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom';
 
 import '../../../scss/spinner.css';
 import 'brace/mode/java';
@@ -56,6 +57,10 @@ class CodeEditor extends Component{
 					time:"",
 					click:false,
 					modalOpen:false,
+					esperaModal:false,
+					error:false,
+					colorModal:"info",
+					textoModal:"",
 
 			}
 	};
@@ -203,7 +208,10 @@ class CodeEditor extends Component{
 	handleSentCodigo=event=>{
 			
 			var num;
-			this.toggleOpen();
+			this.setState({
+				esperaModal:true
+			});
+
 			for(num in this.state.lenguaje){
 					if(this.state.modo===this.state.lenguajeRA[num]){
 							console.log(num);
@@ -224,9 +232,22 @@ class CodeEditor extends Component{
 			.then(response=>{
 					console.log(response);
 					console.log(response.data);
+					this.setState({
+						esperaModal:false,
+						colorModal:"success",
+						textoModal:"Enviado Con Exito",
+					});
 					
-			}).catch(function(error){
+			}).catch(error=>{
 					console.log(error);
+					this.setState({
+						esperaModal:false,
+						error:true,
+						colorModal:"danger",
+						textoModal:"Error de Conexión, intente más tarde",
+
+					});
+
 			});
 	}
 
@@ -235,25 +256,46 @@ class CodeEditor extends Component{
 			modalOpen:!this.state.modalOpen
 		})
 	}
-
-	createModal(){
-
+	createModal(color,texto){
+		var normal=<ModalBody>
+					Estas seguro de enviar el código.
+					<br/>
+					Este código solo podrá ser enviado una vez
+					y no se podrán hacer cambios posteriores.
+				</ModalBody>;
+		var resultado=<ModalBody>
+						{texto}
+					</ModalBody>;
+		var finalTexto;
+		if(color!=="info"){
+			finalTexto=resultado;
+		}
+		else{
+			finalTexto=normal;
+		}
+		var boton= (this.state.error)?
+			<Button color="danger" onClick={()=>{this.toggleOpen();}}>Aceptar</Button>
+			:
+			<Link to="/enunciados" > <Button block color="success" onClick={()=>{this.toggleOpen();}}>Aceptar</Button></Link>
 		return (
 			<Modal isOpen={this.state.modalOpen} toggle={()=>{this.toggleOpen();}}
-                   className='modal-info'>
+                   className={'modal-'+color}>
               <ModalHeader toggle={()=>{this.toggleOpen();}}>Confirmar Envió</ModalHeader>
-              <ModalBody>
-			  	Estas seguro de enviar el código.
-				Este código solo podrá ser enviado una vez
-				y no se podrán hacer cambios posteriores.
-              </ModalBody>
-			  <ModalFooter>
-				<Button color="danger"  onClick={()=>{this.toggleOpen();}}>Cancelar</Button>{' '}
-				<Button color="success"  onClick={()=>{this.handleSentCodigo()}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
-              </ModalFooter>
+			  {(!this.state.esperaModal)?
+			  		finalTexto:
+				  <ModalBody className="text-center">
+						<i className="fa fa-spinner fa-spin fa-lg font-5xl"></i>
+				  </ModalBody>
+			  }
+			  {(!this.state.esperaModal)&&
+				((color!=="info")? boton:
+					<ModalFooter>
+						<Button color="danger"  onClick={()=>{this.toggleOpenEvent();}}>Cancelar</Button>{' '}
+						<Button color="success"  onClick={()=>{this.handleSentCodigo()}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
+					</ModalFooter>)
+			}
         </Modal>
 		);
-		
 	}
 
 	render(){
@@ -372,7 +414,8 @@ class CodeEditor extends Component{
 										<Row >
 											<Col className="text-right">
 												<Button color="success" onClick={()=>{this.toggleOpen();}} style={{right:"0px"}}>Enviar<i className="fa fa-send fa-lg"></i></Button>
-												{this.createModal()}
+												{this.createModal(this.state.colorModal,this.state.textoModal)}
+												
 											</Col>
 										</Row>
 									}
