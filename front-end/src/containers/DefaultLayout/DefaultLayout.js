@@ -44,15 +44,13 @@ class DefaultLayout extends Component {
   }
 
   componentWillMount(){
-    this.filtrarLinks(this.props.infoUsuarios.userType);
+    this.validarUser();
+    //this.filtrarLinks(this.props.infoUsuarios.userType);
   /*  this.setState({
       espera:true,
     });*/
   }
-  componentDidMount(){
-   
-   this.filtrarLinks(this.props.infoUsuarios.userType);
-  }
+
   
   changeState(){
     if(this.props.infoUsuarios.userType === 1 ||this.props.infoUsuarios.userType === 2 || this.props.infoUsuarios.userType === 3 ){
@@ -72,6 +70,21 @@ class DefaultLayout extends Component {
 
   // Al ejecutar esta funcion desaparecer y aparecen links que
   // el usuario indicado puede acceder.
+
+validarUser(){
+  if((this.props.infoUsuarios == null) || (this.props.infoUsuarios == '')){
+    if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
+
+    }
+    else{
+      //window.location.replace('/#/Login');
+    }
+  }
+  else{
+    this.filtrarLinks(this.props.infoUsuarios.userType);
+  }
+}
+
   filtrarLinks(tipoUsuario){
     console.log(tipoUsuario,"1");
     var aux=this.obtener();
@@ -123,10 +136,8 @@ class DefaultLayout extends Component {
   }
 
   render() {
-    let {hola} = this.props.infoUsuarios;
     return (
-      (hola)?<div  className='defaultSpinner'></div>
-      :<div className="app">
+      <div className="app">
         <AppHeader fixed >
           <DefaultHeader setUsuario={this.setUsuario}/>
         </AppHeader>
