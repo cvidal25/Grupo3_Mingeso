@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import  { Redirect } from 'react-router-dom';
 import { isString } from 'util';
-import { Card, CardBody, CardHeader, Col, Row, Input,DropdownItem,DropdownMenu,
-    DropdownToggle,Form,FormGroup,FormText,FormFeedback,InputGroup,InputGroupAddon,
-    InputGroupText,Label,Button,ButtonDropdown,Alert,
+import { Card, CardBody, CardHeader, Col, Row, Input,Popover,PopoverHeader,
+    Form,FormGroup,FormFeedback,
+    Label,Button,Alert,
     Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
 import '../../../scss/spinner.css';
 import Topicos from './Topicos';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 
 /*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
@@ -73,6 +72,8 @@ class EditEnunciado extends Component{
             alertOpen:false,
             alertType:"danger",
             espera:false,
+            botonValidadorIn:false,
+            botonValidadorOut:false,
         };
 
     /*componentWillMount(){
@@ -196,7 +197,21 @@ class EditEnunciado extends Component{
         });
         
         console.log(value);
-        
+        if(name==='botonValidadorIn'){
+            if(value.length>0 && this.state.botonValidadorIn===true){
+               this.setState({
+                botonValidadorIn:false,
+               });
+            }
+        }
+        if(name==='botonValidadorOut'){
+            if(value.length>0 && this.state.botonValidadorOut===true){
+                this.setState({
+                    botonValidadorOut:false,
+                   });
+            }
+        }
+
         this.HandleValidador(name,value);
         
     }
@@ -216,7 +231,9 @@ class EditEnunciado extends Component{
         if(nombreInOut==="entrada"){
             InOut=this.state.entradas;
             enabled=this.state.inputEntradasEnabled;
-            
+            this.setState({
+                botonValidadorIn:false,
+            });
             //Validador
             if(this.state.tempEntrada===""){
                 inputValidadores[1].entrada=true;
@@ -238,6 +255,9 @@ class EditEnunciado extends Component{
             InOut=this.state.salidas;
             enabled=this.state.inputSalidasEnabled;
             //validador
+            this.setState({
+                botonValidadorOut:false,
+            });
             if(this.state.tempSalida===""){
                 inputValidadores[0].salida=false;
                 inputValidadores[1].salida=true;
@@ -462,19 +482,34 @@ class EditEnunciado extends Component{
             //deicr que es 0
             inputValidadores[0].entrada=false;
             inputValidadores[1].entrada=true;
-            this.setState({
-                invalidInOut:1 //arreglo vacio
-            })
+            if(this.state.tempEntrada.length>0){
+                this.setState({
+                    invalidInOut:1, //arreglo vacio
+                    botonValidadorIn:true
+                })
+            }
+            else{
+                this.setState({
+                    invalidInOut:1, //arreglo vacio
+                })
+            }
             status= false;
         }
         if(this.state.salidas.length===0){
             //decir que es 0
             inputValidadores[0].salida=false;
             inputValidadores[1].salida=true;
-            this.setState({
-                invalidInOut:1 //arreglo vacio
-            })
-            status= false;
+            if(this.state.tempSalida.length>0){
+                this.setState({
+                    invalidInOut:1, //arreglo vacio
+                    botonValidadorOut:true
+                })
+            }
+            else{
+                this.setState({
+                    invalidInOut:1, //arreglo vacio
+                })
+            }
         }
 
         if(this.state.entradas.length!==this.state.salidas.length){
@@ -606,6 +641,14 @@ class EditEnunciado extends Component{
               </ModalFooter>
         </Modal>
     }
+    popoverInOut(InOut,arreglo){
+
+        return(
+            <Popover  placement="top" isOpen={(arreglo.length>0)?false:this.state[InOut]} target={InOut} >
+                <PopoverHeader className="text-center">Apreta aqui<br/>para agregar</PopoverHeader>
+            </Popover>
+        )
+    }
 
     render(){
         const feedBack="Complete este campo";
@@ -706,10 +749,11 @@ class EditEnunciado extends Component{
                                                 <FormFeedback>{(this.state.invalidInOut===0)?feedBack:(this.state.invalidInOut===1)?feedBackInOutZero:feedBackDiference}</FormFeedback>
                                             </Col>
                                             <Col md={1} style={{width:"10%",textAlign:"left"}}>
-                                                <Label disabled={!this.state.inputEntradaEnabled} onClick={()=>{this.handleInsertArray("entrada");}} >
+                                                <Label disabled={!this.state.inputEntradaEnabled} id={"botonValidadorIn"} onClick={()=>{this.handleInsertArray("entrada");}} >
                                                     <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
                                                     style={{ color: '#89e4ff'}} ></i>
                                                 </Label>
+                                                {this.popoverInOut("botonValidadorIn",this.state.entradas)}
                                             </Col>
                                         
                                     </Row>
@@ -732,10 +776,11 @@ class EditEnunciado extends Component{
                                             <FormFeedback>{(this.state.invalidInOut===0)?feedBack:(this.state.invalidInOut===1)?feedBackInOutZero:feedBackDiference}</FormFeedback>
                                             </Col>
                                         <Col md={1} style={{width:"10%",textAlign:"left"}}>
-                                            <Label onClick={()=>{this.handleInsertArray("salida");}} >
+                                            <Label onClick={()=>{this.handleInsertArray("salida");}}  id={"botonValidadorOut"} >
                                                 <i className="btn-pill fa fa-plus-circle fa-lg btn-outline-info font-5xl"
                                                 style={{ color: '#89e4ff'}} ></i>
                                             </Label>
+                                            {this.popoverInOut("botonValidadorOut",this.state.salidas)}
                                         </Col>
                                     
                                     </Row>
