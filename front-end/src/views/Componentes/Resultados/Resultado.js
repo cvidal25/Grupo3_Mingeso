@@ -92,12 +92,15 @@ class Resultado extends Component {
             return <div></div>
         }
         var arrayTexto;
-
+        
+        console.log(texto);
         switch(variable){
-            case 2:
+            /*case 2:
                 texto=texto.substr(0,texto.length-2);
+                console.log(texto);
                 arrayTexto=texto.split("\\n/@");
-                break;
+                console.log(arrayTexto);
+                break;*/
             default:
                 arrayTexto=texto.split("/@");
                 break; 
@@ -255,7 +258,7 @@ class Resultado extends Component {
 
                             <Row>
                                 <Col></Col>
-                                <Col className="text-left"><strong>Identación:</strong></Col>
+                                <Col className="text-left"><strong>Indentación:</strong></Col>
                                 <Col className="text-center">{this.iconResult(this.state.result.identationAnalysis)}</Col>
                                 <Col className="text-right"></Col>
                                 <Col></Col>
