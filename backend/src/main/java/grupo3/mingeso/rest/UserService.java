@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,5 +82,34 @@ public class UserService {
         return user.getUserCoordination();
     }
 
+    //Get ALL Coordination
+    @GetMapping(value = "/allcoordination")
+    @ResponseBody
+    public List<String> getAllCoordination() {
+       Iterable<User> users= userRepository.findAll();
+       List<String> coordination = new ArrayList<>();
+        for (User user: users) {
+            if (!coordination.contains(user.getUserCoordination())){
+                coordination.add(user.getUserCoordination());
+            }
+
+        }
+        return coordination;
+    }
+
+    //Get ALL Career
+    @GetMapping(value = "/allcareer")
+    @ResponseBody
+    public List<String> getAllCareer() {
+        Iterable<User> users= userRepository.findAll();
+        List<String> career = new ArrayList<>();
+        for (User user: users) {
+            if (!career.contains(user.getUserCareer())){
+                career.add(user.getUserCareer());
+            }
+
+        }
+        return career;
+    }
 
 }
