@@ -5,7 +5,6 @@ import { Card, CardBody, CardHeader, Col, Row, Input,
     Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
 import Topicos from './Topicos';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 
 /*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
