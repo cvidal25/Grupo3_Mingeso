@@ -318,6 +318,7 @@ class LineChart extends Component {
             this.obtenerData(fecha.getMonth(), 1, false);
             this.setState({
                 profesor: false,
+                lineSelected: 1,
                 dataLineChart: enunLineChartData,
                 optLineChart: enunLineChartOpt,
                 group: false
@@ -327,6 +328,7 @@ class LineChart extends Component {
             this.obtenerData(fecha.getMonth(), 2, true)
             this.setState({
                 profesor: true,
+                lineSelected: 2,
                 dataLineChart: enunLineChartData,
                 optLineChart: enunLineChartOpt,
                 group: true
@@ -430,6 +432,7 @@ class LineChart extends Component {
         enunLineChartData.datasets[1].data = dataCatch.Facil;
         enunLineChartData.datasets[2].data = dataCatch.Intermedio;
         enunLineChartData.datasets[3].data = dataCatch.Dificil;
+        //enunLineChartOpt.scales.yAxes.stepSize=
         console.log(enunLineChartData);
     }
     setDataTime(dataCatch) {

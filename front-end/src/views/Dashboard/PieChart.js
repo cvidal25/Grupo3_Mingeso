@@ -112,6 +112,7 @@ class PieChart extends Component {
     super();
     this.state = {
       userExercises: [],
+      pieStats:[],
       monthPieButtonOpen: false,
       pieSelected: 1,
       monthSelected: fecha.getMonth(),
@@ -132,6 +133,7 @@ class PieChart extends Component {
       this.setState({
         profesor: false,
         dataPieChart: pieDataEnum,
+        pieSelected: 1,
         group: false
       });
     }
@@ -140,6 +142,7 @@ class PieChart extends Component {
       this.setState({
         profesor: true,
         dataPieChart: pieDataEnum,
+        pieSelected: 2,
         group: true
       });
     }
@@ -366,7 +369,10 @@ class PieChart extends Component {
   }
 
   chartFooter(filtro) {
+    a
     //this.calculoDeEstadisticas();
+    console.log(filtro);
+    console.log(totalEnunciados);
     if (filtro === 1) {
       return (
         <CardFooter>

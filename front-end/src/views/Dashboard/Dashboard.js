@@ -218,6 +218,7 @@ class Dashboard extends Component {
           //Evaluacion
           //Profesor
         }
+        {/*
         <Row>
           <Col>
             <Card>
@@ -358,6 +359,7 @@ class Dashboard extends Component {
             </Card>
           </Col>
         </Row>
+        */}
       </div>
     );
   }
