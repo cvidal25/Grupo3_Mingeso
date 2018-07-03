@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 //import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
-import brace, { Split } from 'brace';
 import Axios from 'axios';
 //import GlotAPI from 'glot-api';
-import { Card, CardBody, CardHeader, Col, Collapse,FormGroup, Row, Table,Button,Input,Label} from 'reactstrap';
-import  { Redirect } from 'react-router-dom';
+import { Card, CardBody, CardHeader, Col,CardFooter, 
+	 Row, Button,Input,Label,
+	Modal,ModalBody, ModalFooter,ModalHeader
+} from 'reactstrap';
 import Timer from "../timer/Timer";
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom';
 
 import '../../../scss/spinner.css';
 import 'brace/mode/java';
@@ -48,12 +49,18 @@ class CodeEditor extends Component{
 					bases:[basePython,baseJava,baseC_Cpp],
 					aceEditorValue:"",
 					espera:false,
+					esperaRun:false,
 					url:"",
 					stdin:"",
 					stdout:"",
 					date:"",
 					time:"",
 					click:false,
+					modalOpen:false,
+					esperaModal:false,
+					error:false,
+					colorModal:"info",
+					textoModal:"",
 
 			}
 	};
@@ -87,9 +94,8 @@ class CodeEditor extends Component{
 													existeEnunciado:true,
 													espera:false,
 													date: new Date(),
-													idExercise: parseInt(num),
+													idExercise: parseInt(num,10),
 											});
-											var aux;
 											if(response.data.exerciseLenguge!==lenguajeJson[this.state.modo]){
 												console.log('REDIRIGIR');
 												window.location.replace('/#/dashboard');
@@ -127,14 +133,16 @@ class CodeEditor extends Component{
 				});
 		}
 		handleTime=time=>{
+
 				this.setState({
 						time:time
 				});
+				//console.log(time);
 
 		}
 //se debe cambiar para realizar una actualizacion de los componentes
 	verificarURL(){
-			var lenguaje,url;
+			var url;
 			url=this.props.location.pathname;
 			//console.log(url);
 			url=url.split("/");
@@ -145,16 +153,17 @@ class CodeEditor extends Component{
 
 
 	onChange=(NewValue)=>{
-			//console.log('Change',NewValue);
 			this.setState({
 					aceEditorValue:NewValue
 			});
-			//console.log(this.state.aceEditorValue);
 	};
 
 	handletryCodigo=event=>{
 		console.log(Timer.prototype.getTime(this.state.date));
 		console.log(this.state.time);
+		this.setState({
+			esperaRun:true
+		})
 
 		var trial={
 		"language":lenguajeJson[this.state.modo],
@@ -175,6 +184,9 @@ class CodeEditor extends Component{
 					stdout:json["stdout"]
 				})
 				}
+				this.setState({
+					esperaRun:false
+				})
 
 				
 				console.log(response.data[0]);
@@ -183,6 +195,10 @@ class CodeEditor extends Component{
 			})
 			.catch(error=>{
 				console.log(error);
+				this.setState({
+					esperaRun:false
+				})
+
 			})
 
 
@@ -190,17 +206,12 @@ class CodeEditor extends Component{
 	
 	}
 	handleSentCodigo=event=>{
-			/*
-			//http://localhost:8082/answer
-			{
-"language":1,
-"code":"i = 0\nwhile(i<3):\n\tprint(i)\n\ti = i+1"
-
-}
-			*/
-
-			var num;
 			
+			var num;
+			this.setState({
+				esperaModal:true
+			});
+
 			for(num in this.state.lenguaje){
 					if(this.state.modo===this.state.lenguajeRA[num]){
 							console.log(num);
@@ -208,25 +219,84 @@ class CodeEditor extends Component{
 					}
 			}
 			var data={
-					//tiempo de realizacion
-					//fecha de realizacion
-					
 					'language': lenguajeJson[this.state.modo],
 					'code':this.state.aceEditorValue,
 					'exercise_id':this.state.idExercise,
-					'user:_id':1, // temporal debe ser dinamico
-					'resolving_time': this.state.time,
-					'resolvinf_date':new Date()
+					'user_id':this.props.infoUsuarios.userID,
+					'resolving_time': Timer.prototype.getTimeMin(this.state.time),
+					'resolving_date':new Date()
 			}
+
 			console.log(data);
 			Axios.post('http://localhost:8082/answer',data)
 			.then(response=>{
+					console.log(response);
 					console.log(response.data);
-			}).catch(function(error){
+					this.setState({
+						esperaModal:false,
+						colorModal:"success",
+						textoModal:"Enviado Con Exito",
+					});
+					
+			}).catch(error=>{
 					console.log(error);
-			});       
+					this.setState({
+						esperaModal:false,
+						error:true,
+						colorModal:"danger",
+						textoModal:"Error de Conexión, intente más tarde",
+
+					});
+
+			});
 	}
 
+	toggleOpen(){
+		this.setState({
+			modalOpen:!this.state.modalOpen
+		})
+	}
+	createModal(color,texto){
+		var normal=<ModalBody>
+					Estas seguro de enviar el código.
+					<br/>
+					Este código solo podrá ser enviado una vez
+					y no se podrán hacer cambios posteriores.
+				</ModalBody>;
+		var resultado=<ModalBody>
+						{texto}
+					</ModalBody>;
+		var finalTexto;
+		if(color!=="info"){
+			finalTexto=resultado;
+		}
+		else{
+			finalTexto=normal;
+		}
+		var boton= (this.state.error)?
+			<Button color="danger" onClick={()=>{this.toggleOpen();}}>Aceptar</Button>
+			:
+			<Link to="/enunciados" > <Button block color="success" onClick={()=>{this.toggleOpen();}}>Aceptar</Button></Link>
+		return (
+			<Modal isOpen={this.state.modalOpen} toggle={()=>{this.toggleOpen();}}
+                   className={'modal-'+color}>
+              <ModalHeader toggle={()=>{this.toggleOpen();}}>Confirmar Envió</ModalHeader>
+			  {(!this.state.esperaModal)?
+			  		finalTexto:
+				  <ModalBody className="text-center">
+						<i className="fa fa-spinner fa-spin fa-lg font-5xl"></i>
+				  </ModalBody>
+			  }
+			  {(!this.state.esperaModal)&&
+				((color!=="info")? boton:
+					<ModalFooter>
+						<Button color="danger"  onClick={()=>{this.toggleOpenEvent();}}>Cancelar</Button>{' '}
+						<Button color="success"  onClick={()=>{this.handleSentCodigo()}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
+					</ModalFooter>)
+			}
+        </Modal>
+		);
+	}
 
 	render(){
 
@@ -234,7 +304,7 @@ class CodeEditor extends Component{
 			
 			for(num in this.state.lenguaje){
 					if(this.state.modo===this.state.lenguajeRA[num]){
-							console.log(num);
+							//console.log(num);
 							break;
 					}
 			}
@@ -247,10 +317,22 @@ class CodeEditor extends Component{
 								<Card>
 									<CardHeader>
 											{this.state.existeEnunciado?
-											<h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle}</h2>:
+											<Row style={{paddingRight:"15px"}}>
+												<Col >
+													<h2 style={{textAlign: "center" }}>{this.state.enunciado.exerciseTitle + " "}</h2>
+												</Col>
+												
+													<Button color="success" onClick={()=>{this.toggleOpen();}} style={{right:"0px"}}>Enviar <i className="fa fa-send fa-lg"></i></Button>
+													{this.createModal()}
+												
+											</Row>
+
+											
+											 :
 											<h2 style={{textAlign: "center" }}>Consola de {this.state.lenguaje[num]}</h2>
 									}
 									</CardHeader>
+								
 									<CardBody>
 											{this.state.espera ?
 														<div className="defaultSpinner"></div>
@@ -262,7 +344,17 @@ class CodeEditor extends Component{
 																</Col>
 														</Row>
 														<br/>
-														<Timer timeInit={this.state.date} handler={this.handleTime} click={this.state.click}/>
+														<Row>
+															<Col>
+																<Timer timeInit={this.state.date} handler={this.handleTime} click={this.state.click}/>
+															</Col>
+															<Col className="col-auto">
+																<div style={{paddingTop:"10px"}}>
+																<Button color="dark" onClick={this.handletryCodigo}>Correr <i className="fa fa-cogs fa-lg"></i></Button>
+																</div>
+															</Col>
+														</Row>
+														
 														<br/>
 														<Row >
 															<Col md={7}>
@@ -310,14 +402,25 @@ class CodeEditor extends Component{
 															</Col>
 														</Row>
 														<br/>
-														<Button color="info" onClick={this.handletryCodigo}>Probar</Button>
-														&emsp;
-														<Button color="success" onClick={this.handleSentCodigo}>Enviar</Button>
+														
+														
 													</div>
 											}
 												 
-											
 									</CardBody>
+									<CardFooter >
+									{
+										this.state.existeEnunciado &&	
+										<Row >
+											<Col className="text-right">
+												<Button color="success" onClick={()=>{this.toggleOpen();}} style={{right:"0px"}}>Enviar<i className="fa fa-send fa-lg"></i></Button>
+												{this.createModal(this.state.colorModal,this.state.textoModal)}
+												
+											</Col>
+										</Row>
+									}
+										 
+									</CardFooter>
 
 									
 							</Card>

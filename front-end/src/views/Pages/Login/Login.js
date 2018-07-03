@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Button, Card, Row, CardHeader, CardBody, CardGroup, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import  { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { GoogleLogin } from 'react-google-login-component';
 import Axios from 'axios';
 import fondo from '../../../assets/img/imgI3.jpg'; 
-import connect from 'react-redux'
 import store from '../../../store';
 import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
+import jwt from 'jsonwebtoken';
+import {connect} from 'react-redux'
 
 
 var sectionStyle = {
@@ -28,28 +28,68 @@ class Login extends Component {
         token:"",
         mail:"",//
         nombreUsuario:"", 
-        infoUsuario:{"userID":3,"userName":"Jorge Paredes","userType":2,"userMail":"jorge.paredes@usach.cl","userCareer":"Ingeniería Ejecución en Informática","userCoordination":"A-1"},
+        infoUsuario:"",
         correo:"",
         espera:false,
         info: false,
         warning: false,
+        danger: false,
         tipoUsuario: 1,
+        obtenerUsuario:'',
+        input:"",
       };
     this.responseGoogle = this.responseGoogle.bind(this);
     this.getMail= this.getMail.bind(this);
     this.toggleInfo = this.toggleInfo.bind(this);
     this.toggleWarning = this.toggleWarning.bind(this);
+    this.toggleDanger = this.toggleDanger.bind(this);
     this.filtrarMail = this.filtrarMail.bind(this);
     this.comprobarMail = this.comprobarMail.bind(this);
     this.agregarUsuario = this.agregarUsuario.bind(this);
     this.redirigir = this.redirigir.bind(this);
+    this.guardarDatos = this.guardarDatos.bind(this);
+    this.obtener = this.obtener.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.comprobarUsuario= this.comprobarUsuario.bind(this);
+    this.notUser=this.notUser.bind(this);
   }
-  componentDidMount(){
+  componentWillMount(){
+    this.comprobarUsuario(this.props.infoUsuarios);
     this.setState({
-        espera:true
+        espera:true,
     });
   }
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  comprobarUsuario(tipoUsuario){
+      var result = this.obtener();
+      if((result ==='') || (result === null )|| (result === undefined )){
+        this.notUser(this.props.infoUsuarios);
+      }
+      else{
+        this.agregarUsuario(result);
+        window.location.replace('/#/dashboard')
+      }
+  };
+  notUser(tipoUsuario){
+    if((tipoUsuario==='') || (tipoUsuario=== null )){
+      if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
+
+      }
+      else{
+        window.location.replace('/#/Login');
+      }
+    }
+  };
 
   toggleInfo() {
     this.setState({
@@ -61,15 +101,43 @@ class Login extends Component {
       warning: !this.state.warning,
     });
   }
+  toggleDanger() {
+    this.setState({
+      danger: !this.state.danger,
+    });
+  }
+  guardarDatos(){
+    //console.log("guarde");
+    //console.log(this.state.infoUsuario);
+    var token=jwt.sign(this.state.infoUsuario,'secret');
+    //console.log('token',token);
+    //console.log('decode',jwt.decode(token));
+    //console.log('verify',jwt.verify(token,'secret'));
+    document.cookie=token;
+    sessionStorage.setItem("Alumno", token);
+  };
+
+  obtener(){
+    //console.log("obtener");
+    //console.log("ass",sessionStorage.getItem("Alumno"));
+    //console.log(document.cookie);
+    //console.log(decodeURIComponent(document.cookie));
+    this.setState({
+      obtenerUsuario: jwt.decode(sessionStorage.getItem("Alumno")),
+    });
+    //console.log(this.state.obtenerUsuario);
+
+  };
+
 
   getMail(){  
     Axios.get('https://www.googleapis.com/gmail/v1/users/'+this.state.token+'/profile')
         .then(Response =>{
           //console.log("lala");
-            console.log(Response);
+           // console.log(Response);
         }
         ).catch(function(error){
-            console.log(error);
+           // console.log(error);
         });
   };
 
@@ -83,11 +151,6 @@ class Login extends Component {
     this.setState({
         token:id_token
     });
-
-    //this.getMail();
-    //console.log({ googleId });
-    //console.log({accessToken: id_token});
-    //console.log(googleUser);
     var mailUsuario = googleUser.w3.U3;
     var nombreUsuarios = googleUser.w3.ig;
     this.setState({
@@ -149,22 +212,27 @@ class Login extends Component {
             this.setState({
               infoUsuario:respuesta,
               espera:false,
+              
             });
-            //this.agregarUsuario(this.state.infoUsuario);
-            //this.redirigir();
+            this.guardarDatos();
+            this.agregarUsuario(this.state.infoUsuario);
+            this.obtener();
+          }else{
+            this.toggleDanger();
           }
         })
-        .catch(function(error){
+        .catch(error=>{
             console.log(error);
+            this.toggleDanger();
         });
   };
   redirigir(){
     if(this.state.infoUsuario.userName !== null){
-      console.log("yu")
-      console.log(this.state.infoUsuario);
-      console.log("ya");
+    //  console.log("yu")
+    //  console.log(this.state.infoUsuario);
+    //  console.log("ya");
       //window.location.replace('/Dashboard');
-      console.log("redirigir")
+     // console.log("redirigir")
      }
   };
 
@@ -243,6 +311,22 @@ class Login extends Component {
               </Link>
             </ModalFooter>
           </Modal>
+
+
+           <Modal isOpen={this.state.danger} toggle={this.toggleDanger}
+                className={'modal-danger ' + this.props.className}>
+            <ModalHeader toggle={this.toggleDanger}>Inicio de sesión</ModalHeader>
+            <ModalBody>
+              Error conexión con la base de datos.
+            </ModalBody>
+            <ModalFooter>
+              <Link to={{
+                pathname: '/Login',
+              }}>
+                <Button color="danger" onClick={this.toggleDanger}>Reintentar</Button>
+              </Link>
+            </ModalFooter>
+          </Modal>
         </div>
       </section>
     );
@@ -258,6 +342,10 @@ class Login extends Component {
   }
 }
 
-
-export default Login;
+const mapStateToProps = state =>{
+  return{
+    infoUsuarios: state.infoUsuarios
+  };
+};
+export default connect(mapStateToProps)(Login);
 

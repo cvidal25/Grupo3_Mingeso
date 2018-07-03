@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
+import '../../scss/spinner.css';
 
 import {
   AppAside,
@@ -23,6 +24,7 @@ import routes from '../../routes';
 import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
+import jwt from 'jsonwebtoken';
 
 
 
@@ -33,40 +35,111 @@ class DefaultLayout extends Component {
     super();
     this.state = {
       links: navigation,
-
+      usuario:'',
+      espera:false,
+      obtenerUsuario:'',
     };
+    this.setUsuario=this.setUsuario.bind(this);
+    this.changeState=this.changeState.bind(this);
   }
 
-  componentDidMount(){
-
-   this.filtrarLinks(this.props.infoUsuarios.userType);
+  componentWillMount(){
+    this.validarUser();
+    //this.filtrarLinks(this.props.infoUsuarios.userType);
+  /*  this.setState({
+      espera:true,
+    });*/
   }
+
   
+  changeState(){
+    if(this.props.infoUsuarios.userType === 1 ||this.props.infoUsuarios.userType === 2 || this.props.infoUsuarios.userType === 3 ){
+      this.setState({
+        espera:false,
+      });
+    };
+  };
+  obtener(){
+    return(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")));
+  };
+  guardarDatos(){
+   var token=jwt.sign(this.props.infoUsuarios,'secret');
+    sessionStorage.setItem("AlumnoRespaldo",token);
+    //this.obtener();
+  };
 
   // Al ejecutar esta funcion desaparecer y aparecen links que
   // el usuario indicado puede acceder.
+
+validarUser(){
+  if((this.props.infoUsuarios == null) || (this.props.infoUsuarios == '')){
+    if((window.location.href == 'http://localhost:3000/Login')||(window.location.href == 'http://localhost:3000/Login/')||(window.location.href == 'http://localhost:3000/#/Login')||(window.location.href =='http://localhost:3000/Login#/')||(window.location.href =='http://localhost:3000/#/')){
+
+    }
+    else{
+      //window.location.replace('/#/Login');
+    }
+  }
+  else{
+    this.filtrarLinks(this.props.infoUsuarios.userType);
+  }
+}
+
   filtrarLinks(tipoUsuario){
-    let items = navigation.items.filter(function(link){
+    console.log(tipoUsuario,"1");
+    var aux=this.obtener();
+      this.setState({
+          obtenerUsuario:aux
+      });
+    if(tipoUsuario){
+      console.log(tipoUsuario,"2");
+      let items = navigation.items.filter(function(link){
 
 
-      if(!link.hasOwnProperty("tipoUsuario")) return true;
+        if(!link.hasOwnProperty("tipoUsuario")) return true;
 
-      if(link["tipoUsuario"] == tipoUsuario) return true;
+        if(link["tipoUsuario"] == tipoUsuario) return true;
 
-      return false;
+        return false;
 
-    });
+      });
 
+      this.setState({
+        links: { items: items }
+      });
+      
+    }
+   /* else{
+      console.log(this.state.obtenerUsuario,"datos");  
+      let items = navigation.items.filter(function(link){
+
+        if(!link.hasOwnProperty("tipoUsuario")) return true;
+        
+        if(link["tipoUsuario"] == this.state.obtenerUsuario.userType) return true;
+
+        return false;
+
+      });
+
+      this.setState({
+        links: { items: items }
+      });
+      
+    }*/
+  }
+
+  setUsuario(usuario){
     this.setState({
-      links: { items: items }
+      usuario:usuario
     });
+    this.filtrarLinks(usuario.userType);
   }
 
   render() {
     return (
       <div className="app">
         <AppHeader fixed >
-          <DefaultHeader/>
+          <DefaultHeader setUsuario={this.setUsuario}/>
         </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
@@ -107,8 +180,9 @@ class DefaultLayout extends Component {
 }
 const mapStateToProps = state =>{
   return{
-    infoUsuarios: state.infoUsuarios
+    infoUsuarios: state.infoUsuarios,
   };
 };
+
 
 export default connect(mapStateToProps)(DefaultLayout);

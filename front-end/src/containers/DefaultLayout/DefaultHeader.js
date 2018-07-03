@@ -9,6 +9,8 @@ import sygnet from '../../assets/img/brand/sygnet.svg'
 import {connect} from 'react-redux'
 import salirCuenta from '../../actionCreators';
 import store from '../../store';
+import jwt from 'jsonwebtoken';
+import '../../scss/spinner.css';
 
 const propTypes = {
   children: PropTypes.node,
@@ -24,16 +26,66 @@ class DefaultHeader extends Component {
      constructor () {
     super();
     this.state = {
-    //  tipoUsuario: ''
+    infoUsuario: "",
+    obtenerUsuario:"",
+    espera:false,
+    exist:false,
+    exist2:false,
 
     };
     this.notUser=this.notUser.bind(this);
     this.showName = this.showName.bind(this);
+    this.obtener=this.obtener.bind(this);
+    this.agregarUsuario = this.agregarUsuario.bind(this);
+    this.comprobarUsuario = this.comprobarUsuario.bind(this);
+    this.guardarDatos = this.guardarDatos.bind(this);
+    this.respaldo = this.respaldo.bind(this);
   }
 
-  componentDidMount(){
-    this.notUser(this.props.infoUsuarios);
+  componentWillMount(){
+    this.comprobarUsuario(this.props.infoUsuarios);
+    this.respaldo();
+    this.setState({ 
+      espera:false,
+    })
   }
+  respaldo(){
+    if(this.props.infoUsuarios !== null || this.props.infoUsuarios !== '' ){
+      var aux=this.obtener();
+      this.setState({
+          obtenerUsuario:aux
+      });
+      this.agregarUsuario(aux);
+      
+    }
+  };
+  guardarDatos(){
+    //console.log("guarde");
+    //console.log(this.props.infoUsuarios,"INF");
+    var token=jwt.sign(this.props.infoUsuarios,'secret');
+    sessionStorage.setItem("AlumnoRespaldo",token);
+    //this.obtener();
+  };
+
+  comprobarUsuario(tipoUsuario){
+    if((tipoUsuario==='') || (tipoUsuario=== null )|| (tipoUsuario=== undefined )){
+      var result = this.obtener();
+      if((result ==='') || (result === null )|| (result === undefined )){
+        this.notUser(this.props.infoUsuarios);
+      }
+      else{
+        this.props.setUsuario(result);
+        this.agregarUsuario(result);
+      }
+    }
+    else{
+      this.setState({ 
+        espera:false,
+      })
+      this.guardarDatos();
+    }
+
+  };
 
   notUser(tipoUsuario){
     if((tipoUsuario==='') || (tipoUsuario=== null )){
@@ -41,10 +93,20 @@ class DefaultHeader extends Component {
 
       }
       else{
-        window.location.replace('/Login');
+        window.location.replace('/#/Login');
       }
     }
-  }
+  };
+  obtener(){
+    //console.log("obtener");
+    //console.log(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")),"buenaaaa");
+    return(jwt.decode(sessionStorage.getItem("AlumnoRespaldo")));
+  };
+
+
+
+
+
 
   showName(props){
     if(props.infoUsuarios==null){
@@ -52,7 +114,7 @@ class DefaultHeader extends Component {
 
       }
       else{
-        window.location.replace('/Login');
+        window.location.replace('/#/Login');
       }
     }
     else{
@@ -63,7 +125,8 @@ class DefaultHeader extends Component {
   render() {
     const { children,  ...attributes } = this.props;
     return (
-      <React.Fragment>
+      (this.state.espera)?<div  className='defaultSpinner'></div>
+      :<React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
           full={{ src: logo, width: 89, height: 25, alt: 'CoreUI Logo' }}
@@ -119,6 +182,19 @@ class DefaultHeader extends Component {
               </Nav>
       </React.Fragment>
     );
+  }
+  agregarUsuario(infoUsuario){
+    //console.log(infoUsuario);
+      store.dispatch({
+      type:"LOG_IN",
+      infoUsuario: infoUsuario,
+  });  
+    
+  this.setState({ 
+    espera:false,
+  })
+  
+    
   }
 }
 

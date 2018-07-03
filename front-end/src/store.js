@@ -7,17 +7,14 @@ const reducer = (state,action)=>{
 			...state,
 			infoUsuarios:action.infoUsuario,
 		}
-			
 	}
 	else if(action.type==="lOG_OUT"){
 		console.log("lalalalalalalalalal");
+		sessionStorage.clear();
 		return{
-			
 			infoUsuario:{"userID":'',"userName":'',"userType":'',"userMail":'',"userCareer":'',"userCoordination":''},
-
 		}
 	}
 	return state;
 };
-
 export default createStore(reducer,{infoUsuarios:""});
