@@ -114,10 +114,10 @@ class PieChart extends Component {
       userExercises: [],
       pieStats:[],
       monthPieButtonOpen: false,
-      pieSelected: 1,
-      monthSelected: fecha.getMonth(),
+      pieSelected: null,
+      monthPieSelected: fecha.getMonth(),
       //Chart States
-      dataPieChart: pieInit,
+      dataPieChart: null,
       profesor: true,
       coord: 'B-1',
       career: 'Informatica',
@@ -125,13 +125,10 @@ class PieChart extends Component {
     };
   }
   componentWillMount() {
-    this.setState({
-      espera: true
-    });
     if (this.props.infoUsuarios.userType === 1) {
       this.obtenerData(fecha.getMonth(), 1, false);
       this.setState({
-        profesor: false,
+        profesor: true,
         dataPieChart: pieDataEnum,
         pieSelected: 1,
         group: false
@@ -142,7 +139,7 @@ class PieChart extends Component {
       this.setState({
         profesor: true,
         dataPieChart: pieDataEnum,
-        pieSelected: 2,
+        pieSelected: 1,
         group: true
       });
     }
@@ -156,7 +153,7 @@ class PieChart extends Component {
     }
     else if (selected === 2) {
       this.setState({
-        dataPieChart: pieInit,
+        dataPieChart: pieDataTime,
         pieSelected: selected,
       });
     }
@@ -183,7 +180,7 @@ class PieChart extends Component {
   onPieMonthItemSelected(i) {
     this.obtenerData(i, this.props.infoUsuarios.userType, this.state.group)
     this.setState({
-      monthSelected: i,
+      monthPieSelected: i,
     });
   }
   setDataEnun(dataCatch) {
@@ -202,15 +199,18 @@ class PieChart extends Component {
     minutesIntermedios = this.sumaDeArray(dataCatch.Intermedio);
     minutesDificiles = this.sumaDeArray(dataCatch.Dificil);
     totalMinutes = minutesDificiles + minutesFaciles + minutesIntermedios;
-    percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;;
-    percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;;
-    percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
+    percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;
+    percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;
+    percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;
     pieDataTime.datasets[0].data = [minutesFaciles, minutesIntermedios, minutesDificiles];
     //    console.log(pieDataTime);
   }
   obtenerData(mes, tipo, group) {
     var url, url2;
     var fix = mes + 1;
+    this.setState({
+      espera: true
+    });
     if (tipo === 1) {
       url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
       url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
@@ -225,24 +225,28 @@ class PieChart extends Component {
         url2 = 'http://localhost:8082/userExercise/time/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
       }
     }
-    console.log(url);
-    console.log(url2);
     Axios.get(url)
       .then(response => {
         var dataCatch = response.data;
+        console.log(dataCatch);
         this.setDataEnun(dataCatch);
+        this.setState({espera: false});
       })
       .catch(function (error) {
         console.log(error);
+        this.setState({espera: false});
       });
-
+    
     Axios.get(url2)
       .then(response => {
         var dataCatch = response.data;
+        console.log(dataCatch);
         this.setDataTime(dataCatch);
+        this.setState({espera: false});
       })
       .catch(function (error) {
         console.log(error);
+        this.setState({espera: false});
       });
   }
   buttonPieMonth(month) {
@@ -369,10 +373,7 @@ class PieChart extends Component {
   }
 
   chartFooter(filtro) {
-    a
     //this.calculoDeEstadisticas();
-    console.log(filtro);
-    console.log(totalEnunciados);
     if (filtro === 1) {
       return (
         <CardFooter>
@@ -433,7 +434,7 @@ class PieChart extends Component {
   render() {
     return (
       <Col>
-        {this.makePieChart(this.state.dataPieChart, this.state.monthSelected, this.state.pieSelected)}
+        {this.makePieChart(this.state.dataPieChart, this.state.monthPieSelected, this.state.pieSelected)}
       </Col>
     )
   }

@@ -354,7 +354,7 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
       percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;;
     }
     chartFooter(filtro) {
-      this.calculoDeEstadisticas();
+      //this.calculoDeEstadisticas();
       if (filtro === 1) {
         return (
           <CardFooter>
