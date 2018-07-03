@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button } from 'reactstrap';
 import Axios from 'axios';
-import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
 import c_icon from '../../../assets/img/logos_lenguajes/c_logo.png';
 import python_icon from '../../../assets/img/logos_lenguajes/python_logo.png';
 import java_icon from '../../../assets/img/logos_lenguajes/java_logo.png';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
 
 /*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
 <span>{this.props.infoUsuarios.userName}</span>
@@ -31,6 +29,8 @@ class Enunciado extends Component{
             iconos:[python_icon,java_icon,c_icon],
             collapse: false,
             accordion: [],
+            realizado:[],
+            userExercises:[],
             espera:false,
       };
     }
@@ -39,41 +39,55 @@ class Enunciado extends Component{
         this.setState({
             espera:true
         });
-
-        const config={
-            'onUploadProgress': (progressEvent) => {
-                console.log("PAZ----");
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-            'onDownloadProgress': (progressEvent) => {
-                console.log("PAZ");
-                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-
-
-        }
-        Axios.get('http://localhost:8082/exercise',config)
-        .then(response=>{
-            //console.log(response.data);
+        var Consultas=[];
+        var realizados=[];
+        var userExercises=[];
+        Consultas.push(
+            Axios.get('http://localhost:8082/exercise')
+        );
+        //probar con 8
+        Consultas.push(
+            Axios.get("http://localhost:8082/userExercise/user/"+this.props.infoUsuarios.userID)
+        );
+        Promise.all(Consultas).then(response=>{
             var aux=[];
-            var enunciados=response.data;
-            let item;
-            for (item in enunciados){
-                aux.push(false);    
-            }
+                var enunciados=response[0].data;
+                let item;
+                for (item in enunciados){
+                    aux.push(false); 
+                    realizados.push(false);
+                }
+                
+                userExercises=response[1].data;
+                try{
+                    for(var i=0;i<userExercises.length;i++){
+                        
+                        var posicion=userExercises[i].exercise.exerciseID-1;
+                        realizados[posicion]=true;
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                    
+                }
+                
+                this.setState({
+                    items:enunciados,
+                    accordion: aux,
+                    realizado:realizados,
+                    espera:false,
+                    userExercises:userExercises
+                });
+        }
 
-            this.setState({
-                items:enunciados,
-                accordion: aux,
-                espera:false
-            });
-        })
-        .catch(function(error){
+        ).catch(error=>{
             console.log(error);
+            this.setState({
+                espera:false
+            })
         })
+
+
     };
 
 
@@ -99,9 +113,16 @@ class Enunciado extends Component{
         );
     }
 
-
-
-
+    findExerciseResult(exercise){
+        var id=exercise.exerciseID;
+        var array=this.state.userExercises;
+        for(var i=0;i<array.length;i++){
+            if(array[i].exercise.exerciseID===id){
+                return array[i];
+            }
+        }
+        return null;
+    }
 
     listar (listaEnunciados){
         return (
@@ -113,12 +134,10 @@ class Enunciado extends Component{
                         <i className="fa fa-align-justify"></i> Tabla de Enunciados
                     </CardHeader>
                     <CardBody>
-                        {//<Loading isLoading={this.state.espera} loadingClassName='defloading' > //
-                        }
                             {this.state.espera?
                             <div className="row">
                                 <div className ='col'>
-                                    <div className='defaultSpinner' ></div>
+                                    <div className='defaultSpinner'></div>
                                 </div>
                             </div>
                             :
@@ -133,19 +152,34 @@ class Enunciado extends Component{
                             </tr>
                             </thead>
                             
-                            {listaEnunciados && listaEnunciados.map((enunciado, key) =>
-                            <tbody key={key}>
-                                <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
+                            {listaEnunciados && listaEnunciados.map((enunciado, key) =>{
+                                var exerciseResult=this.findExerciseResult(enunciado);
+
+                            return( (enunciado.exercisePublished || exerciseResult!==null)&&
+                                <tbody key={key}>
+                                    <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
                                     <td>{enunciado.exerciseTitle}</td>
                                     <td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
-                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}}/></td>
+                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}} alt={enunciado.exerciseLenguge}/></td>
                                     <td>
-                                        <Link to={{
+                                        {(exerciseResult===null)?<Link to={{
                                             pathname:"/enunciados/"+this.state.lenguaje[enunciado.exerciseLenguge-1].toString()+"/consola/"+enunciado.exerciseID,
-                                            
+                                        
                                             }}>
-                                            <Button block color="primary">GO</Button>
+                                            <Button block color="success">GO</Button>
+                                        </Link>:
+                                        <Link to={{
+                                            pathname:"/resultado/"+exerciseResult.userExerciseID
+                                            ,state:{
+                                                exercise:enunciado,
+                                                result:exerciseResult
+                                            }
+                                            }} >
+                                            <Button block color="info">Ver Resultado</Button>
                                         </Link>
+
+                                        }
+                                        
                                     </td>
                                 </tr>
                                 <tr>
@@ -174,7 +208,13 @@ class Enunciado extends Component{
                                         </Collapse>
                                     </td>
                                 </tr>
-                            </tbody>
+                            </tbody>);
+
+                            }
+                               
+                                
+                                
+                                
                             )}
                         
                         </Table> }
@@ -207,6 +247,7 @@ class Enunciado extends Component{
 
         return(
             <div>
+                
                 {this.listar(this.state.items)}
             </div>
         );

@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import { AppSwitch } from '@coreui/react';
 import { Card, CardBody, CardHeader, Col, Collapse, Row, Table,Button, Tooltip,Modal,ModalBody, ModalFooter,ModalHeader } from 'reactstrap';
 import Axios from 'axios';
-import Loading from 'react-loading-spinner';
 import '../../../scss/spinner.css';
 import c_icon from '../../../assets/img/logos_lenguajes/c_logo.png';
 import python_icon from '../../../assets/img/logos_lenguajes/python_logo.png';
 import java_icon from '../../../assets/img/logos_lenguajes/java_logo.png';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 
 /*this.props.infoUsuarios.LO QUE NECESITES DEL USUARIO
@@ -44,26 +42,12 @@ class EnunciadoPro extends Component{
             espera:true
         });
 
-        const config={
-            'onUploadProgress': (progressEvent) => {
-                console.log("PAZ----");
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-            'onDownloadProgress': (progressEvent) => {
-                console.log("PAZ");
-                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-        }
-
-        Axios.get('http://localhost:8082/exercise',config)
+        Axios.get('http://localhost:8082/exercise')
         .then(response=>{
             var aux=[];
             var enunciados=response.data;
-            let item;
-            for (item in enunciados){
+            
+            for ( var item in enunciados){
                 aux.push(false);    
             }
 
@@ -75,6 +59,9 @@ class EnunciadoPro extends Component{
         })
         .catch(function(error){
             console.log(error);
+            this.setState({
+                espera:false
+            })
         })
     };
     toggle() {
@@ -112,7 +99,7 @@ class EnunciadoPro extends Component{
     }
   
     listarInOut(datos){
-
+        
         var datosArray=datos.split("/@");
 
         return (
@@ -127,19 +114,7 @@ class EnunciadoPro extends Component{
         let fecha=new Date();
         enunciado.exerciseIntialDate= fecha.toISOString().substr(0,10)+"T03:00:00.000+0000";
         
-        const config={
-            'onUploadProgress': (progressEvent) => {
-                console.log("PAZ----");
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-            'onDownloadProgress': (progressEvent) => {
-                console.log("PAZ");
-                console.log(progressEvent.total,progressEvent.loaded,progressEvent.lengthComputable );
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.debug('onUploadProgress called with', arguments, 'Percent Completed:' + percentCompleted);
-            },
-        }
+        
         Axios.post('http://localhost:8082/exercise',enunciado)
         .then(Response =>{
             console.log(Response);
@@ -151,27 +126,11 @@ class EnunciadoPro extends Component{
         
     }
 
-
-    createModal(key){
-        return
-        <Modal isOpen={this.state.openStates[3][key]} toggle={this.toggleOpen(3,key)}
-                   className='modal-success'>
-              <ModalHeader toggle={this.toggleOpen(3,key)}>Guardado</ModalHeader>
-              <ModalBody>
-                La nueva cuenta de usuario se ha creado satisfactoriamente.
-                <h1>La contraseña del nuevo usuario es:</h1>
-              </ModalBody>
-              <ModalFooter>
-                  <Button color="success">Aceptar</Button>
-              </ModalFooter>
-        </Modal>
-    }
-
     handleDelete=(id,posicion)=>{
         var array =this.state.items;
         var element=array[posicion];
 
-        /*Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
+        Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
         .then(response=>{
             console.log(response);
             array.splice(posicion,1);
@@ -185,18 +144,8 @@ class EnunciadoPro extends Component{
             this.setState({
                 items:array
             });
-        });*/
-        fetch('http://localhost:8082/exercise/delete/'+id.toString(), {
-            method: 'delete'
-        }).then(response =>{
-          console.log(response);
-            //window.location.reload();
-            console.log("EXITO");
-        }
-                
-        ).catch(function (error) {
-                  console.log(error.message);
-                });
+        });
+       
     }
 
     listar (listaEnunciados){
@@ -235,7 +184,7 @@ class EnunciadoPro extends Component{
                                     {
                                         !enunciado.exercisePublished?<td>- - - -</td>:<td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
                                     }
-                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}}/></td>
+                                    <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}} alt={enunciado.exerciseLenguge}/></td>
                                     <td><AppSwitch className={'mx-1'} variant={'pill'} color={'success'} label dataOn="Si" dataOff="No" 
                                             checked={enunciado.exercisePublished} onClick={this.HandleSwitch(enunciado)}/></td>
 
@@ -244,7 +193,7 @@ class EnunciadoPro extends Component{
                                             <Col>
                                                 <Link to={'/enunciadosPro/'+enunciado.exerciseID +'/enunciado'}>
                                                     <Button block color="primary" id={"BotonEdit"+key.toString()} style={{ height:"38px" }}>                                                   
-                                                        <i className="cui-settings icons font-2xl d-block" ></i>
+                                                        <i className="fa fa-wrench icons font-2xl d-block" ></i>
                                                     </Button>
                                                     <Tooltip placement="top" isOpen={this.state.openStates[1][key]} target={"BotonEdit"+key.toString()} toggle={() => {this.toggleOpen(key,1);}}>
                                                        Editar 
