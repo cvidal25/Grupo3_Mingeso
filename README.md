@@ -29,13 +29,10 @@ Instalar IDE
 
 ### Front End
 
-
 ```
 1. Acceda a la carpeta frontend/ -> $ cd frontend/
 2. Abrir una terminal en esa carpeta.
 3. Ejecute el comando: $ npm install
-4. Ejecute el comando: $ npm install axios
-5. Ejecute el comando: $ npm install react-router-dom
 ```
 ## Ejecución
 
@@ -48,10 +45,10 @@ Instalar IDE
 4. Probar el Servicio REST en el navegador usando el URL: ´http://localhost:8082´
 ```
 
-### Iniciar Backend
+### Iniciar Frontend
 
 ```
-1. Acceda a la carpeta backend/ -> $ cd backend/
+1. Acceda a la carpeta backend/ -> $ cd front-end/
 2. Abrir terminal en esa carpeta.
 3. Ejecutar comando: $ yarn start
 4. Acceder a la URL: ´http://localhost:3000´
@@ -70,5 +67,6 @@ Instalar IDE
 * **Eduardo Bustamante**
 * **Shalini Ramchandani**
 * **Jorge Paredes**
+* **Barbara Sarmiento**
 * **Christian Vidal**
 
