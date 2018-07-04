@@ -322,7 +322,8 @@ class LineChart extends Component {
             });
         }
         else {
-            this.obtenerData(fecha.getMonth(), 2, true)
+            this.obtenerData(fecha.getMonth(), 2, true);
+
             this.setState({
                 profesor: true,
                 lineSelected: 1,
@@ -448,7 +449,14 @@ class LineChart extends Component {
         timeLineChartData.datasets[3].data = dataCatch.Dificil;
         timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
     }
+    obtenerCarreras(){
+        var url='http://localhost:8082/user/allcareer';
+        Axios.get(url)
+    }
+    obtenerCoords(){
+        var url='http://localhost:8082/user/allcoordination';
 
+    }
     obtenerData(mes, tipo, group) {
         var url, url2;
         var fix = mes + 1;
