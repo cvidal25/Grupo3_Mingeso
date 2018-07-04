@@ -112,4 +112,20 @@ public class UserService {
         return career;
     }
 
+
+    //Get Career by Coordination
+    @RequestMapping(value = "/coordination/career/{coordination}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> getCareerbyCoordination(@PathVariable("coordination") String coordination) {
+        Iterable<User> users= userRepository.findByUserCoordination(coordination);
+        List<String> career = new ArrayList<>();
+        for (User user: users) {
+            if (!career.contains(user.getUserCareer())){
+                career.add(user.getUserCareer());
+            }
+
+        }
+        return career;
+    }
+
 }
