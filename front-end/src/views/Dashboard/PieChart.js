@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
+import ChartComponent, {Pie}  from 'react-chartjs-2';
 import {
-  Badge,
   Button,
   ButtonDropdown,
   ButtonGroup,
@@ -10,53 +9,22 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  CardTitle,
   Col,
-  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  Input,
   Progress,
   Row,
-  Table,
-  CardColumns,
 } from 'reactstrap';
 import Axios from 'axios';
 import { connect } from 'react-redux';
-import Widget03 from '../../views/Widgets/Widget03'
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 
-const daysLabel = ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'
-  , 'Día 6', 'Día 7', 'Día 8', 'Día 9', 'Día 10'
-  , 'Día 11', 'Día 12', 'Día 13', 'Día 14', 'Día 15'
-  , 'Día 16', 'Día 17', 'Día 18', 'Día 19', 'Día 20'
-  , 'Día 21', 'Día 22', 'Día 23', 'Día 24', 'Día 25'
-  , 'Día 26', 'Día 27', 'Día 28', 'Día 29', 'Día 30'
-  , 'Día 31'];
 const diffLabel = ['Fácil', 'Intermedio', 'Difícil'];
 
 const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
   , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
   , 'Noviembre', 'Diciembre'];
-
-var pieInit = {
-  labels: diffLabel,
-  datasets: [
-    {
-      data: [543, 40, 230],
-      backgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-      hoverBackgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-    }],
-};
 
 var pieDataEnum = {
   labels: diffLabel,
@@ -111,37 +79,57 @@ class PieChart extends Component {
   constructor() {
     super();
     this.state = {
-      userExercises: [],
-      pieStats:[],
+
+      careerDropOpen: false,
+      coordDropOpen: false,
       monthPieButtonOpen: false,
-      pieSelected: null,
+
+      alumSelected: [],
+      pieSelected: 1,
       monthPieSelected: fecha.getMonth(),
+
       //Chart States
       dataPieChart: null,
+
+      alumList: [],
+      coordList: [],
+      careerList: [],
+
       profesor: true,
-      coord: 'B-1',
-      career: 'Informatica',
-      group: true
+      espera: false,
+      careerSight: true,
+      coordSight: true,
+
+      coord: null,
+      career: null,
     };
   }
   componentWillMount() {
     if (this.props.infoUsuarios.userType === 1) {
-      this.obtenerData(fecha.getMonth(), 1, false);
+      this.obtenerCarreras(2);
+      this.obtenerCoords(2);
+
       this.setState({
-        profesor: true,
-        dataPieChart: pieDataEnum,
+        profesor: false,
+        alumSelected: this.props.infoUsuarios,
         pieSelected: 1,
-        group: false
+        careerSight: false,
+        coordSight: false
       });
+      this.obtenerDataAlum(this.state.monthPieSelected, 0);
     }
     else {
-      this.obtenerData(fecha.getMonth(), 2, true)
+      this.obtenerCarreras(this.props.infoUsuarios.userType);
+      this.obtenerCoords(this.props.infoUsuarios.userType);
       this.setState({
         profesor: true,
-        dataPieChart: pieDataEnum,
         pieSelected: 1,
-        group: true
+        coord: this.state.coordList[0],
+        career: this.state.careerList[0],
+        careerSight: true,
+        coordSight: false
       });
+      this.obtenerDataCareer(this.state.monthPieSelected, this.state.careerList[0]);
     }
   }
   onPieFiltClick(selected) {
@@ -159,18 +147,33 @@ class PieChart extends Component {
     }
   }
   onPieCareerItemSelected(sel) {
-    this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
     this.setState({
       career: sel,
-      group: true
+      careerSight: true,
+      coordSight: false
     });
+    if (this.props.infoUsuarios.userType === 3) {
+      this.obtenerDataCarrer(this.state.monthPieSelected, sel);
+    }
   }
   onPieCoordItemSelected(sel) {
-    this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
     this.setState({
       coord: sel,
-      group: false
+      careerSight: false,
+      coordSight: true
     });
+    this.obtenerAlumCord(sel);
+    this.obtenerDataCoord(this.state.monthPieSelected, sel);
+  }
+
+  onUserItemSelect(alumno) {
+    //Obtener data
+    this.setState({
+      alumSelected: alumno,
+      careerSight: false,
+      coordSight: false
+    });
+    this.obtenerDataAlum(this.state.monthPieSelected, alumno);
   }
   onPieButtonMonthToggle() {
     this.setState({
@@ -178,11 +181,243 @@ class PieChart extends Component {
     });
   }
   onPieMonthItemSelected(i) {
-    this.obtenerData(i, this.props.infoUsuarios.userType, this.state.group)
     this.setState({
       monthPieSelected: i,
     });
+    if (this.props.infoUsuarios.userType === 1) {
+      this.obtenerDataAlum(i, this.state.alumSelected);
+    }
+
+    else if (this.props.infoUsuarios.userType === 2) {
+      if (this.state.coordSight === true) {
+        this.obtenerDataCoord(i, this.state.coord);
+      }
+      else {
+        this.obtenerDataAlum(i, this.state.alumSelected);
+      }
+    }
+    else if (this.props.infoUsuarios.userType === 3) {
+      if (this.state.careerSight === true) {
+        this.obtenerDataCarrer(i, this.state.career);
+      }
+      else if (this.state.coordSight === true) {
+        this.obtenerDataCoord(i, this.state.coord);
+      }
+      else {
+        this.obtenerDataAlum(i, this.state.alumSelected);
+      }
+    }
   }
+  obtenerAlumCord(coord) {
+    var url = 'http://localhost:8082/user/coordination/' + coord;
+    this.setState({
+      espera: true
+    });
+    Axios.get(url)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setState({
+          alumList: dataCatch,
+          espera: false
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+  }
+  obtenerCarreras(user) {
+    var url;
+    if (user === 2) {
+      url = 'http://localhost:8082/user/coordination/career/' + this.props.infoUsuarios.userCoordination;
+    }
+    else if (user === 3) {
+      url = 'http://localhost:8082/user/allcareer';
+    }
+    this.setState({
+      espera: true
+    });
+    Axios.get(url)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setState({
+          careerList: dataCatch,
+          espera: false
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+  }
+  obtenerCoords(user) {
+    var url;
+    if (user === 2) {
+      var aux = [];
+      aux.push(this.props.infoUsuarios.userCoordination);
+      this.setState({
+        coordList: aux,
+        espera: false
+      })
+    }
+
+    if (user === 3) {
+      url = 'http://localhost:8082/user/allcoordination'
+      this.setState({
+        espera: true
+      });
+      Axios.get(url)
+        .then(response => {
+          var dataCatch = response.data;
+          console.log(dataCatch);
+          this.setState({
+            coordList: dataCatch,
+            espera: false
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+          this.setState({ espera: false });
+        });
+    }
+  }
+  obtenerDataCoord(mes, coord) {
+    var url, url2;
+    var fix = mes + 1;
+    this.setState({
+      espera: true
+    });
+    url = 'http://localhost:8082/userExercise/exercise/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
+    url2 = 'http://localhost:8082/userExercise/time/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
+    console.log(url, url2);
+    Axios.get(url)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataEnun(dataCatch);
+        this.setState({ espera: false });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+    Axios.get(url2)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataTime(dataCatch);
+        this.setState({ espera: false });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+    if (this.state.pieSelected === 1) {
+      this.setState({
+        dataPieChart: pieDataEnum,
+      });
+    }
+    else if (this.state.pieSelected === 2) {
+      this.setState({
+        dataPieChart: pieDataTime,
+      });
+    }
+  }
+  obtenerDataCarrer(mes, career) {
+    var url, url2;
+    var fix = mes + 1;
+    this.setState({
+      espera: true
+    });
+    url = 'http://localhost:8082/userExercise/exercise/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
+    url2 = 'http://localhost:8082/userExercise/time/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
+    console.log(url, url2);
+    Axios.get(url)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataEnun(dataCatch);
+        this.setState({ espera: false });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+    Axios.get(url2)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataTime(dataCatch);
+        this.setState({ espera: false });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+    if (this.state.pieSelected === 1) {
+      this.setState({
+        dataPieChart: pieDataEnum,
+      });
+    }
+    else if (this.state.pieSelected === 2) {
+      this.setState({
+        dataPieChart: pieDataTime,
+      });
+    }
+  }
+  obtenerDataAlum(mes, alum) {
+    var url, url2;
+    var fix = mes + 1;
+    this.setState({
+      espera: true
+    });
+    if (alum === 0) {
+      url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+      url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+    }
+    else {
+      url = 'http://localhost:8082/userExercise/exercise/student/' + alum.userMail + '/' + fecha.getFullYear() + '-' + fix;
+      url2 = 'http://localhost:8082/userExercise/time/student/' + alum.userMail + '/' + fecha.getFullYear() + '-' + fix;
+    }
+    console.log(url, url2);
+    Axios.get(url)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataEnun(dataCatch);
+        this.setState({ espera: false });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+    Axios.get(url2)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setDataTime(dataCatch);
+        this.setState({ espera: false });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+
+    if (this.state.pieSelected === 1) {
+      this.setState({
+        dataPieChart: pieDataEnum,
+      });
+    }
+    else if (this.state.pieSelected === 2) {
+      this.setState({
+        dataPieChart: pieDataTime,
+      });
+    }
+  }
+
+
+
+
   setDataEnun(dataCatch) {
     totalFaciles = this.sumaDeArray(dataCatch.Facil);
     totalIntermedios = this.sumaDeArray(dataCatch.Intermedio);
@@ -205,55 +440,12 @@ class PieChart extends Component {
     pieDataTime.datasets[0].data = [minutesFaciles, minutesIntermedios, minutesDificiles];
     //    console.log(pieDataTime);
   }
-  obtenerData(mes, tipo, group) {
-    var url, url2;
-    var fix = mes + 1;
-    this.setState({
-      espera: true
-    });
-    if (tipo === 1) {
-      url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
-      url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
-    }
-    else if (tipo === 2) {
-      if (group === true) {
-        url = 'http://localhost:8082/userExercise/exercise/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
-        url2 = 'http://localhost:8082/userExercise/time/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
-      }
-      else {
-        url = 'http://localhost:8082/userExercise/exercise/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
-        url2 = 'http://localhost:8082/userExercise/time/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
-      }
-    }
-    Axios.get(url)
-      .then(response => {
-        var dataCatch = response.data;
-        console.log(dataCatch);
-        this.setDataEnun(dataCatch);
-        this.setState({espera: false});
-      })
-      .catch(function (error) {
-        console.log(error);
-        this.setState({espera: false});
-      });
-    
-    Axios.get(url2)
-      .then(response => {
-        var dataCatch = response.data;
-        console.log(dataCatch);
-        this.setDataTime(dataCatch);
-        this.setState({espera: false});
-      })
-      .catch(function (error) {
-        console.log(error);
-        this.setState({espera: false});
-      });
-  }
+
   buttonPieMonth(month) {
     return (
       <ButtonDropdown size="sm" isOpen={this.state.monthPieButtonOpen} toggle={() => { this.onPieButtonMonthToggle() }}>
         <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
-        <DropdownMenu down="true">
+        <DropdownMenu direction="down">
           <DropdownItem header>Mes</DropdownItem>
           <DropdownItem onClick={() => { this.onPieMonthItemSelected(2); }}>Marzo</DropdownItem>
           <DropdownItem onClick={() => { this.onPieMonthItemSelected(3); }}>Abril</DropdownItem>
@@ -269,27 +461,30 @@ class PieChart extends Component {
       </ButtonDropdown>
     );
   }
-  filterGroupPie() {
+  filterGroupPie(listaCareer, listaCoord) {
     return (
-      <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
-        <ButtonGroup horizontal>
-          <ButtonDropdown size="sm" id='carre' isOpen={this.state.carre} toggle={() => { this.setState({ carre: !this.state.carre }); }}>
+      <ButtonToolbar className="float-left" aria-label="Toolbar with button groups">
+        <ButtonGroup horizontal="true">
+          <ButtonDropdown size="sm" isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
             <DropdownToggle caret>
               Carrera
-                </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => { this.onPieCareerItemSelected('Informatica') }}>Informatica</DropdownItem>
-              <DropdownItem onClick={() => { this.onPieCareerItemSelected('Informatica') }}>Electrica</DropdownItem>
-              <DropdownItem onClick={() => { this.onPieCareerItemSelected('Mecanica') }}>Mecánica</DropdownItem>
+            </DropdownToggle>
+            <DropdownMenu direction="down">
+              <DropdownItem onClick={() => this.onPieCareerItemSelected('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
+              {listaCareer && listaCareer.map((career, key) =>
+                <DropdownItem key={key} onClick={() => this.onPieCareerItemSelected(career)} active={this.state.career === career}>{career}</DropdownItem>
+              )}
             </DropdownMenu>
           </ButtonDropdown>
-          <ButtonDropdown size="sm" id='coord' isOpen={this.state.coord} toggle={() => { this.setState({ coord: !this.state.coord }); }}>
+          <ButtonDropdown size="sm" isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
             <DropdownToggle caret>
               Coordinación
                 </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => { this.onPieCoordItemSelected('A-1') }}>A-1</DropdownItem>
-              <DropdownItem onClick={() => { this.onPieCoordItemSelected('B-3') }}>B-3</DropdownItem>
+            <DropdownMenu direction="down">
+              <DropdownItem onClick={() => this.onPieCoordItemSelected('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
+              {listaCoord && listaCoord.map((cord, key) =>
+                <DropdownItem key={key} onClick={() => this.onPieCoordItemSelected(cord)} active={this.state.coord === cord}>{cord}</DropdownItem>
+              )}
             </DropdownMenu>
           </ButtonDropdown>
         </ButtonGroup>
@@ -297,9 +492,19 @@ class PieChart extends Component {
     )
 
   }
+  filterUser(listaAlumnos) {
+    return (
+      <Input type="select" name="select" id="select">
+        <option value="0">---- ----</option>
+        {listaAlumnos && listaAlumnos.map((alumno, key) =>
+          <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
+        )}
+      </Input>
+    )
+  }
   filterPie() {
     return (
-      <ButtonToolbar style={{ weigth: '20%' }} className="float-right" aria-label="Toolbar with button groups">
+      <ButtonToolbar style={{ weigth: '20%' }} className="float-left" aria-label="Toolbar with button groups">
         <ButtonGroup className="mr-3" aria-label="First group">
           <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(1)} active={this.state.pieSelected === 1}>Enunciados</Button>
           <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(2)} active={this.state.pieSelected === 2}>Horas</Button>
@@ -335,25 +540,26 @@ class PieChart extends Component {
         {this.chartTittle(titulo)}
         <CardBody>
           <Row>
-            <Col>
+            <Col className='text-left' xs='6'>
               {this.filterPie()}
             </Col>
-
-            {this.state.profesor ?
-              <Col className='text-center'>
-                {this.filterGroupPie()}
-              </Col>
-              :
-              <Col>
-
-              </Col>
-            }
-
-            <Col className='text-right'>
+            <Col className='text-right' xs='6'>
               {this.buttonPieMonth(month)}
             </Col>
           </Row>
           {this.chartPie(dataIn, month)}
+          {this.state.profesor ?
+            <Row>
+              <Col className='text-center' xs='6'>
+                {this.filterGroupPie(this.state.careerList, this.state.coordList)}
+              </Col>
+              <Col xs='6'>
+                {this.filterUser(this.state.alumList)}
+              </Col>
+            </Row>
+            :
+            <Row/>
+          }
         </CardBody>
         {this.chartFooter(filtro)}
       </Card>

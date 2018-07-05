@@ -239,7 +239,7 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
   filterGroupDough(){
     return (
       <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
-          <ButtonGroup horizontal>
+          <ButtonGroup horizontal="true">
             <ButtonDropdown size="sm" id='carre' isOpen={this.state.carre} toggle={() => { this.setState({carre: !this.state.carre }); }}>
               <DropdownToggle caret>
                 Carrera
@@ -290,14 +290,14 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
     makeDoughChart(dataIn, month, filtro) {
       var titulo;
       if(filtro===1){
-        titulo="Enunciados realizados al mes"
+        titulo="Enunciados realizados al año"
       }
       else if(filtro===2){
-        titulo="Minutos utilizado al mes";
+        titulo="Minutos utilizado al año";
       }
       return (
         <Card>
-          {this.chartTittle("Enunciados realizados al mes")}
+          {this.chartTittle(titulo)}
           <CardBody>
             <Row>
               <Col>

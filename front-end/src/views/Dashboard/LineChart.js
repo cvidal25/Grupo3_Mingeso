@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ChartComponent, { Line } from 'react-chartjs-2';
 import {
-    Badge,
     Button,
     ButtonDropdown,
     ButtonGroup,
@@ -10,15 +9,13 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
-    CardTitle,
     Col,
-    Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
+    Input,
     Progress,
     Row,
-    Table,
 } from 'reactstrap';
 import Axios from 'axios';
 import { connect } from 'react-redux';
@@ -225,51 +222,6 @@ var timeLineChartOpt = {
         },
     },
 };
-
-const initOpts = {
-    tooltips: {
-        enabled: false,
-        custom: CustomTooltips,
-        intersect: true,
-        mode: 'index',
-        position: 'nearest',
-        callbacks: {
-            labelColor: function (tooltipItem, chart) {
-                return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
-            }
-        }
-    },
-    maintainAspectRatio: false,
-    legend: {
-        display: false,
-    },
-    //Scala de los axes
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    drawOnChartArea: false,
-                },
-            }],
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(enunciadosPerDay.max / 5),
-                    max: enunciadosPerDay.max,
-                },
-            }],
-    },
-    elements: {
-        point: {
-            radius: 0,
-            hitRadius: 10,
-            hoverRadius: 4,
-            hoverBorderWidth: 3,
-        },
-    },
-};
 var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
@@ -292,17 +244,33 @@ class LineChart extends Component {
         super();
 
         this.state = {
+            //Buttons States
+            careerDropOpen: false,
+            coordDropOpen: false,
             monthLineButtonOpen: false,
+
+            //Variable States
+            alumSelected: [],
             lineSelected: 1,
             monthLineSelected: fecha.getMonth(),
+
             //Chart States
             dataLineChart: null,
             optLineChart: null,
+
+            //Booleans states
             espera: false,
             profesor: true,
-            coord: 'B-1',
-            career: 'Informatica',
-            group: true
+            careerSight: true,
+            coordSight: true,
+
+            //Containers State
+            alumList: [],
+            coordList: [],
+            careerList: [],
+
+            coord: null,
+            career: null
         };
         this.onLineFiltClick = this.onLineFiltClick.bind(this);
         this.onLineMonthItemSelected = this.onLineMonthItemSelected.bind(this);
@@ -312,25 +280,29 @@ class LineChart extends Component {
     }
     componentWillMount() {
         if (this.props.infoUsuarios.userType === 1) {
-            this.obtenerData(fecha.getMonth(), 1, false);
+            this.obtenerCarreras(2);
+            this.obtenerCoords(2);
             this.setState({
-                profesor: true,
+                profesor: false,
+                alumSelected: this.props.infoUsuarios,
                 lineSelected: 1,
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
-                group: false
+                careerSight: false,
+                coordSight: false
             });
+            this.obtenerDataAlum(this.state.monthLineSelected, 0);
         }
         else {
-            this.obtenerData(fecha.getMonth(), 2, true);
-
+            this.obtenerCarreras(this.props.infoUsuarios.userType);
+            this.obtenerCoords(this.props.infoUsuarios.userType);
             this.setState({
                 profesor: true,
                 lineSelected: 1,
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
-                group: true
+                coord: this.state.coordList[0],
+                career: this.state.careerList[0],
+                careerSight: true,
+                coordSight: false
             });
+            this.obtenerDataCareer(this.state.monthLineSelected, 3, this.state.careerList[0]);
         }
     }
 
@@ -350,134 +322,160 @@ class LineChart extends Component {
             });
         }
     }
+
     onLineCareerItemSelect(sel) {
         this.setState({
             career: sel,
-            group: true
+            careerSight: true,
+            coordSight: false
         });
-        this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
-        if (this.state.lineSelected === 1) {
-            this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt
-            });
-        }
-        else if (this.state.lineSelected === 2) {
-            this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt
-            });
+        if (this.props.infoUsuarios.userType === 3) {
+            this.obtenerDataCarrer(this.state.monthLineSelected, sel);
         }
     }
+
     onLineCoordItemSelect(sel) {
         this.setState({
-            career: sel,
-            group: false
+            coord: sel,
+            careerSight: false,
+            coordSight: true
         });
-        this.obtenerData(this.state.monthSelected, this.props.infoUsuarios.userType, this.state.group);
-        if (this.state.lineSelected === 1) {
-            this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
-            });
-        }
-        else if (this.state.lineSelected === 2) {
-            this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt,
-            });
-        }
+        this.obtenerAlumCord(sel);
+        this.obtenerDataCoord(this.state.monthLineSelected, sel);
     }
+
+    onUserItemSelect(alumno) {
+        //Obtener data
+        this.setState({
+            alumSelected: alumno,
+            careerSight: false,
+            coordSight: false
+        });
+        this.obtenerDataAlum(this.state.monthLineSelected, alumno);
+    }
+
     onLineMonthItemSelected(i) {
-        this.obtenerData(i, this.props.infoUsuarios.userType, this.state.group);
         this.setState({
             monthLineSelected: i,
         });
-        if (this.state.lineSelected === 1) {
-            this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
-            });
+        if (this.props.infoUsuarios.userType === 1) {
+            this.obtenerDataAlum(i, this.state.alumSelected);
         }
-        else if (this.state.lineSelected === 2) {
-            this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt
-            });
+
+        else if (this.props.infoUsuarios.userType === 2) {
+            if (this.state.coordSight === true) {
+                this.obtenerDataCoord(i, this.state.coord);
+            }
+            else {
+                this.obtenerDataAlum(i, this.state.alumSelected);
+            }
         }
+        else if (this.props.infoUsuarios.userType === 3) {
+            if (this.state.careerSight === true) {
+                this.obtenerDataCarrer(i, this.state.career);
+            }
+            else if (this.state.coordSight === true) {
+                this.obtenerDataCoord(i, this.state.coord);
+            }
+            else {
+                this.obtenerDataAlum(i, this.state.alumSelected);
+            }
+        }
+
     }
+
     onLineButtonMonthToggle() {
         this.setState({
             monthLineButtonOpen: !this.state.monthLineButtonOpen,
         });
     }
-    setDataEnun(dataCatch) {
-        let i;
-        var matrixSum = new Array(30);
-        for (i = 0; i < dataCatch.Facil.length; i++) {
-            matrixSum[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
-        }
-        totalFaciles = this.sumaDeArray(dataCatch.Facil);
-        totalIntermedios = this.sumaDeArray(dataCatch.Intermedio);
-        totalDificiles = this.sumaDeArray(dataCatch.Dificil);
-        totalEnunciados = totalDificiles + totalFaciles + totalIntermedios;
-        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
-        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
-        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-        enunLineChartData.datasets[0].data = matrixSum;
-        enunLineChartData.datasets[1].data = dataCatch.Facil;
-        enunLineChartData.datasets[2].data = dataCatch.Intermedio;
-        enunLineChartData.datasets[3].data = dataCatch.Dificil;
-        enunLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
-    }
-    setDataTime(dataCatch) {
-        let i;
-        var matrixSum = new Array(30);
-        for (i = 0; i < dataCatch.Facil.length; i++) {
-            matrixSum[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
-        }
-        minutesFaciles = this.sumaDeArray(dataCatch.Facil);
-        minutesIntermedios = this.sumaDeArray(dataCatch.Intermedio);
-        minutesDificiles = this.sumaDeArray(dataCatch.Dificil);
-        totalMinutes = minutesDificiles + minutesFaciles + minutesIntermedios;
-        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;
-        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;
-        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;
-        timeLineChartData.datasets[0].data = matrixSum;
-        timeLineChartData.datasets[1].data = dataCatch.Facil;
-        timeLineChartData.datasets[2].data = dataCatch.Intermedio;
-        timeLineChartData.datasets[3].data = dataCatch.Dificil;
-        timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
-    }
-    obtenerCarreras(){
-        var url='http://localhost:8082/user/allcareer';
+    //===============================================================================
+    //==============================GETS=============================================
+    //===============================================================================
+
+    obtenerAlumCord(coord) {
+        var url = 'http://localhost:8082/user/coordination/' + coord;
+        this.setState({
+            espera: true
+        });
         Axios.get(url)
-    }
-    obtenerCoords(){
-        var url='http://localhost:8082/user/allcoordination';
+            .then(response => {
+                var dataCatch = response.data;
+                this.setState({
+                    alumList: dataCatch,
+                    espera: false
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
 
     }
-    obtenerData(mes, tipo, group) {
+    obtenerCarreras(user) {
+        var url;
+        if (user === 2) {
+            url = 'http://localhost:8082/user/coordination/career/' + this.props.infoUsuarios.userCoordination;
+        }
+        else if (user === 3) {
+            url = 'http://localhost:8082/user/allcareer';
+        }
+        this.setState({
+            espera: true
+        });
+        Axios.get(url)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setState({
+                    careerList: dataCatch,
+                    espera: false
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+    }
+    obtenerCoords(user) {
+        var url;
+        if (user === 2) {
+            var aux = [];
+            aux.push(this.props.infoUsuarios.userCoordination);
+            this.setState({
+                coordList: aux,
+                espera: false
+            })
+        }
+
+        if (user === 3) {
+            url = 'http://localhost:8082/user/allcoordination'
+            this.setState({
+                espera: true
+            });
+            Axios.get(url)
+                .then(response => {
+                    var dataCatch = response.data;
+                    console.log(dataCatch);
+                    this.setState({
+                        coordList: dataCatch,
+                        espera: false
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    this.setState({ espera: false });
+                });
+        }
+    }
+    obtenerDataCoord(mes, coord) {
         var url, url2;
         var fix = mes + 1;
         this.setState({
             espera: true
         });
-
-        if (tipo === 1) {
-            url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
-            url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
-        }
-        else if (tipo === 2) {
-            if (group === true) {
-                url = 'http://localhost:8082/userExercise/exercise/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
-                url2 = 'http://localhost:8082/userExercise/time/career/' + this.state.career + '/' + fecha.getFullYear() + '-' + fix;
-            }
-            else {
-                url = 'http://localhost:8082/userExercise/exercise/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
-                url2 = 'http://localhost:8082/userExercise/time/coordination/' + this.state.coord + '/' + fecha.getFullYear() + '-' + fix;
-            }
-        }
+        url = 'http://localhost:8082/userExercise/exercise/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
+        url2 = 'http://localhost:8082/userExercise/time/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
+        console.log(url, url2);
         Axios.get(url)
             .then(response => {
                 var dataCatch = response.data;
@@ -499,13 +497,120 @@ class LineChart extends Component {
                 console.log(error);
                 this.setState({ espera: false });
             });
+
+        if (this.state.lineSelected === 1) {
+            this.setState({
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+            });
+        }
+        else if (this.state.lineSelected === 2) {
+            this.setState({
+                dataLineChart: timeLineChartData,
+                optLineChart: timeLineChartOpt
+            });
+        }
+    }
+    obtenerDataCarrer(mes, career) {
+        var url, url2;
+        var fix = mes + 1;
+        this.setState({
+            espera: true
+        });
+        url = 'http://localhost:8082/userExercise/exercise/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
+        url2 = 'http://localhost:8082/userExercise/time/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
+        console.log(url, url2);
+        Axios.get(url)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setDataEnun(dataCatch);
+                this.setState({ espera: false });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+
+        Axios.get(url2)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setDataTime(dataCatch);
+                this.setState({ espera: false });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+
+        if (this.state.lineSelected === 1) {
+            this.setState({
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+            });
+        }
+        else if (this.state.lineSelected === 2) {
+            this.setState({
+                dataLineChart: timeLineChartData,
+                optLineChart: timeLineChartOpt
+            });
+        }
+    }
+    obtenerDataAlum(mes, alum) {
+        var url, url2;
+        var fix = mes + 1;
+        this.setState({
+            espera: true
+        });
+        if (alum === 0) {
+            url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+            url2 = 'http://localhost:8082/userExercise/time/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
+        }
+        else {
+            url = 'http://localhost:8082/userExercise/exercise/student/' + alum.userMail + '/' + fecha.getFullYear() + '-' + fix;
+            url2 = 'http://localhost:8082/userExercise/time/student/' + alum.userMail + '/' + fecha.getFullYear() + '-' + fix;
+        }
+        console.log(url, url2);
+        Axios.get(url)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setDataEnun(dataCatch);
+                this.setState({ espera: false });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+
+        Axios.get(url2)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setDataTime(dataCatch);
+                this.setState({ espera: false });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+
+        if (this.state.lineSelected === 1) {
+            this.setState({
+                dataLineChart: enunLineChartData,
+                optLineChart: enunLineChartOpt,
+            });
+        }
+        else if (this.state.lineSelected === 2) {
+            this.setState({
+                dataLineChart: timeLineChartData,
+                optLineChart: timeLineChartOpt
+            });
+        }
     }
 
     buttonLineMonth(month) {
         return (
             <ButtonDropdown isOpen={this.state.monthLineButtonOpen} toggle={() => { this.onLineButtonMonthToggle() }}>
                 <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
-                <DropdownMenu down="true">
+                <DropdownMenu direction="down">
                     <DropdownItem header>Mes</DropdownItem>
                     <DropdownItem onClick={() => { this.onLineMonthItemSelected(2); }}>Marzo</DropdownItem>
                     <DropdownItem onClick={() => { this.onLineMonthItemSelected(3); }}>Abril</DropdownItem>
@@ -521,32 +626,46 @@ class LineChart extends Component {
             </ButtonDropdown>
         );
     }
-    filterGroupLine() {
+    filterGroupLine(listaCareer, listaCoord) {
         return (
             <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
-                <ButtonGroup horizontal>
-                    <ButtonDropdown id='carre' isOpen={this.state.carre} toggle={() => { this.setState({ carre: !this.state.carre }); }}>
+                <ButtonGroup horizontal="true">
+                    <ButtonDropdown isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
                         <DropdownToggle caret>
                             Carrera
-                    </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem>Informatica</DropdownItem>
-                            <DropdownItem>Electrica</DropdownItem>
+                        </DropdownToggle>
+                        <DropdownMenu direction="down">
+                            <DropdownItem onClick={() => this.onLineCareerItemSelect('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
+                            {listaCareer && listaCareer.map((career, key) =>
+                                <DropdownItem key={key} onClick={() => this.onLineCareerItemSelect(career)} active={this.state.career === career}>{career}</DropdownItem>
+                            )}
                         </DropdownMenu>
                     </ButtonDropdown>
-                    <ButtonDropdown id='coord' isOpen={this.state.coord} toggle={() => { this.setState({ coord: !this.state.coord }); }}>
+                    <ButtonDropdown isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
                         <DropdownToggle caret>
                             Coordinación
-                    </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem>A-1</DropdownItem>
-                            <DropdownItem>B-2</DropdownItem>
+                        </DropdownToggle>
+                        <DropdownMenu direction="down">
+                            <DropdownItem onClick={() => this.onLineCoordItemSelect('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
+                            {listaCoord && listaCoord.map((cord, key) =>
+                                <DropdownItem key={key} onClick={() => this.onLineCoordItemSelect(cord)} active={this.state.coord === cord}>{cord}</DropdownItem>
+                            )}
                         </DropdownMenu>
                     </ButtonDropdown>
                 </ButtonGroup>
             </ButtonToolbar>
         )
 
+    }
+    filterUser(listaAlumnos) {
+        return (
+            <Input type="select" name="select" id="select">
+                <option value="0">---- ----</option>
+                {listaAlumnos && listaAlumnos.map((alumno, key) =>
+                    <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
+                )}
+            </Input>
+        )
     }
     //Botones de filtro de cada grafo
     filterLine() {
@@ -649,11 +768,20 @@ class LineChart extends Component {
                             {this.filterLine()}
                         </Col>
                         {this.state.profesor ?
-                            <Col className='text-center' xs='6'>
-                                {this.filterGroupLine()}
+                            <Col className='text-right' xs='3'>
+                                {this.filterGroupLine(this.state.careerList, this.state.coordList)}
                             </Col>
                             :
-                            <Col xs='6'>
+                            <Col xs='3'>
+
+                            </Col>
+                        }
+                        {this.state.profesor ?
+                            <Col className='text-center' xs='3'>
+                                {this.filterUser(this.state.alumList)}
+                            </Col>
+                            :
+                            <Col xs='3'>
 
                             </Col>
                         }
@@ -668,18 +796,6 @@ class LineChart extends Component {
         );
     }
 
-    sumaDeArray(array, largo) {
-        var i;
-        var suma = 0;
-        for (i = 0; i < largo; i++) {
-            suma = suma + array[i];
-        }
-        return suma;
-    }
-    calculoPorcentaje(total, cantidad) {
-        var porcentaje = (cantidad * 100) / total;
-        return porcentaje;
-    }
     //Calculo de values importantes
     render() {
         return (
@@ -687,6 +803,56 @@ class LineChart extends Component {
                 {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
             </Col>
         );
+    }
+    setDataEnun(dataCatch) {
+        let i;
+        var matrixSum = new Array(30);
+        for (i = 0; i < dataCatch.Facil.length; i++) {
+            matrixSum[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
+        }
+        totalFaciles = this.sumaDeArray(dataCatch.Facil);
+        totalIntermedios = this.sumaDeArray(dataCatch.Intermedio);
+        totalDificiles = this.sumaDeArray(dataCatch.Dificil);
+        totalEnunciados = totalDificiles + totalFaciles + totalIntermedios;
+        percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
+        percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
+        percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
+        enunLineChartData.datasets[0].data = matrixSum;
+        enunLineChartData.datasets[1].data = dataCatch.Facil;
+        enunLineChartData.datasets[2].data = dataCatch.Intermedio;
+        enunLineChartData.datasets[3].data = dataCatch.Dificil;
+        enunLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
+    }
+    setDataTime(dataCatch) {
+        let i;
+        var matrixSum = new Array(30);
+        for (i = 0; i < dataCatch.Facil.length; i++) {
+            matrixSum[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
+        }
+        minutesFaciles = this.sumaDeArray(dataCatch.Facil);
+        minutesIntermedios = this.sumaDeArray(dataCatch.Intermedio);
+        minutesDificiles = this.sumaDeArray(dataCatch.Dificil);
+        totalMinutes = minutesDificiles + minutesFaciles + minutesIntermedios;
+        percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;
+        percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;
+        percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;
+        timeLineChartData.datasets[0].data = matrixSum;
+        timeLineChartData.datasets[1].data = dataCatch.Facil;
+        timeLineChartData.datasets[2].data = dataCatch.Intermedio;
+        timeLineChartData.datasets[3].data = dataCatch.Dificil;
+        timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
+    }
+    sumaDeArray(array) {
+        var i;
+        var suma = 0;
+        for (i = 0; i < array.length; i++) {
+            suma = suma + array[i];
+        }
+        return suma;
+    }
+    calculoPorcentaje(total, cantidad) {
+        var porcentaje = (cantidad * 100) / total;
+        return porcentaje;
     }
 
 }
