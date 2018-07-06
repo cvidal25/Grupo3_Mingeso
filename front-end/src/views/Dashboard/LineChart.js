@@ -48,13 +48,13 @@ var minutesPerDay = [70, 150, 250, 55, 40, 20
     , 10, 40, 220, 40, 0, 55
     , 50, 0, 105, 140, 180, 0
     , 40];
-
 var enunciadosPerDay = [6, 12, 23, 4, 5, 2
     , 8, 4, 0, 0, 2, 0
     , 28, 5, 13, 6, 17, 0
     , 1, 4, 21, 2, 0, 5
     , 7, 0, 9, 12, 16, 0
     , 2];
+    /*
 var enunLineChartData = {
     labels: daysLabel,
     datasets: [
@@ -64,7 +64,7 @@ var enunLineChartData = {
             borderColor: brandInfo,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: null,
+            data: [],
         },
         {
             label: 'Enunciados Faciles',
@@ -72,7 +72,7 @@ var enunLineChartData = {
             borderColor: brandSuccess,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: null,
+            data: [],
         },
         {
             label: 'Enunciados Intermedios',
@@ -81,7 +81,7 @@ var enunLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: null,
+            data: [],
         },
         {
             label: 'Enunciados Dificiles',
@@ -90,7 +90,7 @@ var enunLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: null,
+            data: [],
         },
     ],
 };
@@ -103,7 +103,7 @@ var timeLineChartData = {
             borderColor: brandInfo,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: null,
+            data: [],
         },
         {
             label: 'Enunciados Faciles',
@@ -111,7 +111,7 @@ var timeLineChartData = {
             borderColor: brandSuccess,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: null,
+            data: [],
         },
         {
             label: 'Enunciados Intermedios',
@@ -120,7 +120,7 @@ var timeLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: null,
+            data: [],
         },
         {
             label: 'Enunciados Dificiles',
@@ -129,7 +129,7 @@ var timeLineChartData = {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             //borderDash: [8, 5],
-            data: null,
+            data: [],
         },
     ],
 };
@@ -222,6 +222,7 @@ var timeLineChartOpt = {
         },
     },
 };
+*/
 var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
@@ -242,7 +243,172 @@ var percentTimeD;
 class LineChart extends Component {
     constructor() {
         super();
-
+        this.enunLineChartData = {
+            labels: daysLabel,
+            datasets: [
+                {
+                    label: 'Enunciados Totales',
+                    backgroundColor: hexToRgba(brandInfo, 10),
+                    borderColor: brandInfo,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    data: [],
+                },
+                {
+                    label: 'Enunciados Faciles',
+                    backgroundColor: 'transparent',
+                    borderColor: brandSuccess,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    data: [],
+                },
+                {
+                    label: 'Enunciados Intermedios',
+                    backgroundColor: 'transparent',
+                    borderColor: brandDanger,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    //borderDash: [8, 5],
+                    data: [],
+                },
+                {
+                    label: 'Enunciados Dificiles',
+                    backgroundColor: 'transparent',
+                    borderColor: brandWarning,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    //borderDash: [8, 5],
+                    data: [],
+                },
+            ],
+        };
+        this.timeLineChartData = {
+            labels: daysLabel,
+            datasets: [
+                {
+                    label: 'Enunciados Totales',
+                    backgroundColor: hexToRgba(brandInfo, 10),
+                    borderColor: brandInfo,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    data: [],
+                },
+                {
+                    label: 'Enunciados Faciles',
+                    backgroundColor: 'transparent',
+                    borderColor: brandSuccess,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    data: [],
+                },
+                {
+                    label: 'Enunciados Intermedios',
+                    backgroundColor: 'transparent',
+                    borderColor: brandDanger,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    //borderDash: [8, 5],
+                    data: [],
+                },
+                {
+                    label: 'Enunciados Dificiles',
+                    backgroundColor: 'transparent',
+                    borderColor: brandWarning,
+                    pointHoverBackgroundColor: '#fff',
+                    borderWidth: 2,
+                    //borderDash: [8, 5],
+                    data: [],
+                },
+            ],
+        };
+        this.enunLineChartOpt = {
+            tooltips: {
+                enabled: false,
+                custom: CustomTooltips,
+                intersect: true,
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                    labelColor: function (tooltipItem, chart) {
+                        return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
+                    }
+                }
+            },
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+            },
+            //Scala de los axes
+            scales: {
+                xAxes: [
+                    {
+                        gridLines: {
+                            drawOnChartArea: false,
+                        },
+                    }],
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: true,
+                            maxTicksLimit: 5,
+                            stepSize: null,
+                            max: minutesPerDay.max,
+                        },
+                    }],
+            },
+            elements: {
+                point: {
+                    radius: 0,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                    hoverBorderWidth: 3,
+                },
+            },
+        };
+        this.timeLineChartOpt = {
+            tooltips: {
+                enabled: false,
+                custom: CustomTooltips,
+                intersect: true,
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                    labelColor: function (tooltipItem, chart) {
+                        return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
+                    }
+                }
+            },
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+            },
+            //Scala de los axes
+            scales: {
+                xAxes: [
+                    {
+                        gridLines: {
+                            drawOnChartArea: false,
+                        },
+                    }],
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: true,
+                            maxTicksLimit: 5,
+                            stepSize: Math.ceil(minutesPerDay.max / 5),
+                            max: minutesPerDay.max,
+                        },
+                    }],
+            },
+            elements: {
+                point: {
+                    radius: 0,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                    hoverBorderWidth: 3,
+                },
+            },
+        };
         this.state = {
             //Buttons States
             careerDropOpen: false,
@@ -255,8 +421,8 @@ class LineChart extends Component {
             monthLineSelected: fecha.getMonth(),
 
             //Chart States
-            dataLineChart: null,
-            optLineChart: null,
+            dataLineChart: this.enunLineChartData,
+            optLineChart: this.enunLineChartOpt,
 
             //Booleans states
             espera: false,
@@ -268,7 +434,8 @@ class LineChart extends Component {
             alumList: [],
             coordList: [],
             careerList: [],
-
+            dataTime:[],
+            dataEnun:[],
             coord: null,
             career: null
         };
@@ -280,8 +447,6 @@ class LineChart extends Component {
     }
     componentWillMount() {
         if (this.props.infoUsuarios.userType === 1) {
-            this.obtenerCarreras(2);
-            this.obtenerCoords(2);
             this.setState({
                 profesor: false,
                 alumSelected: this.props.infoUsuarios,
@@ -302,23 +467,29 @@ class LineChart extends Component {
                 careerSight: true,
                 coordSight: false
             });
-            this.obtenerDataCareer(this.state.monthLineSelected, 3, this.state.careerList[0]);
+            this.obtenerDataCarrer(this.state.monthLineSelected, this.state.careerList[0]);
         }
     }
 
     onLineFiltClick(selected) {
+        //console.log('ENUN',enunLineChartData,'TIME',timeLineChartData)
+        this.setState({espera:true});
         if (selected === 1) {
+            this.setDataEnun(this.state.dataEnun);
             this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
                 lineSelected: selected,
+                dataLineChart: this.enunLineChartData,
+                optLineChart: this.enunLineChartOpt,
+                espera: false
             });
         }
         else if (selected === 2) {
+            this.setDataTime(this.state.dataTime);
             this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt,
                 lineSelected: selected,
+                dataLineChart: this.timeLineChartData,
+                optLineChart: this.timeLineChartOpt,
+                espera: false
             });
         }
     }
@@ -500,14 +671,14 @@ class LineChart extends Component {
 
         if (this.state.lineSelected === 1) {
             this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
+                dataLineChart: this.enunLineChartData,
+                optLineChart: this.enunLineChartOpt,
             });
         }
         else if (this.state.lineSelected === 2) {
             this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt
+                dataLineChart: this.timeLineChartData,
+                optLineChart: this.timeLineChartOpt
             });
         }
     }
@@ -544,14 +715,14 @@ class LineChart extends Component {
 
         if (this.state.lineSelected === 1) {
             this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
+                dataLineChart: this.enunLineChartData,
+                optLineChart: this.enunLineChartOpt,
             });
         }
         else if (this.state.lineSelected === 2) {
             this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt
+                dataLineChart: this.timeLineChartData,
+                optLineChart: this.timeLineChartOpt
             });
         }
     }
@@ -594,14 +765,14 @@ class LineChart extends Component {
 
         if (this.state.lineSelected === 1) {
             this.setState({
-                dataLineChart: enunLineChartData,
-                optLineChart: enunLineChartOpt,
+                dataLineChart: this.enunLineChartData,
+                optLineChart: this.enunLineChartOpt,
             });
         }
         else if (this.state.lineSelected === 2) {
             this.setState({
-                dataLineChart: timeLineChartData,
-                optLineChart: timeLineChartOpt
+                dataLineChart: this.timeLineChartData,
+                optLineChart: this.timeLineChartOpt
             });
         }
     }
@@ -681,7 +852,7 @@ class LineChart extends Component {
     chartLine(dataIn, optIn) {
         return (
             <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-                <Line data={dataIn} options={optIn} height={70} />
+                <Line data={dataIn} options={optIn} height={70} redraw={true}/>
             </div>
         )
     }
@@ -762,6 +933,15 @@ class LineChart extends Component {
         return (
             <Card>
                 {this.chartTittle(titulo)}
+                {this.state.espera?
+                <CardBody>
+                    <div className="row">
+                        <div className ='col'>
+                            <div className='defaultSpinner' ></div>
+                        </div>
+                    </div>
+                </CardBody>
+                :
                 <CardBody>
                     <Row>
                         <Col xs='3'>
@@ -791,6 +971,7 @@ class LineChart extends Component {
                     </Row>
                     {this.chartLine(dataIn, optIn)}
                 </CardBody>
+                }
                 {this.chartFooter(filtro)}
             </Card>
         );
@@ -805,8 +986,9 @@ class LineChart extends Component {
         );
     }
     setDataEnun(dataCatch) {
+        this.setState({espera:true});
         let i;
-        var matrixSum = new Array(30);
+        var matrixSum = new Array(31);
         for (i = 0; i < dataCatch.Facil.length; i++) {
             matrixSum[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
         }
@@ -817,15 +999,21 @@ class LineChart extends Component {
         percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
         percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
         percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-        enunLineChartData.datasets[0].data = matrixSum;
-        enunLineChartData.datasets[1].data = dataCatch.Facil;
-        enunLineChartData.datasets[2].data = dataCatch.Intermedio;
-        enunLineChartData.datasets[3].data = dataCatch.Dificil;
-        enunLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
+        this.enunLineChartData.datasets[0].data = matrixSum;
+        this.enunLineChartData.datasets[1].data = dataCatch.Facil;
+        this.enunLineChartData.datasets[2].data = dataCatch.Intermedio;
+        this.enunLineChartData.datasets[3].data = dataCatch.Dificil;
+        this.enunLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
+        this.enunLineChartOpt.scales.yAxes.max=matrixSum.max;
+        this.setState({
+            dataEnun: dataCatch,
+            espera:false
+        });
     }
     setDataTime(dataCatch) {
+        this.setState({espera: true});
         let i;
-        var matrixSum = new Array(30);
+        var matrixSum = new Array(31);
         for (i = 0; i < dataCatch.Facil.length; i++) {
             matrixSum[i] = dataCatch.Facil[i] + dataCatch.Intermedio[i] + dataCatch.Dificil[i];
         }
@@ -836,11 +1024,16 @@ class LineChart extends Component {
         percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;
         percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;
         percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;
-        timeLineChartData.datasets[0].data = matrixSum;
-        timeLineChartData.datasets[1].data = dataCatch.Facil;
-        timeLineChartData.datasets[2].data = dataCatch.Intermedio;
-        timeLineChartData.datasets[3].data = dataCatch.Dificil;
-        timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
+        this.timeLineChartData.datasets[0].data = matrixSum;
+        this.timeLineChartData.datasets[1].data = dataCatch.Facil;
+        this.timeLineChartData.datasets[2].data = dataCatch.Intermedio;
+        this.timeLineChartData.datasets[3].data = dataCatch.Dificil;
+        this.timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
+        this.timeLineChartOpt.scales.yAxes.max=matrixSum.max;
+        this.setState({
+            dataTime: dataCatch,
+            espera:false
+        });
     }
     sumaDeArray(array) {
         var i;

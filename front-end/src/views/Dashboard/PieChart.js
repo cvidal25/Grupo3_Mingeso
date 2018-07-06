@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ChartComponent, {Pie}  from 'react-chartjs-2';
+import ChartComponent, { Pie } from 'react-chartjs-2';
 import {
   Button,
   ButtonDropdown,
@@ -25,12 +25,12 @@ const diffLabel = ['Fácil', 'Intermedio', 'Difícil'];
 const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
   , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
   , 'Noviembre', 'Diciembre'];
-
+/*
 var pieDataEnum = {
   labels: diffLabel,
   datasets: [
     {
-      data: [65, 72, 77],
+      data: [0,0,0],
       backgroundColor: [
         '#36A2EB',
         '#FFCE56',
@@ -47,7 +47,7 @@ var pieDataTime = {
   labels: diffLabel,
   datasets: [
     {
-      data: [325, 720, 1540],
+      data: [0,0,0],
       backgroundColor: [
         '#36A2EB',
         '#FFCE56',
@@ -59,7 +59,7 @@ var pieDataTime = {
         '#FF6384',
       ],
     }],
-};
+};*/
 var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
@@ -78,6 +78,40 @@ var percentTimeD;
 class PieChart extends Component {
   constructor() {
     super();
+    this.pieDataEnum = {
+      labels: diffLabel,
+      datasets: [
+        {
+          data: [0,0,0],
+          backgroundColor: [
+            '#36A2EB',
+            '#FFCE56',
+            '#FF6384',
+          ],
+          hoverBackgroundColor: [
+            '#36A2EB',
+            '#FFCE56',
+            '#FF6384',
+          ],
+        }],
+    };
+    this.pieDataTime = {
+      labels: diffLabel,
+      datasets: [
+        {
+          data: [0,0,0],
+          backgroundColor: [
+            '#36A2EB',
+            '#FFCE56',
+            '#FF6384',
+          ],
+          hoverBackgroundColor: [
+            '#36A2EB',
+            '#FFCE56',
+            '#FF6384',
+          ],
+        }],
+    };
     this.state = {
 
       careerDropOpen: false,
@@ -106,9 +140,6 @@ class PieChart extends Component {
   }
   componentWillMount() {
     if (this.props.infoUsuarios.userType === 1) {
-      this.obtenerCarreras(2);
-      this.obtenerCoords(2);
-
       this.setState({
         profesor: false,
         alumSelected: this.props.infoUsuarios,
@@ -129,20 +160,25 @@ class PieChart extends Component {
         careerSight: true,
         coordSight: false
       });
-      this.obtenerDataCareer(this.state.monthPieSelected, this.state.careerList[0]);
+      this.obtenerDataCarrer(this.state.monthPieSelected, this.state.careerList[0]);
     }
   }
   onPieFiltClick(selected) {
+    this.setState({
+      espera: true
+    });
     if (selected === 1) {
       this.setState({
-        dataPieChart: pieDataEnum,
+        dataPieChart: this.pieDataEnum,
         pieSelected: selected,
+        espera: false
       });
     }
     else if (selected === 2) {
       this.setState({
-        dataPieChart: pieDataTime,
+        dataPieChart: this.pieDataTime,
         pieSelected: selected,
+        espera: false
       });
     }
   }
@@ -315,12 +351,12 @@ class PieChart extends Component {
 
     if (this.state.pieSelected === 1) {
       this.setState({
-        dataPieChart: pieDataEnum,
+        dataPieChart: this.pieDataEnum,
       });
     }
     else if (this.state.pieSelected === 2) {
       this.setState({
-        dataPieChart: pieDataTime,
+        dataPieChart: this.pieDataTime,
       });
     }
   }
@@ -357,12 +393,12 @@ class PieChart extends Component {
 
     if (this.state.pieSelected === 1) {
       this.setState({
-        dataPieChart: pieDataEnum,
+        dataPieChart: this.pieDataEnum,
       });
     }
     else if (this.state.pieSelected === 2) {
       this.setState({
-        dataPieChart: pieDataTime,
+        dataPieChart: this.pieDataTime,
       });
     }
   }
@@ -405,12 +441,12 @@ class PieChart extends Component {
 
     if (this.state.pieSelected === 1) {
       this.setState({
-        dataPieChart: pieDataEnum,
+        dataPieChart: this.pieDataEnum,
       });
     }
     else if (this.state.pieSelected === 2) {
       this.setState({
-        dataPieChart: pieDataTime,
+        dataPieChart: this.pieDataTime,
       });
     }
   }
@@ -426,7 +462,7 @@ class PieChart extends Component {
     percentFaciles = Math.round(this.calculoPorcentaje(totalEnunciados, totalFaciles) * 100) / 100;
     percentIntermedios = Math.round(this.calculoPorcentaje(totalEnunciados, totalIntermedios) * 100) / 100;
     percentDificiles = Math.round(this.calculoPorcentaje(totalEnunciados, totalDificiles * 100) / 100);
-    pieDataEnum.datasets[0].data = [totalFaciles, totalIntermedios, totalDificiles];
+    this.pieDataEnum.datasets[0].data = [totalFaciles, totalIntermedios, totalDificiles];
     //  console.log(pieDataEnum);   
   }
   setDataTime(dataCatch) {
@@ -437,7 +473,7 @@ class PieChart extends Component {
     percentTimeF = Math.round(this.calculoPorcentaje(totalMinutes, minutesFaciles) * 100) / 100;
     percentTimeI = Math.round(this.calculoPorcentaje(totalMinutes, minutesIntermedios) * 100) / 100;
     percentTimeD = Math.round(this.calculoPorcentaje(totalMinutes, minutesDificiles) * 100) / 100;
-    pieDataTime.datasets[0].data = [minutesFaciles, minutesIntermedios, minutesDificiles];
+    this.pieDataTime.datasets[0].data = [minutesFaciles, minutesIntermedios, minutesDificiles];
     //    console.log(pieDataTime);
   }
 
@@ -515,7 +551,7 @@ class PieChart extends Component {
   chartPie(dataIn) {
     return (
       <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-        <Pie data={dataIn} height={200} />
+        <Pie data={dataIn} height={200} redraw={true}/>
       </div>
     )
   }
@@ -538,6 +574,15 @@ class PieChart extends Component {
     return (
       <Card>
         {this.chartTittle(titulo)}
+        {this.state.espera?
+        <CardBody>
+            <div className="row">
+                <div className ='col'>
+                    <div className='defaultSpinner' ></div>
+                </div>
+            </div>
+        </CardBody>
+        :
         <CardBody>
           <Row>
             <Col className='text-left' xs='6'>
@@ -558,9 +603,10 @@ class PieChart extends Component {
               </Col>
             </Row>
             :
-            <Row/>
+            <Row />
           }
         </CardBody>
+        }
         {this.chartFooter(filtro)}
       </Card>
     );
