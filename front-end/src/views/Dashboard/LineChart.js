@@ -54,175 +54,7 @@ var enunciadosPerDay = [6, 12, 23, 4, 5, 2
     , 1, 4, 21, 2, 0, 5
     , 7, 0, 9, 12, 16, 0
     , 2];
-    /*
-var enunLineChartData = {
-    labels: daysLabel,
-    datasets: [
-        {
-            label: 'Enunciados Totales',
-            backgroundColor: hexToRgba(brandInfo, 10),
-            borderColor: brandInfo,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: [],
-        },
-        {
-            label: 'Enunciados Faciles',
-            backgroundColor: 'transparent',
-            borderColor: brandSuccess,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: [],
-        },
-        {
-            label: 'Enunciados Intermedios',
-            backgroundColor: 'transparent',
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            //borderDash: [8, 5],
-            data: [],
-        },
-        {
-            label: 'Enunciados Dificiles',
-            backgroundColor: 'transparent',
-            borderColor: brandWarning,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            //borderDash: [8, 5],
-            data: [],
-        },
-    ],
-};
-var timeLineChartData = {
-    labels: daysLabel,
-    datasets: [
-        {
-            label: 'Enunciados Totales',
-            backgroundColor: hexToRgba(brandInfo, 10),
-            borderColor: brandInfo,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: [],
-        },
-        {
-            label: 'Enunciados Faciles',
-            backgroundColor: 'transparent',
-            borderColor: brandSuccess,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: [],
-        },
-        {
-            label: 'Enunciados Intermedios',
-            backgroundColor: 'transparent',
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            //borderDash: [8, 5],
-            data: [],
-        },
-        {
-            label: 'Enunciados Dificiles',
-            backgroundColor: 'transparent',
-            borderColor: brandWarning,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            //borderDash: [8, 5],
-            data: [],
-        },
-    ],
-};
-var enunLineChartOpt = {
-    tooltips: {
-        enabled: false,
-        custom: CustomTooltips,
-        intersect: true,
-        mode: 'index',
-        position: 'nearest',
-        callbacks: {
-            labelColor: function (tooltipItem, chart) {
-                return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
-            }
-        }
-    },
-    maintainAspectRatio: false,
-    legend: {
-        display: false,
-    },
-    //Scala de los axes
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    drawOnChartArea: false,
-                },
-            }],
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: null,
-                    max: minutesPerDay.max,
-                },
-            }],
-    },
-    elements: {
-        point: {
-            radius: 0,
-            hitRadius: 10,
-            hoverRadius: 4,
-            hoverBorderWidth: 3,
-        },
-    },
-};
 
-var timeLineChartOpt = {
-    tooltips: {
-        enabled: false,
-        custom: CustomTooltips,
-        intersect: true,
-        mode: 'index',
-        position: 'nearest',
-        callbacks: {
-            labelColor: function (tooltipItem, chart) {
-                return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
-            }
-        }
-    },
-    maintainAspectRatio: false,
-    legend: {
-        display: false,
-    },
-    //Scala de los axes
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    drawOnChartArea: false,
-                },
-            }],
-        yAxes: [
-            {
-                ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(minutesPerDay.max / 5),
-                    max: minutesPerDay.max,
-                },
-            }],
-    },
-    elements: {
-        point: {
-            radius: 0,
-            hitRadius: 10,
-            hoverRadius: 4,
-            hoverBorderWidth: 3,
-        },
-    },
-};
-*/
 var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
@@ -844,15 +676,15 @@ class LineChart extends Component {
             <ButtonToolbar className="float-left" aria-label="Toolbar with button groups">
                 <ButtonGroup className="mr-3" aria-label="First group">
                     <Button color="outline-secondary" onClick={() => this.onLineFiltClick(1)} active={this.state.lineSelected === 1}>Enunciados</Button>
-                    <Button color="outline-secondary" onClick={() => this.onLineFiltClick(2)} active={this.state.lineSelected === 2}>Horas</Button>
+                    <Button color="outline-secondary" onClick={() => this.onLineFiltClick(2)} active={this.state.lineSelected === 2}>Tiémpo</Button>
                 </ButtonGroup>
             </ButtonToolbar>
         )
     }
     chartLine(dataIn, optIn) {
         return (
-            <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-                <Line data={dataIn} options={optIn} height={70} redraw={true}/>
+            <div className="chart-wrapper" style={{ height: 80 + '%', marginTop: 5 + '%' }}>
+                <Line data={dataIn} options={optIn} height={80} redraw={true}/>
             </div>
         )
     }
@@ -881,12 +713,12 @@ class LineChart extends Component {
                         <Col sm={12} md className="mb-sm-2 mb-0">
                             <div className="text-muted">Intermedios Realizados</div>
                             <strong>{totalIntermedios} Enunciados ({percentIntermedios}%)</strong>
-                            <Progress className="progress-xs mt-2" color="warning" value={String(percentIntermedios)} />
+                            <Progress className="progress-xs mt-2" color="danger" value={String(percentIntermedios)} />
                         </Col>
                         <Col sm={12} md className="mb-sm-2 mb-0">
                             <div className="text-muted">Difíciles Realizados</div>
                             <strong>{totalDificiles} Enunciados ({percentDificiles}%)</strong>
-                            <Progress className="progress-xs mt-2" color="danger" value={String(percentDificiles)} />
+                            <Progress className="progress-xs mt-2" color="warning" value={String(percentDificiles)} />
                         </Col>
                     </Row>
                 </CardFooter>
@@ -909,12 +741,12 @@ class LineChart extends Component {
                         <Col sm={12} md className="mb-sm-2 mb-0">
                             <div className="text-muted">Minutos en Intermedios</div>
                             <strong>{minutesIntermedios} Minutos ({percentTimeI}%)</strong>
-                            <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeI)} />
+                            <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeI)} />
                         </Col>
                         <Col sm={12} md className="mb-sm-2 mb-0">
                             <div className="text-muted">Minutos por Difíciles</div>
                             <strong>{minutesDificiles} Minutos ({percentTimeD}%)</strong>
-                            <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeD)} />
+                            <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeD)} />
                         </Col>
                     </Row>
                 </CardFooter>

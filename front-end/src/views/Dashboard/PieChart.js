@@ -25,41 +25,7 @@ const diffLabel = ['Fácil', 'Intermedio', 'Difícil'];
 const monthsLabel = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'
   , 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'
   , 'Noviembre', 'Diciembre'];
-/*
-var pieDataEnum = {
-  labels: diffLabel,
-  datasets: [
-    {
-      data: [0,0,0],
-      backgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-      hoverBackgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-    }],
-};
-var pieDataTime = {
-  labels: diffLabel,
-  datasets: [
-    {
-      data: [0,0,0],
-      backgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-      hoverBackgroundColor: [
-        '#36A2EB',
-        '#FFCE56',
-        '#FF6384',
-      ],
-    }],
-};*/
+
 var fecha = new Date();
 var totalEnunciados;
 var totalFaciles;
@@ -543,7 +509,7 @@ class PieChart extends Component {
       <ButtonToolbar style={{ weigth: '20%' }} className="float-left" aria-label="Toolbar with button groups">
         <ButtonGroup className="mr-3" aria-label="First group">
           <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(1)} active={this.state.pieSelected === 1}>Enunciados</Button>
-          <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(2)} active={this.state.pieSelected === 2}>Horas</Button>
+          <Button color="outline-secondary" size="sm" onClick={() => this.onPieFiltClick(2)} active={this.state.pieSelected === 2}>Tiémpo</Button>
         </ButtonGroup>
       </ButtonToolbar>
     );
