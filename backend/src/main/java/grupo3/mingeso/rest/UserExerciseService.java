@@ -139,6 +139,7 @@ public class UserExerciseService {
         return countBy(completeList,year,month,lastDay,false);
     }
 
+    //Ranking de alumnos (General) quienes hayan resuelto más ejercicios
     @RequestMapping(value="/ranking/students/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public List<UserExercise> rankingStudentsGeneral(@PathVariable("year") int year, @PathVariable("month") int month){
@@ -152,6 +153,7 @@ public class UserExerciseService {
         return userExerciseRepository.rankingStudents(startDate,endDate);
     }
 
+    //Ranking de alumnos de una coordinación específica quienes hayan resuelto más ejercicios
     @RequestMapping(value="/ranking/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public List<UserExercise> rankingByCoordination(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("coordination") String coordination){
@@ -165,6 +167,7 @@ public class UserExerciseService {
         return userExerciseRepository.rankingCoordination(startDate,endDate,coordination);
     }
 
+    //Ranking de alumnos de una carrera específica quienes hayan resuelto más ejercicios
     @RequestMapping(value="/ranking/career/{career}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
     public List<UserExercise> rankingByCareer(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("career") String career){

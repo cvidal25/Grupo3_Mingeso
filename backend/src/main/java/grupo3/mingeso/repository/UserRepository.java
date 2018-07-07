@@ -8,4 +8,5 @@ public interface UserRepository  extends CrudRepository<User,Integer> {
     User findByUserMail(String email);
     List<User> findByUserCareer(String career);
     List<User> findByUserCoordination(String Coordination);
+    List<User> findAllByUserCareerAndUserCoordination(String career, String coordination);
 }
