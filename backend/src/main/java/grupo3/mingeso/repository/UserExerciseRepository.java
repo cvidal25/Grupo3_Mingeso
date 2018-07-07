@@ -21,4 +21,7 @@ public interface UserExerciseRepository extends CrudRepository<UserExercise, Int
 
     @Query("select user.userID,count(userExerciseID) from UserExercise ue where ue.user.userID in (select userID from User where userCoordination = ?3) and userDateResolution between ?1 and ?2 group by ue.user order by count(ue.userExerciseID) desc")
     List<UserExercise> rankingCoordination(Timestamp firstDate, Timestamp lastDate,String coordination);
+
+    @Query("select user.userID,count(userExerciseID) from UserExercise ue where ue.user.userID in (select userID from User where userCareer = ?3) and userDateResolution between ?1 and ?2 group by ue.user order by count(ue.userExerciseID) desc")
+    List<UserExercise> rankingCareer(Timestamp firstDate, Timestamp lastDate,String career);
 }

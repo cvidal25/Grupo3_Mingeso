@@ -154,7 +154,7 @@ public class UserExerciseService {
 
     @RequestMapping(value="/ranking/coordination/{coordination}/{year}-{month}",method = RequestMethod.GET)
     @ResponseBody
-    public List<UserExercise> rankingCoordination(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("coordination") String coordination){
+    public List<UserExercise> rankingByCoordination(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("coordination") String coordination){
         String start = "" + year + "-" + month + "-01 00:00:00.000";
         int lastDay = daysOfTheMonth(month,year);
         String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
@@ -163,6 +163,19 @@ public class UserExerciseService {
         Timestamp endDate = timestampConverter(end);
 
         return userExerciseRepository.rankingCoordination(startDate,endDate,coordination);
+    }
+
+    @RequestMapping(value="/ranking/career/{career}/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<UserExercise> rankingByCareer(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("career") String career){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
+
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        return userExerciseRepository.rankingCareer(startDate,endDate,career);
     }
 
     //Realiza el proceso completo del sumado, separando los ejercicios por el grado de dificultad.
