@@ -139,6 +139,18 @@ public class UserExerciseService {
         return countBy(completeList,year,month,lastDay,false);
     }
 
+    @RequestMapping(value="/ranking/students/{year}-{month}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<UserExercise> rankingStudentsGeneral(@PathVariable("year") int year, @PathVariable("month") int month){
+        String start = "" + year + "-" + month + "-01 00:00:00.000";
+        int lastDay = daysOfTheMonth(month,year);
+        String end = "" + year + "-" + month + "-" + lastDay + " 23:59:59.999";
+
+        Timestamp startDate = timestampConverter(start);
+        Timestamp endDate = timestampConverter(end);
+
+        return userExerciseRepository.rankingStudents(startDate,endDate);
+    }
 
     //Realiza el proceso completo del sumado, separando los ejercicios por el grado de dificultad.
     public Map<String, int[]> countBy(List<UserExercise> completeList, int year, int month, int lastDay, boolean isExercise){
