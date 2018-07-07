@@ -683,8 +683,8 @@ class LineChart extends Component {
     }
     chartLine(dataIn, optIn) {
         return (
-            <div className="chart-wrapper" style={{ height: 80 + '%', marginTop: 5 + '%' }}>
-                <Line data={dataIn} options={optIn} height={80} redraw={true}/>
+            <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
+                <Line data={dataIn} options={optIn} height={70} redraw={true}/>
             </div>
         )
     }
@@ -708,7 +708,7 @@ class LineChart extends Component {
                         <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
                             <div className="text-muted">Faciles Realizados</div>
                             <strong>{totalFaciles} Enunciados ({percentFaciles}%)</strong>
-                            <Progress className="progress-xs mt-2" color="succes" value={String(percentFaciles)} />
+                            <Progress className="progress-xs mt-2" color="green" value={String(percentFaciles)} />
                         </Col>
                         <Col sm={12} md className="mb-sm-2 mb-0">
                             <div className="text-muted">Intermedios Realizados</div>
@@ -736,7 +736,7 @@ class LineChart extends Component {
                         <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
                             <div className="text-muted">Minutos en Faciles</div>
                             <strong>{minutesFaciles} Minutos ({percentTimeF}%)</strong>
-                            <Progress className="progress-xs mt-2" color="succes" value={String(percentTimeF)} />
+                            <Progress className="progress-xs mt-2" color="green" value={String(percentTimeF)} />
                         </Col>
                         <Col sm={12} md className="mb-sm-2 mb-0">
                             <div className="text-muted">Minutos en Intermedios</div>
