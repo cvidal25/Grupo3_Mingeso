@@ -128,4 +128,10 @@ public class UserService {
         return career;
     }
 
+    //Alumnos que pertenezcan a una sección y carrera en particular
+    @RequestMapping(value = "/careerCoordination/{career}/{coordination}")
+    @ResponseBody
+    public List<User> getByCareerAndCoordination(@PathVariable("career") String career, @PathVariable("coordination") String coordination){
+        return userRepository.findAllByUserCareerAndUserCoordination(career,coordination);
+    }
 }
