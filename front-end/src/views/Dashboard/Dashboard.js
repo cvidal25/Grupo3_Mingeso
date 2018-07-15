@@ -29,7 +29,6 @@ class Dashboard extends Component {
         <Row>
           <CardColumns className='cols-2'>
             <PieChart />
-            <DoughnutChart />
           </CardColumns>
         </Row>
         {

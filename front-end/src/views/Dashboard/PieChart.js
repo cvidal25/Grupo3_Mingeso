@@ -48,7 +48,7 @@ class PieChart extends Component {
       labels: diffLabel,
       datasets: [
         {
-          data: [0,0,0],
+          data: [0, 0, 0],
           backgroundColor: [
             '#36A2EB',
             '#FFCE56',
@@ -65,7 +65,7 @@ class PieChart extends Component {
       labels: diffLabel,
       datasets: [
         {
-          data: [0,0,0],
+          data: [0, 0, 0],
           backgroundColor: [
             '#36A2EB',
             '#FFCE56',
@@ -102,6 +102,10 @@ class PieChart extends Component {
 
       coord: null,
       career: null,
+
+      alumLabel: '---- ----',
+      careerLabel: 'Carreras',
+      coordLabel: 'Coordinación'
     };
   }
   componentWillMount() {
@@ -124,7 +128,10 @@ class PieChart extends Component {
         coord: this.state.coordList[0],
         career: this.state.careerList[0],
         careerSight: true,
-        coordSight: false
+        coordSight: false,
+        alumLabel: '---- ----',
+        careerLabel: 'Carreras',
+        coordLabel: 'Coordinación'
       });
       this.obtenerDataCarrer(this.state.monthPieSelected, this.state.careerList[0]);
     }
@@ -150,6 +157,7 @@ class PieChart extends Component {
   }
   onPieCareerItemSelected(sel) {
     this.setState({
+      careerLabel: sel,
       career: sel,
       careerSight: true,
       coordSight: false
@@ -160,6 +168,7 @@ class PieChart extends Component {
   }
   onPieCoordItemSelected(sel) {
     this.setState({
+      coordLabel: sel,
       coord: sel,
       careerSight: false,
       coordSight: true
@@ -171,6 +180,7 @@ class PieChart extends Component {
   onUserItemSelect(alumno) {
     //Obtener data
     this.setState({
+      alumLabel: alumno.userName,
       alumSelected: alumno,
       careerSight: false,
       coordSight: false
@@ -469,7 +479,7 @@ class PieChart extends Component {
         <ButtonGroup horizontal="true">
           <ButtonDropdown size="sm" isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
             <DropdownToggle caret>
-              Carrera
+              {this.state.careerLabel}
             </DropdownToggle>
             <DropdownMenu direction="down">
               <DropdownItem onClick={() => this.onPieCareerItemSelected('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
@@ -480,7 +490,7 @@ class PieChart extends Component {
           </ButtonDropdown>
           <ButtonDropdown size="sm" isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
             <DropdownToggle caret>
-              Coordinación
+              {this.state.coordLabel}
                 </DropdownToggle>
             <DropdownMenu direction="down">
               <DropdownItem onClick={() => this.onPieCoordItemSelected('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
@@ -497,7 +507,7 @@ class PieChart extends Component {
   filterUser(listaAlumnos) {
     return (
       <Input type="select" name="select" id="select">
-        <option value="0">---- ----</option>
+        <option value="0">{this.state.alumLabel}</option>
         {listaAlumnos && listaAlumnos.map((alumno, key) =>
           <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
         )}
@@ -517,7 +527,7 @@ class PieChart extends Component {
   chartPie(dataIn) {
     return (
       <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-        <Pie data={dataIn} height={200} redraw={true}/>
+        <Pie data={dataIn} height={200} redraw={true} />
       </div>
     )
   }
@@ -540,38 +550,38 @@ class PieChart extends Component {
     return (
       <Card>
         {this.chartTittle(titulo)}
-        {this.state.espera?
-        <CardBody>
+        {this.state.espera ?
+          <CardBody>
             <div className="row">
-                <div className ='col'>
-                    <div className='defaultSpinner' ></div>
-                </div>
+              <div className='col'>
+                <div className='defaultSpinner' ></div>
+              </div>
             </div>
-        </CardBody>
-        :
-        <CardBody>
-          <Row>
-            <Col className='text-left' xs='6'>
-              {this.filterPie()}
-            </Col>
-            <Col className='text-right' xs='6'>
-              {this.buttonPieMonth(month)}
-            </Col>
-          </Row>
-          {this.chartPie(dataIn, month)}
-          {this.state.profesor ?
+          </CardBody>
+          :
+          <CardBody>
             <Row>
-              <Col className='text-center' xs='6'>
-                {this.filterGroupPie(this.state.careerList, this.state.coordList)}
+              <Col className='text-left' xs='6'>
+                {this.filterPie()}
               </Col>
-              <Col xs='6'>
-                {this.filterUser(this.state.alumList)}
+              <Col className='text-right' xs='6'>
+                {this.buttonPieMonth(month)}
               </Col>
             </Row>
-            :
-            <Row />
-          }
-        </CardBody>
+            {this.chartPie(dataIn, month)}
+            {this.state.profesor ?
+              <Row>
+                <Col className='text-center' xs='9'>
+                  {this.filterGroupPie(this.state.careerList, this.state.coordList)}
+                </Col>
+                <Col xs='3'>
+                  {this.filterUser(this.state.alumList)}
+                </Col>
+              </Row>
+              :
+              <Row />
+            }
+          </CardBody>
         }
         {this.chartFooter(filtro)}
       </Card>

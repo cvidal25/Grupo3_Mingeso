@@ -266,10 +266,15 @@ class LineChart extends Component {
             alumList: [],
             coordList: [],
             careerList: [],
-            dataTime:[],
-            dataEnun:[],
+            dataTime: [],
+            dataEnun: [],
             coord: null,
-            career: null
+            career: null,
+
+            alumLabel: '---- ----',
+            careerLabel: 'Carreras',
+            coordLabel: 'Coordinación'
+
         };
         this.onLineFiltClick = this.onLineFiltClick.bind(this);
         this.onLineMonthItemSelected = this.onLineMonthItemSelected.bind(this);
@@ -292,6 +297,9 @@ class LineChart extends Component {
             this.obtenerCarreras(this.props.infoUsuarios.userType);
             this.obtenerCoords(this.props.infoUsuarios.userType);
             this.setState({
+                alumLabel: '---- ----',
+                careerLabel: 'Carreras',
+                coordLabel: 'Coordinación',
                 profesor: true,
                 lineSelected: 1,
                 coord: this.state.coordList[0],
@@ -305,7 +313,7 @@ class LineChart extends Component {
 
     onLineFiltClick(selected) {
         //console.log('ENUN',enunLineChartData,'TIME',timeLineChartData)
-        this.setState({espera:true});
+        this.setState({ espera: true });
         if (selected === 1) {
             this.setDataEnun(this.state.dataEnun);
             this.setState({
@@ -328,6 +336,7 @@ class LineChart extends Component {
 
     onLineCareerItemSelect(sel) {
         this.setState({
+            careerLabel: sel,
             career: sel,
             careerSight: true,
             coordSight: false
@@ -339,6 +348,7 @@ class LineChart extends Component {
 
     onLineCoordItemSelect(sel) {
         this.setState({
+            coordLabel: sel,
             coord: sel,
             careerSight: false,
             coordSight: true
@@ -351,6 +361,7 @@ class LineChart extends Component {
         //Obtener data
         this.setState({
             alumSelected: alumno,
+            alumLabel: alumno.userName,
             careerSight: false,
             coordSight: false
         });
@@ -635,7 +646,7 @@ class LineChart extends Component {
                 <ButtonGroup horizontal="true">
                     <ButtonDropdown isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
                         <DropdownToggle caret>
-                            Carrera
+                            {this.state.careerLabel}
                         </DropdownToggle>
                         <DropdownMenu direction="down">
                             <DropdownItem onClick={() => this.onLineCareerItemSelect('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
@@ -646,7 +657,7 @@ class LineChart extends Component {
                     </ButtonDropdown>
                     <ButtonDropdown isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
                         <DropdownToggle caret>
-                            Coordinación
+                            {this.state.coordLabel}
                         </DropdownToggle>
                         <DropdownMenu direction="down">
                             <DropdownItem onClick={() => this.onLineCoordItemSelect('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
@@ -663,7 +674,7 @@ class LineChart extends Component {
     filterUser(listaAlumnos) {
         return (
             <Input type="select" name="select" id="select">
-                <option value="0">---- ----</option>
+                <option value="0">{this.state.alumLabel}</option>
                 {listaAlumnos && listaAlumnos.map((alumno, key) =>
                     <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
                 )}
@@ -684,7 +695,7 @@ class LineChart extends Component {
     chartLine(dataIn, optIn) {
         return (
             <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-                <Line data={dataIn} options={optIn} height={70} redraw={true}/>
+                <Line data={dataIn} options={optIn} height={70} redraw={true} />
             </div>
         )
     }
@@ -765,44 +776,44 @@ class LineChart extends Component {
         return (
             <Card>
                 {this.chartTittle(titulo)}
-                {this.state.espera?
-                <CardBody>
-                    <div className="row">
-                        <div className ='col'>
-                            <div className='defaultSpinner' ></div>
+                {this.state.espera ?
+                    <CardBody>
+                        <div className="row">
+                            <div className='col'>
+                                <div className='defaultSpinner' ></div>
+                            </div>
                         </div>
-                    </div>
-                </CardBody>
-                :
-                <CardBody>
-                    <Row>
-                        <Col xs='3'>
-                            {this.filterLine()}
-                        </Col>
-                        {this.state.profesor ?
-                            <Col className='text-right' xs='3'>
-                                {this.filterGroupLine(this.state.careerList, this.state.coordList)}
-                            </Col>
-                            :
+                    </CardBody>
+                    :
+                    <CardBody>
+                        <Row>
                             <Col xs='3'>
+                                {this.filterLine()}
+                            </Col>
+                            {this.state.profesor ?
+                                <Col className='text-right' xs='5'>
+                                    {this.filterGroupLine(this.state.careerList, this.state.coordList)}
+                                </Col>
+                                :
+                                <Col xs='3'>
 
-                            </Col>
-                        }
-                        {this.state.profesor ?
-                            <Col className='text-center' xs='3'>
-                                {this.filterUser(this.state.alumList)}
-                            </Col>
-                            :
-                            <Col xs='3'>
+                                </Col>
+                            }
+                            {this.state.profesor ?
+                                <Col className='text-center' xs='3'>
+                                    {this.filterUser(this.state.alumList)}
+                                </Col>
+                                :
+                                <Col xs='3'>
 
+                                </Col>
+                            }
+                            <Col className='text-right' xs='1'>
+                                {this.buttonLineMonth(month)}
                             </Col>
-                        }
-                        <Col className='text-right' xs='3'>
-                            {this.buttonLineMonth(month)}
-                        </Col>
-                    </Row>
-                    {this.chartLine(dataIn, optIn)}
-                </CardBody>
+                        </Row>
+                        {this.chartLine(dataIn, optIn)}
+                    </CardBody>
                 }
                 {this.chartFooter(filtro)}
             </Card>
@@ -818,7 +829,7 @@ class LineChart extends Component {
         );
     }
     setDataEnun(dataCatch) {
-        this.setState({espera:true});
+        this.setState({ espera: true });
         let i;
         var matrixSum = new Array(31);
         for (i = 0; i < dataCatch.Facil.length; i++) {
@@ -836,14 +847,14 @@ class LineChart extends Component {
         this.enunLineChartData.datasets[2].data = dataCatch.Intermedio;
         this.enunLineChartData.datasets[3].data = dataCatch.Dificil;
         this.enunLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
-        this.enunLineChartOpt.scales.yAxes.max=matrixSum.max;
+        this.enunLineChartOpt.scales.yAxes.max = matrixSum.max;
         this.setState({
             dataEnun: dataCatch,
-            espera:false
+            espera: false
         });
     }
     setDataTime(dataCatch) {
-        this.setState({espera: true});
+        this.setState({ espera: true });
         let i;
         var matrixSum = new Array(31);
         for (i = 0; i < dataCatch.Facil.length; i++) {
@@ -861,10 +872,10 @@ class LineChart extends Component {
         this.timeLineChartData.datasets[2].data = dataCatch.Intermedio;
         this.timeLineChartData.datasets[3].data = dataCatch.Dificil;
         this.timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
-        this.timeLineChartOpt.scales.yAxes.max=matrixSum.max;
+        this.timeLineChartOpt.scales.yAxes.max = matrixSum.max;
         this.setState({
             dataTime: dataCatch,
-            espera:false
+            espera: false
         });
     }
     sumaDeArray(array) {
