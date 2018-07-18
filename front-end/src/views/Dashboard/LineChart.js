@@ -16,6 +16,7 @@ import {
     Input,
     Progress,
     Row,
+    Table,
 } from 'reactstrap';
 import Axios from 'axios';
 import { connect } from 'react-redux';
@@ -242,10 +243,22 @@ class LineChart extends Component {
             },
         };
         this.state = {
+            //top5
+            rankingAlumnos:'',
+            firstUser:'',
+            secondUser:'',
+            thirdUser:'',
+            fourthUser:'',
+            fifthUser:'',
+            escucha:'',
+            result:'',
+
+
             //Buttons States
             careerDropOpen: false,
             coordDropOpen: false,
             monthLineButtonOpen: false,
+            monthButtonOpen: false,
 
             //Variable States
             alumSelected: [],
@@ -281,6 +294,11 @@ class LineChart extends Component {
         this.buttonLineMonth = this.buttonLineMonth.bind(this);
         this.onLineButtonMonthToggle = this.onLineButtonMonthToggle.bind(this)
         this.filterLine = this.filterLine.bind(this);
+        this.generarRanking = this.generarRanking.bind(this);
+       // this.topFive = this.topFive.bind(this);
+        this.obtenerRankingCareer = this.obtenerRankingCareer.bind(this);
+        this.obtenerAlumno = this.obtenerAlumno.bind(this);
+        this.obtenerRankingCord = this.obtenerRankingCord.bind(this);
     }
     componentWillMount() {
         if (this.props.infoUsuarios.userType === 1) {
@@ -403,11 +421,113 @@ class LineChart extends Component {
             monthLineButtonOpen: !this.state.monthLineButtonOpen,
         });
     }
+    onButtonMonthToggle() {
+        this.setState({
+            monthButtonOpen: !this.state.monthButtonOpen,
+        });
+    }
+
+    showCol(){
+        if(this.props.infoUsuarios.userType==2||this.props.infoUsuarios.userType==3){
+            this.setState({
+                monthButtonOpen: !this.state.monthButtonOpen,
+            });   
+        }
+    }
+    generarRanking(action){
+        if(action == this.state.escucha ){
+            this.obtenerRankingCord(action);
+        }
+        else{
+            this.obtenerRankingCareer(action);
+        }
+    //        this.topFive();
+    }
+
+   /* topFive(){
+        var uno, dos,tres, cuatro, cinco,
+        uno = obtenerAlumno(this.state.rankingAlumnos),
+        dos = obtenerAlumno(this.state.rankingAlumnos),
+        tres = obtenerAlumno(this.state.rankingAlumnos),
+        cuatro = obtenerAlumno(this.state.rankingAlumnos),
+        cinco = obteneraAlumno(this.state.rankingAlumnos);
+        this.setState({
+            firstUser:uno,
+            secondUser:dos,
+            thirdUser:tres,
+            fourthUser:cuatro,
+            fifthUser:cinco,
+            espera:false,
+        });
+    }*/
+
     //===============================================================================
     //==============================GETS=============================================
     //===============================================================================
+   
+    obtenerRankingCord(mes,coord) {
+        var fix = mes + 1;
+        var url = 'http://localhost:8082/userExercise/ranking/coordination/'+ coord + '/' + fecha.getFullYear() + '-' + fix;
+        this.setState({
+            espera: true
+        });
+        Axios.get(url)
+            .then(response => {
+                var resultado = response.data;
+                this.setState({
+                    rankingAlumnos: resultado,
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
 
-    obtenerAlumCord(coord) {
+    }
+    
+
+    obtenerAlumno(id) {
+        var url = 'http://localhost:8082/user/' + id;
+
+        Axios.get(url)
+            .then(response => {
+                var resultado = response.data;
+                this.setState({
+                    espera: true,
+                    result: resultado,
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+
+    }
+
+    obtenerRankingCareer(mes,career) {
+        var fix = mes + 1;
+        var url = 'http://localhost:8082/userExercise/ranking/career/'+ career + '/' + fecha.getFullYear() + '-' + fix;
+        //
+        this.setState({
+            espera: true
+        });
+        Axios.get(url)
+            .then(response => {
+                var resultado = response.data;
+                this.setState({
+                    rankingAlumnos: resultado,
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+
+    }
+    ///
+
+    obtenerAlumCoord(coord) {
+    
         var url = 'http://localhost:8082/user/coordination/' + coord;
         this.setState({
             espera: true
@@ -640,6 +760,27 @@ class LineChart extends Component {
             </ButtonDropdown>
         );
     }
+    buttonMonth(month) {
+        return (
+            <ButtonDropdown isOpen={this.state.monthButtonOpen} toggle={() => { this.onButtonMonthToggle() }}>
+                <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
+                <DropdownMenu direction="down">
+                    <DropdownItem header>Mes</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(2); }}>Marzo</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(3); }}>Abril</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(4); }}>Mayo</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(5); }}>Junio</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(6); }}>Julio</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(7); }}>Agosto</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(8); }}>Septiembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(9); }}>Octubre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(10); }}>Noviembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(11); }}>Diciembre</DropdownItem>
+                </DropdownMenu>
+            </ButtonDropdown>
+        );
+    }
+
     filterGroupLine(listaCareer, listaCoord) {
         return (
             <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
@@ -764,6 +905,89 @@ class LineChart extends Component {
             );
         }
     }
+
+    makeRanking(dataIn, optIn, month) {
+        //hacer ranking
+        var titulo = "Ranking Mejores alumnos y alumnas";
+        //this.generarRanking(month,carreraOcoord);
+
+        return (
+            <Card>
+                {this.chartTittle(titulo)}
+                {this.state.espera ?
+                    <CardBody>
+                        <div className="row">
+                            <div className='col'>
+                                <div className='defaultSpinner' ></div>
+                            </div>
+                        </div>
+                    </CardBody>
+                    :
+                    <CardBody>
+                        <Row>
+                            {this.state.profesor ?
+                                <Col className='text-right' xs='5'>
+                                    {this.filterGroupLine(this.state.careerList, this.state.coordList)}
+                                </Col>
+                                :
+                                <Col xs='3'>
+
+                                </Col>
+                            }
+                            <Col className='text-right' xs='1'>
+                                {this.buttonMonth(month)}
+                            </Col>
+
+                        </Row>
+                        <br></br><br></br>
+                        <Row>
+                        <Table responsive>
+                            
+                            <thead>
+                            <tr style={{fontSize:"13"}}>
+                                <th>Alumno</th>
+                                <th>Algo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td //this.state.firstUser
+                                    > pedro</td>
+                                    <td> pedro</td>
+                                </tr>
+                                <tr>
+                                    <td //this.state.secondUser
+                                    > pedro</td>
+                                    <td> pedro</td>
+                                  
+                                </tr>
+                                <tr>
+                                    <td //this.state.thirdUser
+                                    > pedro</td>
+                                    <td> pedro</td>
+                                </tr>
+                                <tr>
+                                    <td //this.state.fourthUser
+                                    > pedro</td>
+                                    <td> pedro</td>
+                                </tr>
+                                <tr>
+                                    <td //this.state.fifthUser
+                                    > pedro</td>
+                                    <td> pedro</td>
+                                </tr>
+                            
+                            </tbody>
+                            
+                        
+                            </Table>
+                        </Row>
+                    </CardBody>
+                }
+            </Card>
+        );
+    }
+
     makeLineChart(dataIn, optIn, month, filtro) {
         //PEDIR ENUNCIADOS SEGUN MES
         var titulo;
@@ -823,9 +1047,14 @@ class LineChart extends Component {
     //Calculo de values importantes
     render() {
         return (
-            <Col>
-                {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
-            </Col>
+            <div>
+                <Col>
+                    {this.makeRanking(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected)}
+                </Col>
+                <Col>
+                    {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
+                </Col>
+            </div>
         );
     }
     setDataEnun(dataCatch) {
