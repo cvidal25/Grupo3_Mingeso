@@ -244,14 +244,14 @@ class LineChart extends Component {
         };
         this.state = {
             //top5
-            rankingAlumnos:'',
-            firstUser:'',
-            secondUser:'',
-            thirdUser:'',
-            fourthUser:'',
-            fifthUser:'',
-            escucha:'',
-            result:'',
+            rankingAlumnos: '',
+            firstUser: '',
+            secondUser: '',
+            thirdUser: '',
+            fourthUser: '',
+            fifthUser: '',
+            escucha: '',
+            result: '',
 
 
             //Buttons States
@@ -295,7 +295,7 @@ class LineChart extends Component {
         this.onLineButtonMonthToggle = this.onLineButtonMonthToggle.bind(this)
         this.filterLine = this.filterLine.bind(this);
         this.generarRanking = this.generarRanking.bind(this);
-       // this.topFive = this.topFive.bind(this);
+        // this.topFive = this.topFive.bind(this);
         this.obtenerRankingCareer = this.obtenerRankingCareer.bind(this);
         this.obtenerAlumno = this.obtenerAlumno.bind(this);
         this.obtenerRankingCord = this.obtenerRankingCord.bind(this);
@@ -362,6 +362,12 @@ class LineChart extends Component {
         if (this.props.infoUsuarios.userType === 3) {
             this.obtenerDataCarrer(this.state.monthLineSelected, sel);
         }
+        else{
+            if(sel==='Todas')
+                this.obtenerAlumCoord(this.state.coord);
+            else
+                this.obtenerAlumBeCareerOnCoord(sel,this.state.coord);
+        }
     }
 
     onLineCoordItemSelect(sel) {
@@ -371,7 +377,12 @@ class LineChart extends Component {
             careerSight: false,
             coordSight: true
         });
-        this.obtenerAlumCord(sel);
+        if(this.state.career==='Todas'){
+            this.obtenerAlumCoord(sel);
+        }
+        else{
+            this.obtenerAlumBeCareerOnCoord(this.state.career,sel);
+        }
         this.obtenerDataCoord(this.state.monthLineSelected, sel);
     }
 
@@ -427,47 +438,47 @@ class LineChart extends Component {
         });
     }
 
-    showCol(){
-        if(this.props.infoUsuarios.userType==2||this.props.infoUsuarios.userType==3){
+    showCol() {
+        if (this.props.infoUsuarios.userType == 2 || this.props.infoUsuarios.userType == 3) {
             this.setState({
                 monthButtonOpen: !this.state.monthButtonOpen,
-            });   
+            });
         }
     }
-    generarRanking(action){
-        if(action == this.state.escucha ){
+    generarRanking(action) {
+        if (action == this.state.escucha) {
             this.obtenerRankingCord(action);
         }
-        else{
+        else {
             this.obtenerRankingCareer(action);
         }
-    //        this.topFive();
+        //        this.topFive();
     }
 
-   /* topFive(){
-        var uno, dos,tres, cuatro, cinco,
-        uno = obtenerAlumno(this.state.rankingAlumnos),
-        dos = obtenerAlumno(this.state.rankingAlumnos),
-        tres = obtenerAlumno(this.state.rankingAlumnos),
-        cuatro = obtenerAlumno(this.state.rankingAlumnos),
-        cinco = obteneraAlumno(this.state.rankingAlumnos);
-        this.setState({
-            firstUser:uno,
-            secondUser:dos,
-            thirdUser:tres,
-            fourthUser:cuatro,
-            fifthUser:cinco,
-            espera:false,
-        });
-    }*/
+    /* topFive(){
+         var uno, dos,tres, cuatro, cinco,
+         uno = obtenerAlumno(this.state.rankingAlumnos),
+         dos = obtenerAlumno(this.state.rankingAlumnos),
+         tres = obtenerAlumno(this.state.rankingAlumnos),
+         cuatro = obtenerAlumno(this.state.rankingAlumnos),
+         cinco = obteneraAlumno(this.state.rankingAlumnos);
+         this.setState({
+             firstUser:uno,
+             secondUser:dos,
+             thirdUser:tres,
+             fourthUser:cuatro,
+             fifthUser:cinco,
+             espera:false,
+         });
+     }*/
 
     //===============================================================================
     //==============================GETS=============================================
     //===============================================================================
-   
-    obtenerRankingCord(mes,coord) {
+
+    obtenerRankingCord(mes, coord) {
         var fix = mes + 1;
-        var url = 'http://localhost:8082/userExercise/ranking/coordination/'+ coord + '/' + fecha.getFullYear() + '-' + fix;
+        var url = 'http://localhost:8082/userExercise/ranking/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
         this.setState({
             espera: true
         });
@@ -484,7 +495,7 @@ class LineChart extends Component {
             });
 
     }
-    
+
 
     obtenerAlumno(id) {
         var url = 'http://localhost:8082/user/' + id;
@@ -504,9 +515,9 @@ class LineChart extends Component {
 
     }
 
-    obtenerRankingCareer(mes,career) {
+    obtenerRankingCareer(mes, career) {
         var fix = mes + 1;
-        var url = 'http://localhost:8082/userExercise/ranking/career/'+ career + '/' + fecha.getFullYear() + '-' + fix;
+        var url = 'http://localhost:8082/userExercise/ranking/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
         //
         this.setState({
             espera: true
@@ -525,9 +536,26 @@ class LineChart extends Component {
 
     }
     ///
-
+    obtenerAlumBeCareerOnCoord(career,coord){
+        var url = 'http://localhost:8082/user/careerCoordination/'+career+ '/' + coord;
+        this.setState({
+            espera: true
+        });
+        Axios.get(url)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setState({
+                    alumList: dataCatch,
+                    espera: false
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+    }
     obtenerAlumCoord(coord) {
-    
+
         var url = 'http://localhost:8082/user/coordination/' + coord;
         this.setState({
             espera: true
@@ -941,45 +969,45 @@ class LineChart extends Component {
                         </Row>
                         <br></br><br></br>
                         <Row>
-                        <Table responsive>
-                            
-                            <thead>
-                            <tr style={{fontSize:"13"}}>
-                                <th>Alumno</th>
-                                <th>Algo</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td //this.state.firstUser
-                                    > pedro</td>
-                                    <td> pedro</td>
-                                </tr>
-                                <tr>
-                                    <td //this.state.secondUser
-                                    > pedro</td>
-                                    <td> pedro</td>
-                                  
-                                </tr>
-                                <tr>
-                                    <td //this.state.thirdUser
-                                    > pedro</td>
-                                    <td> pedro</td>
-                                </tr>
-                                <tr>
-                                    <td //this.state.fourthUser
-                                    > pedro</td>
-                                    <td> pedro</td>
-                                </tr>
-                                <tr>
-                                    <td //this.state.fifthUser
-                                    > pedro</td>
-                                    <td> pedro</td>
-                                </tr>
-                            
-                            </tbody>
-                            
-                        
+                            <Table responsive>
+
+                                <thead>
+                                    <tr style={{ fontSize: "13" }}>
+                                        <th>Alumno</th>
+                                        <th>Algo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td //this.state.firstUser
+                                        > pedro</td>
+                                        <td> pedro</td>
+                                    </tr>
+                                    <tr>
+                                        <td //this.state.secondUser
+                                        > pedro</td>
+                                        <td> pedro</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td //this.state.thirdUser
+                                        > pedro</td>
+                                        <td> pedro</td>
+                                    </tr>
+                                    <tr>
+                                        <td //this.state.fourthUser
+                                        > pedro</td>
+                                        <td> pedro</td>
+                                    </tr>
+                                    <tr>
+                                        <td //this.state.fifthUser
+                                        > pedro</td>
+                                        <td> pedro</td>
+                                    </tr>
+
+                                </tbody>
+
+
                             </Table>
                         </Row>
                     </CardBody>
@@ -1046,15 +1074,18 @@ class LineChart extends Component {
 
     //Calculo de values importantes
     render() {
-        return (
-            <div>
+        {/*<div>
                 <Col>
                     {this.makeRanking(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected)}
                 </Col>
                 <Col>
                     {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
                 </Col>
-            </div>
+            </div>*/}
+        return (
+            <Col>
+                {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
+            </Col>
         );
     }
     setDataEnun(dataCatch) {
