@@ -130,7 +130,7 @@ class EnunciadoPro extends Component{
         var array =this.state.items;
         var element=array[posicion];
 
-        Axios.delete('http://localhost:8082/exercise/delete/'+id.toString())
+        Axios.delete('http://localhost:8082/exercise/'+id.toString())
         .then(response=>{
             console.log(response);
             array.splice(posicion,1);
@@ -140,10 +140,10 @@ class EnunciadoPro extends Component{
 
         }).catch(error=>{
             console.log(error);
-            array.splice(posicion,0,element);
-            this.setState({
-                items:array
-            });
+        //    array.splice(posicion,0,element);
+         //   this.setState({
+         //       items:array
+          //  });
         });
        
     }
