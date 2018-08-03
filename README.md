@@ -67,6 +67,6 @@ Instalar IDE
 * **Eduardo Bustamante**
 * **Shalini Ramchandani**
 * **Jorge Paredes**
-* **Barbara Sarmiento**
+* **Bárbara Sarmiento**
 * **Christian Vidal**
 
