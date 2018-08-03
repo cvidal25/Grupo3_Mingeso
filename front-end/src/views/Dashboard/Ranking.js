@@ -118,35 +118,27 @@ class Ranking extends Component {
         super();
         this.state = {
             coord: false,
+            career: false,
             careerDropOpen: false,
             coordDropOpen: false,
             profesor: null,
 
-            monthSelected:fecha.getMonth(),
+            monthSelected: fecha.getMonth(),
             monthButtonOpen: false,
 
-            coordList:[],
-            careerList:[],
+            coordList: [],
+            careerList: [],
 
             careerLabel: 'Carreras',
-            coordLabel:'Coordinación',
-            idList:[],
-            alumList:[],
+            coordLabel: 'Coordinación',
+            idList: [],
+            alumList: [],
+            trueSight: false
 
         };
     }
-    componentWillMount(){
-        if (this.props.infoUsuarios.userType === 1) {
-            this.setState({
-                profesor: false,
-                alumSelected: this.props.infoUsuarios,
-                lineSelected: 1,
-                careerSight: false,
-                coordSight: false
-            });
-            this.obtenerRankingCord(this.state.monthSelected,this.state.coordList[0])
-        }
-        else {
+    componentWillMount() {
+        if (this.props.infoUsuarios.userType === 3) {
             this.obtenerCarreras(this.props.infoUsuarios.userType);
             this.obtenerCoords(this.props.infoUsuarios.userType);
             this.setState({
@@ -156,7 +148,15 @@ class Ranking extends Component {
                 coord: this.state.coordList[0],
                 career: this.state.careerList[0],
             });
-            this.obtenerRankingCareer(this.state.monthSelected,this.state.careerList[0]);
+            this.obtenerRankingCareer(this.state.monthSelected, this.state.careerList[0]);
+        }
+        else {
+            this.setState({
+                profesor: false,
+                coord: this.props.infoUsuarios.userCoordination,
+                career: this.props.infoUsuarios.userCareer,
+            });
+            this.obtenerRankingCord(this.state.monthSelected, this.props.infoUsuarios.userCoordination)
         }
     }
     onButtonMonthToggle() {
@@ -169,25 +169,18 @@ class Ranking extends Component {
             monthSelected: i,
         });
         if (this.props.infoUsuarios.userType === 1) {
-            
+            this.obtenerRankingCord(i, this.state.coord);
         }
 
         else if (this.props.infoUsuarios.userType === 2) {
-            if (this.state.coordSight === true) {
-                
-            }
-            else {
-                
-            }
+            this.obtenerRankingCord(i, this.state.coord);
         }
         else if (this.props.infoUsuarios.userType === 3) {
-            if (this.state.careerSight === true) {
-                
-            }
-            else if (this.state.coordSight === true) {
-                this.obtenerDataCoord(i, this.state.coord);
+            if (this.state.trueSight == true) {
+                this.obtenerRankingCareer(i, this.state.career)
             }
             else {
+                this.obtenerRankingCord(i, this.state.coord);
             }
         }
 
@@ -196,38 +189,18 @@ class Ranking extends Component {
         this.setState({
             careerLabel: sel,
             career: sel,
-            careerSight: true,
-            coordSight: false
+            trueSight: true
         });
-        if (this.props.infoUsuarios.userType === 3) {
-            //this.obtenerDataCarrer(this.state.monthSelected, sel);
-        }
-        else{
-            if(sel==='Todas'){
-                //this.obtenerAlumCoord(this.state.coord);
-                this.setState({alumLabel:'---- ----'});
-            }
-            else
-                this.obtenerRankingCareer(this.state.monthSelected,sel);
-        }
+        this.obtenerRankingCareer(this.state.monthSelected, sel);
     }
 
     onCoordItemSelect(sel) {
         this.setState({
             coordLabel: sel,
             coord: sel,
-            careerSight: false,
-            coordSight: true
+            trueSight: false
         });
-        if(this.state.career==='Todas'){
-            //this.obtenerAlumCoord(sel);
-            this.setState({alumLabel:'---- ----'});
-        }
-        else{
-            //this.obtenerAlumBeCareerOnCoord(this.state.career,sel);
-            this.setState({alumLabel:'---- ----'});
-        }
-        //this.obtenerDataCoord(this.state.monthSelected, sel);
+        this.obtenerRankingCord(this.state.monthSelected, sel);
     }
     obtenerCarreras(user) {
         var url;
@@ -292,11 +265,11 @@ class Ranking extends Component {
         });
         Axios.get(url)
             .then(response => {
-                var dataCatch = response.data;
-                console.log(dataCatch);
+                var dataCatch = response.data[0];
+                this.obtenerAlumnos(dataCatch);
                 this.setState({
                     idList: dataCatch,
-                    espera: false
+                    careerLabel: "Carreras"
                 });
             })
             .catch(function (error) {
@@ -305,24 +278,41 @@ class Ranking extends Component {
             });
 
     }
-    obtenerAlumno(id) {
-        var url = 'http://localhost:8082/user/' + id;
 
-        this.setState({espera: true});
-
-        Axios.get(url)
-            .then(response => {
-                var dataCatch= response.data;
-                console.log(dataCatch);
-                this.setState({
-                    alumList: dataCatch,
-                    espera: false,
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-                this.setState({ espera: false });
+    obtenerAlumnos(idsList) {
+        var Consultas = [];
+        var i;
+        var des = 0;
+        this.setState({
+            espera: true
+        });
+        while (des == 0) {
+            var auxid = idsList.pop();
+            if (auxid == null) {
+                des = 1;
+            }
+            else {
+                Consultas.push(
+                    Axios.get('http://localhost:8082/user/' + auxid)
+                );
+            }
+        }
+        Promise.all(Consultas).then(response => {
+            var listaAlum = [];
+            console.log(Consultas.length);
+            for (i = 0; i < Consultas.length; i++) {
+                console.log(response[i].data);
+                listaAlum.push(response[i].data);
+            }
+            this.setState({
+                alumList: listaAlum,
+                espera: false
             });
+
+        }).catch(function (error) {
+            console.log(error);
+            this.setState({ espera: false });
+        });
 
     }
     obtenerRankingCareer(mes, career) {
@@ -333,24 +323,24 @@ class Ranking extends Component {
         });
         Axios.get(url)
             .then(response => {
-                var dataCatch = response.data;
+                var dataCatch = response.data[0];
                 console.log(dataCatch);
+                this.obtenerAlumnos(dataCatch);
                 this.setState({
                     idList: dataCatch,
-                    espera: false,
+                    coordLabel: "Carreras"
                 });
             })
             .catch(function (error) {
                 console.log(error);
                 this.setState({ espera: false });
             });
-
     }
     filterGroup(listaCareer, listaCoord) {
         return (
             <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
                 <ButtonGroup horizontal="true">
-                    <ButtonDropdown isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
+                    <ButtonDropdown size="sm" isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
                         <DropdownToggle caret>
                             {this.state.careerLabel}
                         </DropdownToggle>
@@ -361,7 +351,7 @@ class Ranking extends Component {
                             )}
                         </DropdownMenu>
                     </ButtonDropdown>
-                    <ButtonDropdown isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
+                    <ButtonDropdown size="sm" isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
                         <DropdownToggle caret>
                             {this.state.coordLabel}
                         </DropdownToggle>
@@ -379,7 +369,7 @@ class Ranking extends Component {
     }
     buttonMonth(month) {
         return (
-            <ButtonDropdown isOpen={this.state.monthButtonOpen} toggle={() => { this.onButtonMonthToggle() }}>
+            <ButtonDropdown size="sm" isOpen={this.state.monthButtonOpen} toggle={() => { this.onButtonMonthToggle() }}>
                 <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
                 <DropdownMenu direction="down">
                     <DropdownItem header>Mes</DropdownItem>
@@ -407,18 +397,30 @@ class Ranking extends Component {
     alumList(listaAlumnos) {
         return (
             <Col>
+                <Row>
+                    <Col xs='2' className='text-left'>
+                        <strong>Pos</strong>
+                    </Col>
+                    <Col xs='8' className='text-center'>
+                        <strong> Nombre</strong>
+                    </Col>
+                    <Col className='text-right'>
+                        <strong>Total</strong>
+                    </Col>
+                </Row>
+
                 {listaAlumnos && listaAlumnos.map((alumno, key) =>
-                    <div key={key} className="progress-group mb-4">
-                        <div className="progress-group-prepend">
-                            <span className="progress-group-text">
-                                {alumno.userName}
-                            </span>
-                        </div>
-                        <div className="progress-group-bars">
-                            <Progress className="progress-xs" color="info" value="78" />
-                            <Progress className="progress-xs" color="danger" value="78" />
-                        </div>
-                    </div>
+                    <Row>
+                        <Col xs='2' className='text-left'>
+                            <div className="text-muted">{key + 1}</div>
+                        </Col>
+                        <Col xs='8' className='text-left'>
+                            <div className="text-muted">{alumno.userName}</div>
+                        </Col>
+                        <Col className='text-center'>
+                            <div className="text-muted">N/A</div>
+                        </Col>
+                    </Row>
                 )}
                 <div className="legend text-center">
                     <small>
@@ -443,18 +445,22 @@ class Ranking extends Component {
                             <div className='defaultSpinner' ></div>
                         </div>
                     </div>
-                :
-                <CardBody>
-                    <Row>
-                        <Col className='text-left'>
-                            {this.filterGroup(this.state.careerList,this.state.coordList)}
-                        </Col>
-                        <Col className='text-right'>
-                            {this.buttonMonth(month)}
-                        </Col>
-                    </Row>
-                    {this.alumList(this.state.listaAlumnos)}
-                </CardBody>
+                    :
+                    <CardBody>
+                        <Row>
+                            {this.state.profesor ?
+                                <Col className='text-left'>
+                                    {this.filterGroup(this.state.careerList, this.state.coordList)}
+                                </Col>
+                                :
+                                <div />
+                            }
+                            <Col className='text-right'>
+                                {this.buttonMonth(month)}
+                            </Col>
+                        </Row>
+                        {this.alumList(this.state.alumList)}
+                    </CardBody>
                 }
             </Card>
         );

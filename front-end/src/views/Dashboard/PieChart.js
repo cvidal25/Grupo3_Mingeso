@@ -80,16 +80,17 @@ class PieChart extends Component {
     };
     this.state = {
 
+      viewing: null,
       careerDropOpen: false,
       coordDropOpen: false,
-      monthPieButtonOpen: false,
+      monthButtonOpen: false,
 
       alumSelected: [],
       pieSelected: 1,
-      monthPieSelected: fecha.getMonth(),
+      monthSelected: fecha.getMonth(),
 
       //Chart States
-      dataPieChart: null,
+      dataChart: null,
 
       alumList: [],
       coordList: [],
@@ -117,7 +118,7 @@ class PieChart extends Component {
         careerSight: false,
         coordSight: false
       });
-      this.obtenerDataAlum(this.state.monthPieSelected, 0);
+      this.obtenerDataAlum(this.state.monthSelected, 0);
     }
     else {
       this.obtenerCarreras(this.props.infoUsuarios.userType);
@@ -133,7 +134,17 @@ class PieChart extends Component {
         careerLabel: 'Carreras',
         coordLabel: 'Coordinación'
       });
-      this.obtenerDataCarrer(this.state.monthPieSelected, this.state.careerList[0]);
+      if (this.props.infoUsuarios.userType === 3) {
+        this.obtenerDataCarrer(this.state.monthSelected, this.props.infoUsuarios.userCareer);
+      }
+      else {
+        this.setState({
+          coordLabel: this.props.infoUsuarios.userCoordination,
+          coord: this.props.infoUsuarios.userCoordination
+        });
+        this.obtenerAlumCoord(this.props.infoUsuarios.userCoordination);
+        this.obtenerDataCoord(this.state.monthSelected, this.props.infoUsuarios.userCoordination);
+      }
     }
   }
   onPieFiltClick(selected) {
@@ -142,20 +153,20 @@ class PieChart extends Component {
     });
     if (selected === 1) {
       this.setState({
-        dataPieChart: this.pieDataEnum,
+        dataChart: this.pieDataEnum,
         pieSelected: selected,
         espera: false
       });
     }
     else if (selected === 2) {
       this.setState({
-        dataPieChart: this.pieDataTime,
+        dataChart: this.pieDataTime,
         pieSelected: selected,
         espera: false
       });
     }
   }
-  onPieCareerItemSelected(sel) {
+  onCareerItemSelected(sel) {
     this.setState({
       careerLabel: sel,
       career: sel,
@@ -163,18 +174,41 @@ class PieChart extends Component {
       coordSight: false
     });
     if (this.props.infoUsuarios.userType === 3) {
-      this.obtenerDataCarrer(this.state.monthPieSelected, sel);
+      this.obtenerDataCarrer(this.state.monthSelected, sel);
+      this.setState({
+        coordLabel: 'Coordinación',
+        alumList: null,
+        alumLabel: '---- ----'
+      });
+    }
+    else {
+      this.obtenerAlumBeCareerOnCoord(sel, this.state.coord);
+      this.setState({ alumLabel: '---- ----' });
     }
   }
-  onPieCoordItemSelected(sel) {
+  onCoordItemSelected(sel) {
     this.setState({
       coordLabel: sel,
       coord: sel,
       careerSight: false,
       coordSight: true
     });
-    this.obtenerAlumCord(sel);
-    this.obtenerDataCoord(this.state.monthPieSelected, sel);
+    if (this.props.infoUsuarios.userType === 3) {
+      this.obtenerDataCoord(this.state.monthSelected, sel);
+      this.obtenerAlumCoord(sel);
+      this.setState({
+        careerLabel: 'Carreras',
+        alumLabel: '---- ----'
+      });
+    }
+    else {
+      this.obtenerAlumCoord(sel);
+      this.setState({
+        careerLabel: 'Carreras',
+        alumLabel: '---- ----'
+      });
+      this.obtenerDataCoord(this.state.monthSelected, sel);
+    }
   }
 
   onUserItemSelect(alumno) {
@@ -185,16 +219,16 @@ class PieChart extends Component {
       careerSight: false,
       coordSight: false
     });
-    this.obtenerDataAlum(this.state.monthPieSelected, alumno);
+    this.obtenerDataAlum(this.state.monthSelected, alumno);
   }
-  onPieButtonMonthToggle() {
+  onButtonMonthToggle() {
     this.setState({
-      monthPieButtonOpen: !this.state.monthPieButtonOpen,
+      monthButtonOpen: !this.state.monthButtonOpen,
     });
   }
-  onPieMonthItemSelected(i) {
+  onMonthItemSelected(i) {
     this.setState({
-      monthPieSelected: i,
+      monthSelected: i,
     });
     if (this.props.infoUsuarios.userType === 1) {
       this.obtenerDataAlum(i, this.state.alumSelected);
@@ -202,6 +236,9 @@ class PieChart extends Component {
 
     else if (this.props.infoUsuarios.userType === 2) {
       if (this.state.coordSight === true) {
+        this.obtenerDataCoord(i, this.state.coord);
+      }
+      else if (this.state.careerSight === true) {
         this.obtenerDataCoord(i, this.state.coord);
       }
       else {
@@ -220,7 +257,26 @@ class PieChart extends Component {
       }
     }
   }
-  obtenerAlumCord(coord) {
+
+  obtenerAlumBeCareerOnCoord(career, coord) {
+    var url = 'http://localhost:8082/user/careerCoordination/' + career + '/' + coord;
+    this.setState({
+      espera: true
+    });
+    Axios.get(url)
+      .then(response => {
+        var dataCatch = response.data;
+        this.setState({
+          alumList: dataCatch,
+          espera: false
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ espera: false });
+      });
+  }
+  obtenerAlumCoord(coord) {
     var url = 'http://localhost:8082/user/coordination/' + coord;
     this.setState({
       espera: true
@@ -298,7 +354,8 @@ class PieChart extends Component {
     var url, url2;
     var fix = mes + 1;
     this.setState({
-      espera: true
+      espera: true,
+      viewing: coord,
     });
     url = 'http://localhost:8082/userExercise/exercise/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
     url2 = 'http://localhost:8082/userExercise/time/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
@@ -327,12 +384,12 @@ class PieChart extends Component {
 
     if (this.state.pieSelected === 1) {
       this.setState({
-        dataPieChart: this.pieDataEnum,
+        dataChart: this.pieDataEnum,
       });
     }
     else if (this.state.pieSelected === 2) {
       this.setState({
-        dataPieChart: this.pieDataTime,
+        dataChart: this.pieDataTime,
       });
     }
   }
@@ -340,7 +397,8 @@ class PieChart extends Component {
     var url, url2;
     var fix = mes + 1;
     this.setState({
-      espera: true
+      espera: true,
+      viewing: career,
     });
     url = 'http://localhost:8082/userExercise/exercise/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
     url2 = 'http://localhost:8082/userExercise/time/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
@@ -369,12 +427,12 @@ class PieChart extends Component {
 
     if (this.state.pieSelected === 1) {
       this.setState({
-        dataPieChart: this.pieDataEnum,
+        dataChart: this.pieDataEnum,
       });
     }
     else if (this.state.pieSelected === 2) {
       this.setState({
-        dataPieChart: this.pieDataTime,
+        dataChart: this.pieDataTime,
       });
     }
   }
@@ -382,7 +440,8 @@ class PieChart extends Component {
     var url, url2;
     var fix = mes + 1;
     this.setState({
-      espera: true
+      espera: true,
+      viewing: alum.userName,
     });
     if (alum === 0) {
       url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
@@ -417,12 +476,12 @@ class PieChart extends Component {
 
     if (this.state.pieSelected === 1) {
       this.setState({
-        dataPieChart: this.pieDataEnum,
+        dataChart: this.pieDataEnum,
       });
     }
     else if (this.state.pieSelected === 2) {
       this.setState({
-        dataPieChart: this.pieDataTime,
+        dataChart: this.pieDataTime,
       });
     }
   }
@@ -453,27 +512,27 @@ class PieChart extends Component {
     //    console.log(pieDataTime);
   }
 
-  buttonPieMonth(month) {
+  buttonMonth(month) {
     return (
-      <ButtonDropdown size="sm" isOpen={this.state.monthPieButtonOpen} toggle={() => { this.onPieButtonMonthToggle() }}>
+      <ButtonDropdown size="sm" isOpen={this.state.monthButtonOpen} toggle={() => { this.onButtonMonthToggle() }}>
         <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
         <DropdownMenu direction="down">
           <DropdownItem header>Mes</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(2); }}>Marzo</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(3); }}>Abril</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(4); }}>Mayo</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(5); }}>Junio</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(6); }}>Julio</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(7); }}>Agosto</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(8); }}>Septiembre</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(9); }}>Octubre</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(10); }}>Noviembre</DropdownItem>
-          <DropdownItem onClick={() => { this.onPieMonthItemSelected(11); }}>Diciembre</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(2); }}>Marzo</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(3); }}>Abril</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(4); }}>Mayo</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(5); }}>Junio</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(6); }}>Julio</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(7); }}>Agosto</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(8); }}>Septiembre</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(9); }}>Octubre</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(10); }}>Noviembre</DropdownItem>
+          <DropdownItem onClick={() => { this.onMonthItemSelected(11); }}>Diciembre</DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>
     );
   }
-  filterGroupPie(listaCareer, listaCoord) {
+  filterGroup(listaCareer, listaCoord) {
     return (
       <ButtonToolbar className="float-left" aria-label="Toolbar with button groups">
         <ButtonGroup horizontal="true">
@@ -482,20 +541,18 @@ class PieChart extends Component {
               {this.state.careerLabel}
             </DropdownToggle>
             <DropdownMenu direction="down">
-              <DropdownItem onClick={() => this.onPieCareerItemSelected('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
               {listaCareer && listaCareer.map((career, key) =>
-                <DropdownItem key={key} onClick={() => this.onPieCareerItemSelected(career)} active={this.state.career === career}>{career}</DropdownItem>
+                <DropdownItem key={key} onClick={() => this.onCareerItemSelected(career)}>{career}</DropdownItem>
               )}
             </DropdownMenu>
           </ButtonDropdown>
           <ButtonDropdown size="sm" isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
             <DropdownToggle caret>
               {this.state.coordLabel}
-                </DropdownToggle>
+            </DropdownToggle>
             <DropdownMenu direction="down">
-              <DropdownItem onClick={() => this.onPieCoordItemSelected('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
               {listaCoord && listaCoord.map((cord, key) =>
-                <DropdownItem key={key} onClick={() => this.onPieCoordItemSelected(cord)} active={this.state.coord === cord}>{cord}</DropdownItem>
+                <DropdownItem key={key} onClick={() => this.onCoordItemSelected(cord)} >{cord}</DropdownItem>
               )}
             </DropdownMenu>
           </ButtonDropdown>
@@ -505,9 +562,20 @@ class PieChart extends Component {
 
   }
   filterUser(listaAlumnos) {
+    var des;
+    if (listaAlumnos === null || listaAlumnos.length === 0)
+      des = true;
+    else
+      des = false;
     return (
       <Input type="select" name="select" id="select">
         <option value="0">{this.state.alumLabel}</option>
+        {des ?
+          <div />
+          :
+          <optgroup className="text-center" label='-----------------------------'>
+          </optgroup>
+        }
         {listaAlumnos && listaAlumnos.map((alumno, key) =>
           <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
         )}
@@ -534,7 +602,7 @@ class PieChart extends Component {
   chartTittle(titulo) {
     return (
       <CardHeader>
-        <i className="fa fa-align-justify"></i> {titulo}
+        <i className="fa fa-align-justify"></i> {titulo +' - '+ this.state.viewing +' mes de '+monthsLabel[this.state.monthSelected]}
       </CardHeader>
     )
   }
@@ -565,14 +633,14 @@ class PieChart extends Component {
                 {this.filterPie()}
               </Col>
               <Col className='text-right' xs='6'>
-                {this.buttonPieMonth(month)}
+                {this.buttonMonth(month)}
               </Col>
             </Row>
             {this.chartPie(dataIn, month)}
             {this.state.profesor ?
               <Row>
                 <Col className='text-center' xs='9'>
-                  {this.filterGroupPie(this.state.careerList, this.state.coordList)}
+                  {this.filterGroup(this.state.careerList, this.state.coordList)}
                 </Col>
                 <Col xs='3'>
                   {this.filterUser(this.state.alumList)}
@@ -662,7 +730,7 @@ class PieChart extends Component {
   render() {
     return (
       <Col>
-        {this.makePieChart(this.state.dataPieChart, this.state.monthPieSelected, this.state.pieSelected)}
+        {this.makePieChart(this.state.dataChart, this.state.monthSelected, this.state.pieSelected)}
       </Col>
     )
   }

@@ -244,6 +244,7 @@ class LineChart extends Component {
         };
         this.state = {
             //Buttons States
+            viewing: null,
             careerDropOpen: false,
             coordDropOpen: false,
             monthButtonOpen: false,
@@ -308,8 +309,20 @@ class LineChart extends Component {
                 careerSight: true,
                 coordSight: false
             });
-            this.obtenerDataCarrer(this.state.monthSelected, this.state.careerList[0]);
+
+            if (this.props.infoUsuarios.userType === 3) {
+                this.obtenerDataCarrer(this.state.monthSelected, this.props.infoUsuarios.userCareer);
+            }
+            else {
+                this.setState({
+                    coordLabel: this.props.infoUsuarios.userCoordination,
+                    coord: this.props.infoUsuarios.userCoordination
+                });
+                this.obtenerAlumCoord(this.props.infoUsuarios.userCoordination);
+                this.obtenerDataCoord(this.state.monthSelected, this.props.infoUsuarios.userCoordination);
+            }
         }
+
     }
 
     onLineFiltClick(selected) {
@@ -344,14 +357,15 @@ class LineChart extends Component {
         });
         if (this.props.infoUsuarios.userType === 3) {
             this.obtenerDataCarrer(this.state.monthSelected, sel);
+            this.setState({
+                coordLabel: 'Coordinación',
+                alumList: null,
+                alumLabel: '---- ----'
+            });
         }
-        else{
-            if(sel==='Todas'){
-                this.obtenerAlumCoord(this.state.coord);
-                this.setState({alumLabel:'---- ----'});
-            }
-            else
-                this.obtenerAlumBeCareerOnCoord(sel,this.state.coord);
+        else {
+            this.obtenerAlumBeCareerOnCoord(sel, this.state.coord);
+            this.setState({ alumLabel: '---- ----' });
         }
     }
 
@@ -362,15 +376,21 @@ class LineChart extends Component {
             careerSight: false,
             coordSight: true
         });
-        if(this.state.career==='Todas'){
+        if (this.props.infoUsuarios.userType === 3) {
+            this.obtenerDataCoord(this.state.monthSelected, sel);
             this.obtenerAlumCoord(sel);
-            this.setState({alumLabel:'---- ----'});
+            this.setState({
+                careerLabel: 'Carreras',
+                alumLabel: '---- ----'
+            });
         }
-        else{
-            this.obtenerAlumBeCareerOnCoord(this.state.career,sel);
-            this.setState({alumLabel:'---- ----'});
+        else {
+            this.obtenerAlumCoord(sel);
+            this.setState({ 
+                careerLabel: 'Carreras',
+                alumLabel: '---- ----' });
+            this.obtenerDataCoord(this.state.monthSelected, sel);
         }
-        this.obtenerDataCoord(this.state.monthSelected, sel);
     }
 
     onUserItemSelect(alumno) {
@@ -394,6 +414,9 @@ class LineChart extends Component {
 
         else if (this.props.infoUsuarios.userType === 2) {
             if (this.state.coordSight === true) {
+                this.obtenerDataCoord(i, this.state.coord);
+            }
+            else if(this.state.careerSight === true){
                 this.obtenerDataCoord(i, this.state.coord);
             }
             else {
@@ -423,10 +446,10 @@ class LineChart extends Component {
     //==============================GETS=============================================
     //===============================================================================
 
-    
+
     ///
-    obtenerAlumBeCareerOnCoord(career,coord){
-        var url = 'http://localhost:8082/user/careerCoordination/'+career+ '/' + coord;
+    obtenerAlumBeCareerOnCoord(career, coord) {
+        var url = 'http://localhost:8082/user/careerCoordination/' + career + '/' + coord;
         this.setState({
             espera: true
         });
@@ -523,7 +546,8 @@ class LineChart extends Component {
         var url, url2;
         var fix = mes + 1;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: 'Sección: '+ coord,
         });
         url = 'http://localhost:8082/userExercise/exercise/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
         url2 = 'http://localhost:8082/userExercise/time/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
@@ -567,7 +591,8 @@ class LineChart extends Component {
         var url, url2;
         var fix = mes + 1;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: career,
         });
         url = 'http://localhost:8082/userExercise/exercise/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
         url2 = 'http://localhost:8082/userExercise/time/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
@@ -611,7 +636,8 @@ class LineChart extends Component {
         var url, url2;
         var fix = mes + 1;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: alum.userName,
         });
         if (alum === 0) {
             url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
@@ -688,9 +714,8 @@ class LineChart extends Component {
                             {this.state.careerLabel}
                         </DropdownToggle>
                         <DropdownMenu direction="down">
-                            <DropdownItem onClick={() => this.onCareerItemSelect('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
                             {listaCareer && listaCareer.map((career, key) =>
-                                <DropdownItem key={key} onClick={() => this.onCareerItemSelect(career)} active={this.state.career === career}>{career}</DropdownItem>
+                                <DropdownItem key={key} onClick={() => this.onCareerItemSelect(career)} >{career}</DropdownItem>
                             )}
                         </DropdownMenu>
                     </ButtonDropdown>
@@ -699,9 +724,8 @@ class LineChart extends Component {
                             {this.state.coordLabel}
                         </DropdownToggle>
                         <DropdownMenu direction="down">
-                            <DropdownItem onClick={() => this.onCoordItemSelect('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
                             {listaCoord && listaCoord.map((cord, key) =>
-                                <DropdownItem key={key} onClick={() => this.onCoordItemSelect(cord)} active={this.state.coord === cord}>{cord}</DropdownItem>
+                                <DropdownItem key={key} onClick={() => this.onCoordItemSelect(cord)} >{cord}</DropdownItem>
                             )}
                         </DropdownMenu>
                     </ButtonDropdown>
@@ -711,9 +735,21 @@ class LineChart extends Component {
 
     }
     filterUser(listaAlumnos) {
+        var des;
+        if (listaAlumnos === null || listaAlumnos.length === 0)
+            des = true;
+        else
+            des = false;
+
         return (
             <Input type="select" name="select" id="select">
                 <option value="0">{this.state.alumLabel}</option>
+                {des ?
+                    <div />
+                    :
+                    <optgroup className="text-center" label='-----------------------------'>
+                    </optgroup>
+                }
                 {listaAlumnos && listaAlumnos.map((alumno, key) =>
                     <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
                 )}
@@ -741,7 +777,7 @@ class LineChart extends Component {
     chartTittle(titulo) {
         return (
             <CardHeader>
-                <i className="fa fa-align-justify"></i> {titulo}
+                <i className="fa fa-align-justify"></i> {titulo +' - '+ this.state.viewing +' mes de '+monthsLabel[this.state.monthSelected]}
             </CardHeader>
         )
     }
