@@ -11,6 +11,7 @@ class Timer extends Component{
         };
     }
 
+
     componentWillMount(){
         this.getTimeUntil(this.props.timeInit);
     }
@@ -31,6 +32,8 @@ class Timer extends Component{
         
     }
     
+    //Calcula el tiempo desde que se de la hora actual con la que se realizo el llamado
+    //Entrada: tiempo de creacion
     getTimeUntil(timeInit){
         const time=Date.parse(new Date) - Date.parse(timeInit);
         const seg=Math.floor((time/1000) % 60);
@@ -40,12 +43,15 @@ class Timer extends Component{
         const minP=(min<10)?"0"+min:min;
         const segP=(seg<10)?"0"+seg:seg;
 
+        //Cambia el valor del padre (consola.js)
         this.setState({hora,min,seg});
         if ((horaP+":"+minP+":"+segP) !=="NaN:NaN:NaN"){
             this.props.handler(horaP+":"+minP+":"+segP);
         }
         
     }
+
+    //Retorna el tiempo para ser usado
     getTime(timeInit){
         const time=Date.parse(new Date) - Date.parse(timeInit);
         const seg=Math.floor((time/1000) % 60);
@@ -56,6 +62,8 @@ class Timer extends Component{
         const segP=(seg<10)?"0"+seg:seg;
         return (horaP+":"+minP+":"+segP);
     }
+
+
     getTimeMin(time){ // 00:00:00 hora, min, seg
         var arrayTime=time.split(":");
         var horasMin=parseInt(arrayTime[0],10) *60;

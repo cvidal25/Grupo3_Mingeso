@@ -31,6 +31,8 @@ class Resultado extends Component {
         this.existExerciseResult=this.existExerciseResult.bind(this);
         this.inOutToPrint=this.inOutToPrint.bind(this);
     }
+
+
     componentWillMount(){
         this.setState(
             {
@@ -38,11 +40,11 @@ class Resultado extends Component {
             }
         )
         var Consultas=[];
-        Consultas.push(
+        Consultas.push( //obtener el resultado del ejercicio Id
             Axios.get(urlBase+"/userExercise/"+this.props.match.params.idUserExercise)
         );
         //probar con 8
-        Consultas.push(
+        Consultas.push(// obtiene los resultados de los ejercicio del usuario id
             Axios.get(urlBase+"/userExercise/user/"+this.props.infoUsuarios.userID) 
         );
 
@@ -52,7 +54,7 @@ class Resultado extends Component {
                 var userExercises=[];
                 userExercises=Response[1].data;
                 console.log(Response[0].data)
-                if(this.existExerciseResult(exercise,userExercises)){
+                if(this.existExerciseResult(exercise,userExercises)){ // verificar existencia
                     this.setState({
                         exercise:exercise,
                         result:Response[0].data,
@@ -68,7 +70,7 @@ class Resultado extends Component {
                         variablesNoRep:invalidVariables
             })
                 }
-                else{
+                else{ // no existencia
                     window.location.replace('/#/enunciados');
                 }
             }
@@ -77,6 +79,7 @@ class Resultado extends Component {
                 this.setState({
                     espera:false
                 })
+                //error de conexión
                 window.location.replace('/#/enunciados');
             };
         })
@@ -84,6 +87,10 @@ class Resultado extends Component {
             console.log(error)
         });
     }
+
+    //verifica si el ejercicio si fue hecho por el usuario
+    // Entrada: ejercicio y arreglo de ejercicios resueltos
+    // Return: boolean
     existExerciseResult(exercise,array){
         //verificarId usuario
         var id=exercise.exerciseID;
@@ -95,25 +102,16 @@ class Resultado extends Component {
         return false;
     }
 
+    //Genera por pantalla las entradas y salidas
+    //funcionando para ambos casos: las de usurio y las definidos previamente
+    //Entrada: texto a parsear, caso.
     inOutToPrint(texto,variable){
         if(typeof (texto)=== 'undefined'){
            
             return <div></div>
         }
         var arrayTexto;
-        
-        console.log(texto);
-        switch(variable){
-            /*case 2:
-                texto=texto.substr(0,texto.length-2);
-                console.log(texto);
-                arrayTexto=texto.split("\\n/@");
-                console.log(arrayTexto);
-                break;*/
-            default:
-                arrayTexto=texto.split("/@");
-                break; 
-        }
+        arrayTexto=texto.split("/@");
         var salida="";
         switch(variable){
             case 3:
@@ -135,18 +133,24 @@ class Resultado extends Component {
                 );
         }  
     }
+
+    //obtiene el resultado del tiempo que se demoro en realizar el programa.
+    //Entrada: un entero en representacion del tiempo en minutos
     converTime(min){
         if(!Number.isInteger(min)){
             return "";
         }
         var minRest=min % 60;
         var hora=Math.floor(min/60) % 24;
+        //para hacer diferencias entre con 1 o 2 digitos.
         return((hora>0)?hora+" horas "+minRest + " minutos":minRest + " minutos");
     }
 
+    //Selecciona el icono a mostrar según sea correcto o incorrecto
+    //Entrada: booleano de validacion, o en un peor caso un array.
     iconResult(bool){
 
-        if(typeof(bool)===typeof("")){
+        if(typeof(bool)===typeof([])){
             
             console.log("array")
             if(bool.length===0){
@@ -157,8 +161,6 @@ class Resultado extends Component {
                 bool=false;
             }
         }
-        //<i class="fa fa-check-circle-o fa-lg"></i>
-        //<i class="fa fa-times-circle-o fa-lg"></i>
         if(bool){
             return <i className="fa fa-check-circle-o fa-lg " style={{color:"#4dbd74"}}></i>
         }
@@ -167,18 +169,20 @@ class Resultado extends Component {
         }
     }
 
+    //cambia el estado del colapse, para abrir.
     toggle=event=>{
         event.preventDefault();
         this.setState({
             open:!this.state.open
-        })
+        });
     }
+
+    //no permitir que pueda cambiar el codigo de mostrado por pantalla
     notChange=(NewValue)=>{
         this.setState({
                 code:this.state.code
         });
-}
-
+    }
     render(){
         console.log(this.props);
         this.converTime(this.state.result.userSolvingTime);

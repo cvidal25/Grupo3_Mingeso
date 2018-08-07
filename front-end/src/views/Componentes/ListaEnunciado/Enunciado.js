@@ -90,9 +90,9 @@ class Enunciado extends Component{
 
     };
 
-
+    //para abrir uno y solo uno de los desplegables.
+    //entrada posición
     toggleAccordion(tab) {
-
 
     const prevState = this.state.accordion;
     const state = prevState.map((x, index) => tab === index ? !x : false);
@@ -102,6 +102,8 @@ class Enunciado extends Component{
     });
   }
 
+    //los lista los datos correspontiente a entrada o salidas correspodiente del programa
+    //entrada: string con de entradas o salidas, con separacion de  @
     listarInOut(datos){
 
         var datosArray=datos.split("/@");
@@ -113,6 +115,8 @@ class Enunciado extends Component{
         );
     }
 
+    //busca si un ejercicio de tiene resultado realizado por el usuario.
+    //entrada: ejercicio.
     findExerciseResult(exercise){
         var id=exercise.exerciseID;
         var array=this.state.userExercises;
@@ -124,6 +128,7 @@ class Enunciado extends Component{
         return null;
     }
 
+    //lista todos los enuncidos disponibles
     listar (listaEnunciados){
         return (
             <div >
@@ -155,17 +160,18 @@ class Enunciado extends Component{
                             {listaEnunciados && listaEnunciados.map((enunciado, key) =>{
                                 var exerciseResult=this.findExerciseResult(enunciado);
 
-                            return( (enunciado.exercisePublished || exerciseResult!==null)&&
+                            //muestra solo los ejercicios publicasos o que ya tengan algún resultado
+                            return( (enunciado.exercisePublished || exerciseResult!==null)&& 
                                 <tbody key={key}>
                                     <tr  onClick={() => this.toggleAccordion(key)} aria-expanded={this.state.accordion[key]} aria-controls={"collapse"+key.toString()}>
                                     <td>{enunciado.exerciseTitle}</td>
                                     <td>{enunciado.exerciseIntialDate.toString().substr(0, 10)}</td>
                                     <td>&emsp;<img src={this.state.iconos[enunciado.exerciseLenguge-1]} style={{height:'30px',width:'30px'}} alt={enunciado.exerciseLenguge}/></td>
-                                    <td>
-                                        {(exerciseResult===null)?<Link to={{
-                                            pathname:"/enunciados/"+this.state.lenguaje[enunciado.exerciseLenguge-1].toString()+"/consola/"+enunciado.exerciseID,
-                                        
-                                            }}>
+                                    <td>{
+                                        //si tiene resultado de va a ver resultado, sino va a Go para realizar el ejercicio
+                                    }
+                                        {(exerciseResult===null)?
+                                            <Link to={{pathname:"/enunciados/"+this.state.lenguaje[enunciado.exerciseLenguge-1].toString()+"/consola/"+enunciado.exerciseID,}}>
                                             <Button block color="success">GO</Button>
                                         </Link>:
                                         <Link to={{
@@ -184,6 +190,9 @@ class Enunciado extends Component{
                                 </tr>
                                 <tr>
                                     <td colSpan="4">
+                                    {
+                                        // desplegable
+                                    }
                                         <Collapse isOpen={this.state.accordion[key]} aria-labelledby="headingOne">
                                             <fieldset className="form-group">
                                                 <div className="row">

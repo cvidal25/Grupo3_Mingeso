@@ -71,7 +71,8 @@ class EnunciadoPro extends Component{
         });
     }
 
-
+    //cambia estado para abrir el colapse o bien mostrar el tooltips
+    //Entrada: posicion, y posicion del arreglo al que pertenece
     toggleOpen(tab,posicionOpens) {
         var tempOpenStates=this.state.openStates;
         if(tempOpenStates[3][posicionOpens]){
@@ -86,6 +87,9 @@ class EnunciadoPro extends Component{
             openStates:tempOpenStates
         });
   }
+
+    //cambiar estado para abrir uno de los modal del ejercicio.
+    //Entrada: posicion.
     toggleOpenModal(tab){
         var tempOpenStates=this.state.openStates;
         tempOpenStates[3][tab]=!tempOpenStates[3][tab];
@@ -97,7 +101,9 @@ class EnunciadoPro extends Component{
         console.log(this.state.openStates);
 
     }
-  
+    
+    //los lista los datos correspontiente a entrada o salidas correspodiente del programa
+    //entrada: string con de entradas o salidas, con separacion de  @
     listarInOut(datos){
         
         var datosArray=datos.split("/@");
@@ -109,6 +115,7 @@ class EnunciadoPro extends Component{
         );
     }
 
+    // evento para cambiar el estado de publicado del ejercicio.
     HandleSwitch=(enunciado)=>event=>{
         enunciado.exercisePublished=event.target.checked;
         let fecha=new Date();
@@ -126,6 +133,7 @@ class EnunciadoPro extends Component{
         
     }
 
+    //evento para borrar un ejercicio.
     handleDelete=(id,posicion)=>{
         var array =this.state.items;
         var element=array[posicion];
@@ -148,6 +156,7 @@ class EnunciadoPro extends Component{
        
     }
 
+    //lista todos los enuncidos disponibles
     listar (listaEnunciados){
         return (
             <div >
@@ -191,6 +200,9 @@ class EnunciadoPro extends Component{
                                     <td >
                                         <Row>
                                             <Col>
+                                            {
+                                                //boton de Edición
+                                            }
                                                 <Link to={'/enunciadosPro/'+enunciado.exerciseID +'/enunciado'}>
                                                     <Button block color="primary" id={"BotonEdit"+key.toString()} style={{ height:"38px" }}>                                                   
                                                         <i className="fa fa-wrench icons font-2xl d-block" ></i>
@@ -201,7 +213,9 @@ class EnunciadoPro extends Component{
                                                 </Link>
                                             </Col>
                                             <Col>
-                                                
+                                                {
+                                                //boton de Eliminar
+                                            }
                                                     <Button block color="danger" id={"BotonDelete"+key.toString()}  style={{height:"38px"}} onClick={()=>{this.toggleOpenModal(key);}}>
                                                         <i className="fa fa-close font-2xl fa-lg d-block"></i>
                                                     </Button>
