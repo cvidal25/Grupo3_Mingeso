@@ -293,7 +293,7 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
         titulo="Enunciados realizados al año"
       }
       else if(filtro===2){
-        titulo="Minutos utilizado al año";
+        titulo="Segundos utilizado al año";
       }
       return (
         <Card>
@@ -389,22 +389,22 @@ const enunciadosPerDay = [6, 12, 23, 4, 5, 2
             <Row className="text-center">
               <Col sm={12} md className="mb-sm-2 mb-0">
                 <div className="text-muted">Tiempo Utilizado</div>
-                <strong>{totalMinutes} Minutos Totales </strong>
+                <strong>{totalMinutes} Segundos Totales </strong>
                 <Progress className="progress-xs mt-2" color="info" value="100" />
               </Col>
               <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                <div className="text-muted">Minutos en Faciles</div>
-                <strong>{minutesFaciles} Minutos ({percentTimeF}%)</strong>
+                <div className="text-muted">Segundos en Faciles</div>
+                <strong>{minutesFaciles} Segundos ({percentTimeF}%)</strong>
                 <Progress className="progress-xs mt-2" color="succes" value={String(percentTimeF)} />
               </Col>
               <Col sm={12} md className="mb-sm-2 mb-0">
-                <div className="text-muted">Minutos en Intermedios</div>
-                <strong>{minutesIntermedios} Minutos ({percentTimeI}%)</strong>
+                <div className="text-muted">Segundos en Intermedios</div>
+                <strong>{minutesIntermedios} Segundos ({percentTimeI}%)</strong>
                 <Progress className="progress-xs mt-2" color="warning" value={String(percentTimeI)} />
               </Col>
               <Col sm={12} md className="mb-sm-2 mb-0">
-                <div className="text-muted">Minutos por Difíciles</div>
-                <strong>{minutesDificiles} Minutos ({percentTimeD}%)</strong>
+                <div className="text-muted">Segundos por Difíciles</div>
+                <strong>{minutesDificiles} Segundos ({percentTimeD}%)</strong>
                 <Progress className="progress-xs mt-2" color="danger" value={String(percentTimeD)} />
               </Col>
             </Row>
