@@ -117,6 +117,7 @@ class Ranking extends Component {
     constructor() {
         super();
         this.state = {
+            viewing: null,
             coord: false,
             career: false,
             careerDropOpen: false,
@@ -133,6 +134,7 @@ class Ranking extends Component {
             coordLabel: 'Coordinación',
             idList: [],
             alumList: [],
+            enunRank: [],
             trueSight: false
 
         };
@@ -145,10 +147,10 @@ class Ranking extends Component {
                 careerLabel: 'Carreras',
                 coordLabel: 'Coordinación',
                 profesor: true,
-                coord: this.state.coordList[0],
-                career: this.state.careerList[0],
+                coord: this.props.infoUsuarios.userCoordination,
+                career: this.props.infoUsuarios.userCareer,
             });
-            this.obtenerRankingCareer(this.state.monthSelected, this.state.careerList[0]);
+            this.obtenerRankingCareer(this.state.monthSelected, this.props.infoUsuarios.userCareer);
         }
         else {
             this.setState({
@@ -261,11 +263,12 @@ class Ranking extends Component {
         var fix = mes + 1;
         var url = 'http://localhost:8082/userExercise/ranking/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: 'Sección' + coord
         });
         Axios.get(url)
             .then(response => {
-                var dataCatch = response.data[0];
+                var dataCatch = response.data;
                 this.obtenerAlumnos(dataCatch);
                 this.setState({
                     idList: dataCatch,
@@ -281,20 +284,23 @@ class Ranking extends Component {
 
     obtenerAlumnos(idsList) {
         var Consultas = [];
+        var enun=[];
         var i;
         var des = 0;
+        console.log(idsList);
         this.setState({
             espera: true
         });
         while (des == 0) {
-            var auxid = idsList.pop();
+            var auxid = idsList.shift();
             if (auxid == null) {
                 des = 1;
             }
             else {
                 Consultas.push(
-                    Axios.get('http://localhost:8082/user/' + auxid)
+                    Axios.get('http://localhost:8082/user/' + auxid[0])
                 );
+                enun.push(auxid[1]);
             }
         }
         Promise.all(Consultas).then(response => {
@@ -306,6 +312,7 @@ class Ranking extends Component {
             }
             this.setState({
                 alumList: listaAlum,
+                enunRank: enun,
                 espera: false
             });
 
@@ -319,16 +326,16 @@ class Ranking extends Component {
         var fix = mes + 1;
         var url = 'http://localhost:8082/userExercise/ranking/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: career
         });
         Axios.get(url)
             .then(response => {
-                var dataCatch = response.data[0];
-                console.log(dataCatch);
+                var dataCatch = response.data;
                 this.obtenerAlumnos(dataCatch);
                 this.setState({
                     idList: dataCatch,
-                    coordLabel: "Carreras"
+                    coordLabel: "Coordinación"
                 });
             })
             .catch(function (error) {
@@ -418,7 +425,7 @@ class Ranking extends Component {
                             <div className="text-muted">{alumno.userName}</div>
                         </Col>
                         <Col className='text-center'>
-                            <div className="text-muted">N/A</div>
+                            <div className="text-muted">{this.state.enunRank[key]}</div>
                         </Col>
                     </Row>
                 )}
@@ -427,8 +434,6 @@ class Ranking extends Component {
                         <sup className="px-1"><Badge pill color="info">&nbsp;</Badge></sup>
                         Enunciados hechos
                         &nbsp;
-                        <sup className="px-1"><Badge pill color="danger">&nbsp;</Badge></sup>
-                        Tiempo gastado
                     </small>
                 </div>
             </Col>
