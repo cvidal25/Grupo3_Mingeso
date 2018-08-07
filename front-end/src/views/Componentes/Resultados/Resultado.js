@@ -32,6 +32,11 @@ class Resultado extends Component {
         this.inOutToPrint=this.inOutToPrint.bind(this);
     }
     componentWillMount(){
+        this.setState(
+            {
+                espera:true,
+            }
+        )
         var Consultas=[];
         Consultas.push(
             Axios.get(urlBase+"/userExercise/"+this.props.match.params.idUserExercise)
@@ -53,7 +58,8 @@ class Resultado extends Component {
                         result:Response[0].data,
                         code:Response[0].data.code,
                         modo:lenguaje[exercise.exerciseLenguge-1],
-                        carga:true
+                        carga:true,
+                        espera:false,
                     });
 
                     var invalidVariables=Response[0].data.invalidVariables.substr(1,Response[0].data.invalidVariables.length-1);
@@ -68,6 +74,9 @@ class Resultado extends Component {
             }
             catch(err){
                 //console.log(err);
+                this.setState({
+                    espera:false
+                })
                 window.location.replace('/#/enunciados');
             };
         })
@@ -178,6 +187,17 @@ class Resultado extends Component {
                 <Col className="offset-md-2" md={8}>
                     <Card>
                         <CardHeader className="text-center"> <h3><strong>Resultado</strong></h3></CardHeader>
+
+                        {this.state.espera?
+                            <CardBody>
+                                <div className="row">
+                                    <div className ='col'>
+                                        <div className='defaultSpinner' ></div>
+                                    </div>
+                                </div> 
+                            </CardBody>
+                            :
+                            <div>
                         <CardBody>
                             <Row >
                                 <Col className="text-center">
@@ -326,7 +346,9 @@ class Resultado extends Component {
                                 <Col sm={1} ></Col>
                             </Row>
                         </CardBody>  
-                        }  
+                        }
+                        </div>
+                        }
 
                         <CardFooter className="text-center">
                             <Col></Col>

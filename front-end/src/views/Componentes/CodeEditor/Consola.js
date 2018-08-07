@@ -61,6 +61,8 @@ class CodeEditor extends Component{
 					error:false,
 					colorModal:"info",
 					textoModal:"",
+					resultado:"",
+					enviado:false,
 
 			}
 	};
@@ -233,9 +235,11 @@ class CodeEditor extends Component{
 					console.log(response);
 					console.log(response.data);
 					this.setState({
+						resultado:response.data,
 						esperaModal:false,
 						colorModal:"success",
 						textoModal:"Enviado Con Exito",
+						enviado:true,
 					});
 					
 			}).catch(error=>{
@@ -245,6 +249,7 @@ class CodeEditor extends Component{
 						error:true,
 						colorModal:"danger",
 						textoModal:"Error de Conexión, intente más tarde",
+						enviado:false,
 
 					});
 
@@ -264,7 +269,17 @@ class CodeEditor extends Component{
 					y no se podrán hacer cambios posteriores.
 				</ModalBody>;
 		var resultado=<ModalBody>
-						{texto}
+						{(!this.state.error && this.state.enviado)?
+						<div>
+							{texto}
+							<br/>
+							<h5>Obtuviste un Puntaje de: {this.state.resultado.score}</h5>
+							<small>Para más información de tu resultado puede verlo en la tabla de enunciados haciendo click en 
+								<strong>{" Ver Resultados"}</strong></small>
+						</div>
+						:
+						<div>{texto}</div>
+						}
 					</ModalBody>;
 		var finalTexto;
 		if(color!=="info"){
@@ -272,15 +287,16 @@ class CodeEditor extends Component{
 		}
 		else{
 			finalTexto=normal;
+			
 		}
 		var boton= (this.state.error)?
 			<Button color="danger" onClick={()=>{this.toggleOpen();}}>Aceptar</Button>
 			:
 			<Link to="/enunciados" > <Button block color="success" onClick={()=>{this.toggleOpen();}}>Aceptar</Button></Link>
 		return (
-			<Modal isOpen={this.state.modalOpen} toggle={()=>{this.toggleOpen();}}
+			<Modal isOpen={this.state.modalOpen} 
                    className={'modal-'+color}>
-              <ModalHeader toggle={()=>{this.toggleOpen();}}>Confirmar Envió</ModalHeader>
+              <ModalHeader>Confirmar Envió</ModalHeader>
 			  {(!this.state.esperaModal)?
 			  		finalTexto:
 				  <ModalBody className="text-center">
@@ -290,7 +306,7 @@ class CodeEditor extends Component{
 			  {(!this.state.esperaModal)&&
 				((color!=="info")? boton:
 					<ModalFooter>
-						<Button color="danger"  onClick={()=>{this.toggleOpenEvent();}}>Cancelar</Button>{' '}
+						<Button color="danger"  onClick={()=>{this.toggleOpen();}}>Cancelar</Button>{' '}
 						<Button color="success"  onClick={()=>{this.handleSentCodigo()}}>Enviar <i className="fa fa-send fa-lg"></i></Button>                   
 					</ModalFooter>)
 			}

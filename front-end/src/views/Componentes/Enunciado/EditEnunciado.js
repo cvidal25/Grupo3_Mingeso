@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import  { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 import { isString } from 'util';
 import { Card, CardBody, CardHeader, Col, Row, Input,Popover,PopoverHeader,
     Form,FormGroup,FormFeedback,
@@ -127,22 +129,9 @@ class EditEnunciado extends Component{
 
     
     componentDidMount(){
-        this.setState({
-            espera:true,
-        });
-
-        Axios.get(url+'topic')
-        .then(Response=>{
-
-            console.log(Response.data);
-            this.setState({
-                topics:Response.data
-            });
-
-        }).catch(function(error){
-            console.log(error);
-        });
-        
+      this.setState({
+          espera:true,
+      })
         var num=this.props.match.params.id;
         if(isString(num)){
             Axios.get('http://localhost:8082/exercise/'+num)
@@ -543,7 +532,7 @@ class EditEnunciado extends Component{
         if(this.validador()){
             
             var exercise={
-                'exerciseID': this.data.exerciseID,
+                'exerciseID': this.state.data.exerciseID,
                 'exerciseTitle': this.state.titulo,
                 'exerciseBody': this.state.enunciado,
                 'exerciseLenguge': this.state.lenguaje,
@@ -555,7 +544,7 @@ class EditEnunciado extends Component{
                 'exercisePublished': this.state.publicar,
                 'exerciseDifficulty':this.state.dificultad,
                 'exerciseDays':	this.state.dias,
-                'topic': this.state.topics[this.state.topico]
+                'exerciseTopic': this.state.topico
                 }
             
             console.log(exercise);
@@ -631,16 +620,22 @@ class EditEnunciado extends Component{
         }));
     }
     createModal(){
-        return <Modal isOpen={this.state.alertOpen} toggle={this.onDismiss}>
-              <ModalHeader toggle={this.onDismiss}>Nuevo</ModalHeader>
+        return <Modal isOpen={this.state.alertOpen} className={"modal-"+this.state.alertType} >
+              <ModalHeader >Edición</ModalHeader>
               <ModalBody>
-              {(this.state.alertType==="success")?"Nuevo Enunciado Creado Con Exito":"Se tuvo un problema con la conexion intente mas tarde..."}
+              {(this.state.alertType==="success")?"Se ha editado el enunciado de forma correcta":"Se tuvo un problema con la conexion intente mas tarde..."}
               </ModalBody>
               <ModalFooter>
-                  <Button color={this.state.alertType} >Aceptar</Button>
-              </ModalFooter>
-        </Modal>
+                  {(this.state.alertType==="success")?
+                    <Link to={'/enunciadosPro'}>
+                       <Button color={this.state.alertType} >Aceptar</Button>
+                    </Link>:
+                     <Button color={this.state.alertType} toggle={this.onDismiss}>Aceptar</Button>
+                }
+                  </ModalFooter>
+            </Modal>
     }
+
     popoverInOut(InOut,arreglo){
 
         return(
@@ -666,7 +661,7 @@ class EditEnunciado extends Component{
                   <Card>
                       
                     <CardHeader >
-                        <i className="fa fa-align-justify" ></i> Nuevo Enunciado
+                        <i className="fa fa-align-justify" ></i> Edición de Enunciado
                     </CardHeader>
                     <Alert color={this.state.alertType} isOpen={this.state.alertOpen} toggle={this.onDismiss}>
                         {(this.state.alertType==="success")?"Nuevo Enunciado Creado Con Exito":"Se tuvo un problema con la conexion intente mas tarde..."}
