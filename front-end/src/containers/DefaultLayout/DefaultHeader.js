@@ -4,8 +4,8 @@ import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLin
 import PropTypes from 'prop-types';
 import { GoogleLogout } from 'react-google-login';
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../assets/img/brand/logo.svg'
-import sygnet from '../../assets/img/brand/sygnet.svg'
+import logo from '../../assets/img/brand/icon.png'
+import sygnet from '../../assets/img/brand/favicon.png'
 import {connect} from 'react-redux'
 import salirCuenta from '../../actionCreators';
 import store from '../../store';
