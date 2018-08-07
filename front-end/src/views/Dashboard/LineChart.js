@@ -16,6 +16,7 @@ import {
     Input,
     Progress,
     Row,
+    Table,
 } from 'reactstrap';
 import Axios from 'axios';
 import { connect } from 'react-redux';
@@ -243,18 +244,19 @@ class LineChart extends Component {
         };
         this.state = {
             //Buttons States
+            viewing: null,
             careerDropOpen: false,
             coordDropOpen: false,
-            monthLineButtonOpen: false,
+            monthButtonOpen: false,
 
             //Variable States
             alumSelected: [],
             lineSelected: 1,
-            monthLineSelected: fecha.getMonth(),
+            monthSelected: fecha.getMonth(),
 
             //Chart States
-            dataLineChart: this.enunLineChartData,
-            optLineChart: this.enunLineChartOpt,
+            dataChart: this.enunLineChartData,
+            optChart: this.enunLineChartOpt,
 
             //Booleans states
             espera: false,
@@ -266,15 +268,20 @@ class LineChart extends Component {
             alumList: [],
             coordList: [],
             careerList: [],
-            dataTime:[],
-            dataEnun:[],
+            dataTime: [],
+            dataEnun: [],
             coord: null,
-            career: null
+            career: null,
+
+            alumLabel: '---- ----',
+            careerLabel: 'Carreras',
+            coordLabel: 'Coordinación'
+
         };
         this.onLineFiltClick = this.onLineFiltClick.bind(this);
-        this.onLineMonthItemSelected = this.onLineMonthItemSelected.bind(this);
-        this.buttonLineMonth = this.buttonLineMonth.bind(this);
-        this.onLineButtonMonthToggle = this.onLineButtonMonthToggle.bind(this)
+        this.onMonthItemSelected = this.onMonthItemSelected.bind(this);
+        this.buttonMonth = this.buttonMonth.bind(this);
+        this.onButtonMonthToggle = this.onButtonMonthToggle.bind(this)
         this.filterLine = this.filterLine.bind(this);
     }
     componentWillMount() {
@@ -286,12 +293,15 @@ class LineChart extends Component {
                 careerSight: false,
                 coordSight: false
             });
-            this.obtenerDataAlum(this.state.monthLineSelected, 0);
+            this.obtenerDataAlum(this.state.monthSelected, 0);
         }
         else {
             this.obtenerCarreras(this.props.infoUsuarios.userType);
             this.obtenerCoords(this.props.infoUsuarios.userType);
             this.setState({
+                alumLabel: '---- ----',
+                careerLabel: 'Carreras',
+                coordLabel: 'Coordinación',
                 profesor: true,
                 lineSelected: 1,
                 coord: this.state.coordList[0],
@@ -299,19 +309,31 @@ class LineChart extends Component {
                 careerSight: true,
                 coordSight: false
             });
-            this.obtenerDataCarrer(this.state.monthLineSelected, this.state.careerList[0]);
+
+            if (this.props.infoUsuarios.userType === 3) {
+                this.obtenerDataCarrer(this.state.monthSelected, this.props.infoUsuarios.userCareer);
+            }
+            else {
+                this.setState({
+                    coordLabel: this.props.infoUsuarios.userCoordination,
+                    coord: this.props.infoUsuarios.userCoordination
+                });
+                this.obtenerAlumCoord(this.props.infoUsuarios.userCoordination);
+                this.obtenerDataCoord(this.state.monthSelected, this.props.infoUsuarios.userCoordination);
+            }
         }
+
     }
 
     onLineFiltClick(selected) {
         //console.log('ENUN',enunLineChartData,'TIME',timeLineChartData)
-        this.setState({espera:true});
+        this.setState({ espera: true });
         if (selected === 1) {
             this.setDataEnun(this.state.dataEnun);
             this.setState({
                 lineSelected: selected,
-                dataLineChart: this.enunLineChartData,
-                optLineChart: this.enunLineChartOpt,
+                dataChart: this.enunLineChartData,
+                optChart: this.enunLineChartOpt,
                 espera: false
             });
         }
@@ -319,47 +341,72 @@ class LineChart extends Component {
             this.setDataTime(this.state.dataTime);
             this.setState({
                 lineSelected: selected,
-                dataLineChart: this.timeLineChartData,
-                optLineChart: this.timeLineChartOpt,
+                dataChart: this.timeLineChartData,
+                optChart: this.timeLineChartOpt,
                 espera: false
             });
         }
     }
 
-    onLineCareerItemSelect(sel) {
+    onCareerItemSelect(sel) {
         this.setState({
+            careerLabel: sel,
             career: sel,
             careerSight: true,
             coordSight: false
         });
         if (this.props.infoUsuarios.userType === 3) {
-            this.obtenerDataCarrer(this.state.monthLineSelected, sel);
+            this.obtenerDataCarrer(this.state.monthSelected, sel);
+            this.setState({
+                coordLabel: 'Coordinación',
+                alumList: null,
+                alumLabel: '---- ----'
+            });
+        }
+        else {
+            this.obtenerAlumBeCareerOnCoord(sel, this.state.coord);
+            this.setState({ alumLabel: '---- ----' });
         }
     }
 
-    onLineCoordItemSelect(sel) {
+    onCoordItemSelect(sel) {
         this.setState({
+            coordLabel: sel,
             coord: sel,
             careerSight: false,
             coordSight: true
         });
-        this.obtenerAlumCord(sel);
-        this.obtenerDataCoord(this.state.monthLineSelected, sel);
+        if (this.props.infoUsuarios.userType === 3) {
+            this.obtenerDataCoord(this.state.monthSelected, sel);
+            this.obtenerAlumCoord(sel);
+            this.setState({
+                careerLabel: 'Carreras',
+                alumLabel: '---- ----'
+            });
+        }
+        else {
+            this.obtenerAlumCoord(sel);
+            this.setState({ 
+                careerLabel: 'Carreras',
+                alumLabel: '---- ----' });
+            this.obtenerDataCoord(this.state.monthSelected, sel);
+        }
     }
 
     onUserItemSelect(alumno) {
         //Obtener data
         this.setState({
             alumSelected: alumno,
+            alumLabel: alumno.userName,
             careerSight: false,
             coordSight: false
         });
-        this.obtenerDataAlum(this.state.monthLineSelected, alumno);
+        this.obtenerDataAlum(this.state.monthSelected, alumno);
     }
 
-    onLineMonthItemSelected(i) {
+    onMonthItemSelected(i) {
         this.setState({
-            monthLineSelected: i,
+            monthSelected: i,
         });
         if (this.props.infoUsuarios.userType === 1) {
             this.obtenerDataAlum(i, this.state.alumSelected);
@@ -367,6 +414,9 @@ class LineChart extends Component {
 
         else if (this.props.infoUsuarios.userType === 2) {
             if (this.state.coordSight === true) {
+                this.obtenerDataCoord(i, this.state.coord);
+            }
+            else if(this.state.careerSight === true){
                 this.obtenerDataCoord(i, this.state.coord);
             }
             else {
@@ -386,17 +436,38 @@ class LineChart extends Component {
         }
 
     }
-
-    onLineButtonMonthToggle() {
+    onButtonMonthToggle() {
         this.setState({
-            monthLineButtonOpen: !this.state.monthLineButtonOpen,
+            monthButtonOpen: !this.state.monthButtonOpen,
         });
     }
+
     //===============================================================================
     //==============================GETS=============================================
     //===============================================================================
 
-    obtenerAlumCord(coord) {
+
+    ///
+    obtenerAlumBeCareerOnCoord(career, coord) {
+        var url = 'http://localhost:8082/user/careerCoordination/' + career + '/' + coord;
+        this.setState({
+            espera: true
+        });
+        Axios.get(url)
+            .then(response => {
+                var dataCatch = response.data;
+                this.setState({
+                    alumList: dataCatch,
+                    espera: false
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+                this.setState({ espera: false });
+            });
+    }
+    obtenerAlumCoord(coord) {
+
         var url = 'http://localhost:8082/user/coordination/' + coord;
         this.setState({
             espera: true
@@ -429,6 +500,7 @@ class LineChart extends Component {
         Axios.get(url)
             .then(response => {
                 var dataCatch = response.data;
+                console.log(dataCatch);
                 this.setState({
                     careerList: dataCatch,
                     espera: false
@@ -474,7 +546,8 @@ class LineChart extends Component {
         var url, url2;
         var fix = mes + 1;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: 'Sección: '+ coord,
         });
         url = 'http://localhost:8082/userExercise/exercise/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
         url2 = 'http://localhost:8082/userExercise/time/coordination/' + coord + '/' + fecha.getFullYear() + '-' + fix;
@@ -503,14 +576,14 @@ class LineChart extends Component {
 
         if (this.state.lineSelected === 1) {
             this.setState({
-                dataLineChart: this.enunLineChartData,
-                optLineChart: this.enunLineChartOpt,
+                dataChart: this.enunLineChartData,
+                optChart: this.enunLineChartOpt,
             });
         }
         else if (this.state.lineSelected === 2) {
             this.setState({
-                dataLineChart: this.timeLineChartData,
-                optLineChart: this.timeLineChartOpt
+                dataChart: this.timeLineChartData,
+                optChart: this.timeLineChartOpt
             });
         }
     }
@@ -518,7 +591,8 @@ class LineChart extends Component {
         var url, url2;
         var fix = mes + 1;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: career,
         });
         url = 'http://localhost:8082/userExercise/exercise/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
         url2 = 'http://localhost:8082/userExercise/time/career/' + career + '/' + fecha.getFullYear() + '-' + fix;
@@ -547,14 +621,14 @@ class LineChart extends Component {
 
         if (this.state.lineSelected === 1) {
             this.setState({
-                dataLineChart: this.enunLineChartData,
-                optLineChart: this.enunLineChartOpt,
+                dataChart: this.enunLineChartData,
+                optChart: this.enunLineChartOpt,
             });
         }
         else if (this.state.lineSelected === 2) {
             this.setState({
-                dataLineChart: this.timeLineChartData,
-                optLineChart: this.timeLineChartOpt
+                dataChart: this.timeLineChartData,
+                optChart: this.timeLineChartOpt
             });
         }
     }
@@ -562,7 +636,8 @@ class LineChart extends Component {
         var url, url2;
         var fix = mes + 1;
         this.setState({
-            espera: true
+            espera: true,
+            viewing: alum.userName,
         });
         if (alum === 0) {
             url = 'http://localhost:8082/userExercise/exercise/student/' + this.props.infoUsuarios.userMail + '/' + fecha.getFullYear() + '-' + fix;
@@ -597,61 +672,60 @@ class LineChart extends Component {
 
         if (this.state.lineSelected === 1) {
             this.setState({
-                dataLineChart: this.enunLineChartData,
-                optLineChart: this.enunLineChartOpt,
+                dataChart: this.enunLineChartData,
+                optChart: this.enunLineChartOpt,
             });
         }
         else if (this.state.lineSelected === 2) {
             this.setState({
-                dataLineChart: this.timeLineChartData,
-                optLineChart: this.timeLineChartOpt
+                dataChart: this.timeLineChartData,
+                optChart: this.timeLineChartOpt
             });
         }
     }
 
-    buttonLineMonth(month) {
+    buttonMonth(month) {
         return (
-            <ButtonDropdown isOpen={this.state.monthLineButtonOpen} toggle={() => { this.onLineButtonMonthToggle() }}>
+            <ButtonDropdown isOpen={this.state.monthButtonOpen} toggle={() => { this.onButtonMonthToggle() }}>
                 <DropdownToggle caret className="pb-1" color="primary">{monthsLabel[month]}</DropdownToggle>
                 <DropdownMenu direction="down">
                     <DropdownItem header>Mes</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(2); }}>Marzo</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(3); }}>Abril</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(4); }}>Mayo</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(5); }}>Junio</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(6); }}>Julio</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(7); }}>Agosto</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(8); }}>Septiembre</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(9); }}>Octubre</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(10); }}>Noviembre</DropdownItem>
-                    <DropdownItem onClick={() => { this.onLineMonthItemSelected(11); }}>Diciembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(2); }}>Marzo</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(3); }}>Abril</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(4); }}>Mayo</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(5); }}>Junio</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(6); }}>Julio</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(7); }}>Agosto</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(8); }}>Septiembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(9); }}>Octubre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(10); }}>Noviembre</DropdownItem>
+                    <DropdownItem onClick={() => { this.onMonthItemSelected(11); }}>Diciembre</DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
         );
     }
-    filterGroupLine(listaCareer, listaCoord) {
+
+    filterGroup(listaCareer, listaCoord) {
         return (
             <ButtonToolbar className="float-center" aria-label="Toolbar with button groups">
                 <ButtonGroup horizontal="true">
                     <ButtonDropdown isOpen={this.state.careerDropOpen} toggle={() => { this.setState({ careerDropOpen: !this.state.careerDropOpen }); }}>
                         <DropdownToggle caret>
-                            Carrera
+                            {this.state.careerLabel}
                         </DropdownToggle>
                         <DropdownMenu direction="down">
-                            <DropdownItem onClick={() => this.onLineCareerItemSelect('Todas')} active={this.state.career === 'Todas'}>Todas</DropdownItem>
                             {listaCareer && listaCareer.map((career, key) =>
-                                <DropdownItem key={key} onClick={() => this.onLineCareerItemSelect(career)} active={this.state.career === career}>{career}</DropdownItem>
+                                <DropdownItem key={key} onClick={() => this.onCareerItemSelect(career)} >{career}</DropdownItem>
                             )}
                         </DropdownMenu>
                     </ButtonDropdown>
                     <ButtonDropdown isOpen={this.state.coordDropOpen} toggle={() => { this.setState({ coordDropOpen: !this.state.coordDropOpen }); }}>
                         <DropdownToggle caret>
-                            Coordinación
+                            {this.state.coordLabel}
                         </DropdownToggle>
                         <DropdownMenu direction="down">
-                            <DropdownItem onClick={() => this.onLineCoordItemSelect('Todas')} active={this.state.coord === 'Todas'}>Todas</DropdownItem>
                             {listaCoord && listaCoord.map((cord, key) =>
-                                <DropdownItem key={key} onClick={() => this.onLineCoordItemSelect(cord)} active={this.state.coord === cord}>{cord}</DropdownItem>
+                                <DropdownItem key={key} onClick={() => this.onCoordItemSelect(cord)} >{cord}</DropdownItem>
                             )}
                         </DropdownMenu>
                     </ButtonDropdown>
@@ -661,9 +735,21 @@ class LineChart extends Component {
 
     }
     filterUser(listaAlumnos) {
+        var des;
+        if (listaAlumnos === null || listaAlumnos.length === 0)
+            des = true;
+        else
+            des = false;
+
         return (
             <Input type="select" name="select" id="select">
-                <option value="0">---- ----</option>
+                <option value="0">{this.state.alumLabel}</option>
+                {des ?
+                    <div />
+                    :
+                    <optgroup className="text-center" label='-----------------------------'>
+                    </optgroup>
+                }
                 {listaAlumnos && listaAlumnos.map((alumno, key) =>
                     <option key={key} value={key} onClick={() => this.onUserItemSelect(alumno)} >{alumno.userName}</option>
                 )}
@@ -684,14 +770,14 @@ class LineChart extends Component {
     chartLine(dataIn, optIn) {
         return (
             <div className="chart-wrapper" style={{ height: 70 + '%', marginTop: 5 + '%' }}>
-                <Line data={dataIn} options={optIn} height={70} redraw={true}/>
+                <Line data={dataIn} options={optIn} height={70} redraw={true} />
             </div>
         )
     }
     chartTittle(titulo) {
         return (
             <CardHeader>
-                <i className="fa fa-align-justify"></i> {titulo}
+                <i className="fa fa-align-justify"></i> {titulo +' - '+ this.state.viewing +' mes de '+monthsLabel[this.state.monthSelected]}
             </CardHeader>
         )
     }
@@ -765,44 +851,44 @@ class LineChart extends Component {
         return (
             <Card>
                 {this.chartTittle(titulo)}
-                {this.state.espera?
-                <CardBody>
-                    <div className="row">
-                        <div className ='col'>
-                            <div className='defaultSpinner' ></div>
+                {this.state.espera ?
+                    <CardBody>
+                        <div className="row">
+                            <div className='col'>
+                                <div className='defaultSpinner' ></div>
+                            </div>
                         </div>
-                    </div>
-                </CardBody>
-                :
-                <CardBody>
-                    <Row>
-                        <Col xs='3'>
-                            {this.filterLine()}
-                        </Col>
-                        {this.state.profesor ?
-                            <Col className='text-right' xs='3'>
-                                {this.filterGroupLine(this.state.careerList, this.state.coordList)}
-                            </Col>
-                            :
+                    </CardBody>
+                    :
+                    <CardBody>
+                        <Row>
                             <Col xs='3'>
+                                {this.filterLine()}
+                            </Col>
+                            {this.state.profesor ?
+                                <Col className='text-right' xs='5'>
+                                    {this.filterGroup(this.state.careerList, this.state.coordList)}
+                                </Col>
+                                :
+                                <Col xs='3'>
 
-                            </Col>
-                        }
-                        {this.state.profesor ?
-                            <Col className='text-center' xs='3'>
-                                {this.filterUser(this.state.alumList)}
-                            </Col>
-                            :
-                            <Col xs='3'>
+                                </Col>
+                            }
+                            {this.state.profesor ?
+                                <Col className='text-center' xs='3'>
+                                    {this.filterUser(this.state.alumList)}
+                                </Col>
+                                :
+                                <Col xs='3'>
 
+                                </Col>
+                            }
+                            <Col className='text-right' xs='1'>
+                                {this.buttonMonth(month)}
                             </Col>
-                        }
-                        <Col className='text-right' xs='3'>
-                            {this.buttonLineMonth(month)}
-                        </Col>
-                    </Row>
-                    {this.chartLine(dataIn, optIn)}
-                </CardBody>
+                        </Row>
+                        {this.chartLine(dataIn, optIn)}
+                    </CardBody>
                 }
                 {this.chartFooter(filtro)}
             </Card>
@@ -813,12 +899,12 @@ class LineChart extends Component {
     render() {
         return (
             <Col>
-                {this.makeLineChart(this.state.dataLineChart, this.state.optLineChart, this.state.monthLineSelected, this.state.lineSelected)}
+                {this.makeLineChart(this.state.dataChart, this.state.optChart, this.state.monthSelected, this.state.lineSelected)}
             </Col>
         );
     }
     setDataEnun(dataCatch) {
-        this.setState({espera:true});
+        this.setState({ espera: true });
         let i;
         var matrixSum = new Array(31);
         for (i = 0; i < dataCatch.Facil.length; i++) {
@@ -836,14 +922,14 @@ class LineChart extends Component {
         this.enunLineChartData.datasets[2].data = dataCatch.Intermedio;
         this.enunLineChartData.datasets[3].data = dataCatch.Dificil;
         this.enunLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
-        this.enunLineChartOpt.scales.yAxes.max=matrixSum.max;
+        this.enunLineChartOpt.scales.yAxes.max = matrixSum.max;
         this.setState({
             dataEnun: dataCatch,
-            espera:false
+            espera: false
         });
     }
     setDataTime(dataCatch) {
-        this.setState({espera: true});
+        this.setState({ espera: true });
         let i;
         var matrixSum = new Array(31);
         for (i = 0; i < dataCatch.Facil.length; i++) {
@@ -861,10 +947,10 @@ class LineChart extends Component {
         this.timeLineChartData.datasets[2].data = dataCatch.Intermedio;
         this.timeLineChartData.datasets[3].data = dataCatch.Dificil;
         this.timeLineChartOpt.scales.yAxes.stepSize = Math.ceil(matrixSum.max / 5);
-        this.timeLineChartOpt.scales.yAxes.max=matrixSum.max;
+        this.timeLineChartOpt.scales.yAxes.max = matrixSum.max;
         this.setState({
             dataTime: dataCatch,
-            espera:false
+            espera: false
         });
     }
     sumaDeArray(array) {
